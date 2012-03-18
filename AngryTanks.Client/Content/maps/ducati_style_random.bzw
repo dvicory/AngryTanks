@@ -1,0 +1,277 @@
+options
+  -c
+  -ms 2
+end
+
+box
+  position -374.707 244.336 0
+  size 30 30 23.0147
+  rotation 184.043
+end
+box
+  position 374.707 -244.336 0
+  size 30 30 23.0147
+  rotation 184.043
+end
+box
+  position -147.485 17.4561 0
+  size 30 30 22.572
+  rotation 206.993
+end
+box
+  position 147.485 -17.4561 0
+  size 30 30 22.572
+  rotation 206.993
+end
+box
+  position 226.904 140.723 0
+  size 30 30 18.4232
+  rotation 205.126
+end
+box
+  position -226.904 -140.723 0
+  size 30 30 18.4232
+  rotation 205.126
+end
+box
+  position -198.218 171.191 0
+  size 30 30 15.2322
+  rotation 145.404
+end
+box
+  position 198.218 -171.191 0
+  size 30 30 15.2322
+  rotation 145.404
+end
+box
+  position -178.101 -46.5088 0
+  size 30 30 12.0171
+  rotation 262.573
+end
+box
+  position 178.101 46.5088 0
+  size 30 30 12.0171
+  rotation 262.573
+end
+box
+  position 170.801 -310.229 0
+  size 30 30 11.9676
+  rotation 300.52
+end
+box
+  position -170.801 310.229 0
+  size 30 30 11.9676
+  rotation 300.52
+end
+box
+  position 241.797 349.121 0
+  size 30 30 8.02574
+  rotation 54.8547
+end
+box
+  position -241.797 -349.121 0
+  size 30 30 8.02574
+  rotation 54.8547
+end
+box
+  position -45.5078 380.151 0
+  size 30 30 4.81924
+  rotation 246.445
+end
+box
+  position 45.5078 -380.151 0
+  size 30 30 4.81924
+  rotation 246.445
+end
+pyramid
+  position -63.9648 367.578 0
+  size 8.2 8.2 25.4429
+  rotation 309.891
+end
+pyramid
+  position 63.9648 -367.578 0
+  size 8.2 8.2 25.4429
+  rotation 309.891
+end
+pyramid
+  position -245.581 -235.62 0
+  size 8.2 8.2 25.346
+  rotation 62.2266
+end
+pyramid
+  position 245.581 235.62 0
+  size 8.2 8.2 25.346
+  rotation 62.2266
+end
+pyramid
+  position 186.987 14.9414 0
+  size 8.2 8.2 21.2395
+  rotation 222.847
+end
+pyramid
+  position -186.987 -14.9414 0
+  size 8.2 8.2 21.2395
+  rotation 222.847
+end
+pyramid
+  position 164.429 372.241 0
+  size 8.2 8.2 19.454
+  rotation 66.5002
+end
+pyramid
+  position -164.429 -372.241 0
+  size 8.2 8.2 19.454
+  rotation 66.5002
+end
+pyramid
+  position 337.524 397.925 0
+  size 8.2 8.2 18.6782
+  rotation 19.6216
+end
+pyramid
+  position -337.524 -397.925 0
+  size 8.2 8.2 18.6782
+  rotation 19.6216
+end
+pyramid
+  position -116.064 289.722 0
+  size 8.2 8.2 17.3156
+  rotation 87.7478
+end
+pyramid
+  position 116.064 -289.722 0
+  size 8.2 8.2 17.3156
+  rotation 87.7478
+end
+pyramid
+  position 44.6533 92.0898 0
+  size 8.2 8.2 16.5943
+  rotation 216.09
+end
+pyramid
+  position -44.6533 -92.0898 0
+  size 8.2 8.2 16.5943
+  rotation 216.09
+end
+pyramid
+  position 200.806 -4.27246 0
+  size 8.2 8.2 16.05
+  rotation 185.977
+end
+pyramid
+  position -200.806 4.27246 0
+  size 8.2 8.2 16.05
+  rotation 185.977
+end
+pyramid
+  position -44.2383 -160.938 0
+  size 8.2 8.2 15.3012
+  rotation 46.582
+end
+pyramid
+  position 44.2383 160.938 0
+  size 8.2 8.2 15.3012
+  rotation 46.582
+end
+pyramid
+  position 109.521 -262.402 0
+  size 8.2 8.2 15.2055
+  rotation 144.624
+end
+pyramid
+  position -109.521 262.402 0
+  size 8.2 8.2 15.2055
+  rotation 144.624
+end
+pyramid
+  position -215.015 289.6 0
+  size 8.2 8.2 14.4966
+  rotation 123.794
+end
+pyramid
+  position 215.015 -289.6 0
+  size 8.2 8.2 14.4966
+  rotation 123.794
+end
+pyramid
+  position 170.313 -122.583 0
+  size 8.2 8.2 13.5163
+  rotation 48.1421
+end
+pyramid
+  position -170.313 122.583 0
+  size 8.2 8.2 13.5163
+  rotation 48.1421
+end
+pyramid
+  position -331.8 21.8 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position 348.2 -38.2 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position -348.2 38.2 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position 331.8 21.8 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position -348.2 -38.2 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position -331.8 -21.8 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position 331.8 -21.8 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position 348.2 38.2 0
+  size 8.2 8.2 10.25
+  rotation 0
+end
+pyramid
+  position -376.831 -355.859 0
+  size 8.2 8.2 6.82103
+  rotation 231.592
+end
+pyramid
+  position 376.831 355.859 0
+  size 8.2 8.2 6.82103
+  rotation 231.592
+end
+pyramid
+  position 70.5811 -24.5117 0
+  size 8.2 8.2 6.29427
+  rotation 254.004
+end
+pyramid
+  position -70.5811 24.5117 0
+  size 8.2 8.2 6.29427
+  rotation 254.004
+end
+base
+  position -370 0 0
+  size 30 30 0
+  rotation 0
+  color 1
+end
+base
+  position 370 0 0
+  size 30 30 0
+  rotation 0
+  color 2
+end

@@ -1,0 +1,348 @@
+# Pillbox by Cosmos
+
+options
+  -c
+  -ms 3
+end
+
+box
+  position -226 297 0
+  size 3 25 15
+  rotation 90
+end
+box
+  position -231.5 244.5 0
+  size 3 20 15
+  rotation 90
+end
+box
+  position -200 279 0
+  size 3 20 15
+  rotation 0
+end
+box
+  position 223 -295.5 0
+  size 3 25 15
+  rotation 90
+end
+box
+  position 247.5 -273.5 0
+  size 3 25 15
+  rotation 0
+end
+box
+  position 231 -245.5 0
+  size 3 20 15
+  rotation 90
+end
+box
+  position 196 -278 0
+  size 3 20 15
+  rotation 0
+end
+box
+  position -249 272.5 0
+  size 3 25 15
+  rotation 0
+end
+box
+  position -360.5 37 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 318.5 370.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 335 36.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 318.5 320 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 287 11.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 366.5 320 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 13 112.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 355.5 295.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -14 260 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 306 296 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 295 356 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 294 332 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 0.5 23.5 0
+  size 1 50 10
+  rotation 0
+end
+box
+  position 295.5 381 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 13 211.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 0 24.5 0
+  size 1 50 10
+  rotation 90
+end
+box
+  position 188 11 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -295 -329.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -259.5 36.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -295 -379 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -12 -362 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 88.5 13.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 13 312 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -356.5 -294 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -380.5 -294 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -307.5 -295 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -311 11.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -331.5 -294 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -13 360 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -12 161 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -9.5 -63 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 380.5 295.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -63 37 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -112 13 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 14 -111.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -344.5 -318.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -295 -305.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -320.5 -342 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -14 -162 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 139.5 37 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 344 320 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 238.5 35 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 318 344 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 330.5 295 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 295 306.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -162 37 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -295 -355 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -319.5 -318.5 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position -369.5 -319 0
+  size 5 5 10
+  rotation 0
+end
+box
+  position 387 12 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -210 12.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 13 -210.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -14.5 -262 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position 12 -312.5 0
+  size 10 10 10
+  rotation 45
+end
+box
+  position -319.5 -367 0
+  size 5 5 10
+  rotation 0
+end
+base
+  position 375 376 0
+  size 25 25 0
+  rotation 0
+  color 1
+end
+base
+  position -375 -374 0
+  size 25 25 0
+  rotation 0
+  color 2
+end
+zone
+  position 399 399 0
+  size 1 1 0
+  rotation 0
+  safety 1
+end
+
+zone
+  position -399 -399 0
+  size 1 1 0
+  rotation 0
+  safety 2
+end
+

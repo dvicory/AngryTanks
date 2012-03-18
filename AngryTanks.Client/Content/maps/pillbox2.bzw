@@ -1,0 +1,753 @@
+# Pillbox 2 by ducatiwannabe
+
+options
+	-ms 3
+	-c
+end
+
+
+box
+name Box
+	position -350 -350 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 0
+	position -300 -300 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 1
+	position -250 -250 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 2
+	position -200 -200 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 3
+	position -150 -150 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 4
+	position -100 -100 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 5
+	position -50 -50 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 7
+	position 50 50 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 8
+	position 100 100 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 9
+	position 150 150 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 10
+	position 200 200 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 11
+	position 250 250 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 12
+	position 300 300 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 13
+	position 350 350 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box
+	position -350 350 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 0
+	position -300 300 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 1
+	position -250 250 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 2
+	position -200 200 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 3
+	position -150 150 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 4
+	position -100 100 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 5
+	position -50 50 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 6
+	position -18 18 0
+	rotation 45
+	size 1 20 10
+end
+
+box
+name Box Dupe 7
+	position 50 -50 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 8
+	position 100 -100 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 9
+	position 150 -150 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 10
+	position 200 -200 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 11
+	position 250 -250 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 12
+	position 300 -300 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 13
+	position 350 -350 0
+	rotation 0
+	size 10 10 10
+end
+
+box
+name Box Dupe 6 copy
+	position 18 18 0
+	rotation 45
+	size 20 1 10
+end
+
+box
+name Box Dupe 6 copy 1
+	position -18 -18 0
+	rotation 45
+	size 20 1 10
+end
+
+box
+name Box Dupe 6 copy
+	position 18 -18 0
+	rotation 45
+	size 1 20 10
+end
+
+box
+name Box Dupe 6 copy 1
+	position 0 0 0
+	rotation 0
+	size 5 5 10
+	shootthrough
+end
+
+base
+name Base
+	position 385 0 0
+	rotation 0
+	size 15 15 0
+	color 1
+end
+
+box
+name Box
+	position 330 30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy
+	position 330 -30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy
+	position 355 0 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position 342.5 15 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position 342.5 -15 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy
+	position 345 45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position 345 -45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position 360 60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position 360 -60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position 375 -45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 3
+	position 375 45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 3
+	position 375 -75 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 4
+	position 375 75 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position -355 0 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position -342.5 15 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 3
+	position -342.5 -15 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy
+	position -330 30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position -330 -30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 1
+	position -345 45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position -345 -45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 2
+	position -360 60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 3
+	position -360 -60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 4
+	position -375 45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 5
+	position -375 -45 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 5
+	position -375 75 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 6
+	position -375 -75 0
+	rotation 0
+	size 5 5 10
+end
+
+base
+name Base
+	position -385 0 0
+	rotation 0
+	size 15 15 0
+	color 2
+end
+
+pyramid
+name pyramid
+	position 250 -5 10
+	rotation 0
+	size 30 6 0.1
+end
+
+box
+name Box Dupe 7 copy
+	position 100 50 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 1
+	position 100 150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 2
+	position 200 150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 3
+	position 200 250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 4
+	position 300 250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 5
+	position 300 350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy
+	position 100 -50 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 1
+	position 100 -150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 2
+	position 200 -150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 3
+	position 200 -250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 4
+	position 300 -250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 5
+	position 300 -350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 6
+	position 400 -350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy
+	position -100 -50 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 1
+	position -100 -150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 2
+	position -200 -150 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 3
+	position -200 -250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 4
+	position -300 -250 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 5
+	position -300 -350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 6
+	position -400 -350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 7 copy 7
+	position 400 350 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy
+	position -50 100 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 1
+	position -150 100 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 2
+	position -150 200 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 3
+	position -250 200 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 4
+	position -250 300 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 5
+	position -350 300 0
+	rotation 45
+	size 10 10 10
+end
+
+box
+name Box Dupe 5 copy 6
+	position -350 400 0
+	rotation 45
+	size 10 10 10
+end
+
+pyramid
+name pyramid
+	position 226 6 10
+	rotation 0
+	size 6 6 0.1
+end
+
+pyramid
+name pyramid
+	position 252 6 10
+	rotation 0
+	size 6 6 0.1
+end
+
+pyramid
+name pyramid
+	position 239 18 10
+	rotation 0
+	size 19 6 0.1
+end
+
+pyramid
+name pyramid
+	position -250 5 10
+	rotation 0
+	size 30 6 0.1
+end
+
+pyramid
+name pyramid
+	position -226 -6 10
+	rotation 0
+	size 6 6 0.1
+end
+
+pyramid
+name pyramid
+	position -252 -6 10
+	rotation 0
+	size 6 6 0.1
+end
+
+pyramid
+name pyramid
+	position -239 -18 10
+	rotation 0
+	size 19 6 0.1
+end
+
+pyramid
+name Pyramid
+	position 0 0 10
+	rotation 0
+	size 5 5 4
+end
+
+box
+name Box copy 2
+	position -356 -30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 3
+	position -356 30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 4
+	position 356 30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 5
+	position 356 -30 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 4
+	position -390 -60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 5
+	position -390 60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 6
+	position 390 60 0
+	rotation 0
+	size 5 5 10
+end
+
+box
+name Box copy 7
+	position 390 -60 0
+	rotation 0
+	size 5 5 10
+end
+
