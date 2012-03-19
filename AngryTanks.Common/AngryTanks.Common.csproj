@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{14E07D52-020C-4787-965B-6B26EDD115AD}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{916A9399-C7C6-4CA4-A2D1-EC23194D19C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AngryTanks.Server</RootNamespace>
-    <AssemblyName>AngryTanks.Server</AssemblyName>
+    <RootNamespace>AngryTanks.Common</RootNamespace>
+    <AssemblyName>AngryTanks.Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,18 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AngryTanks.Common\AngryTanks.Common.csproj">
-      <Project>{916A9399-C7C6-4CA4-A2D1-EC23194D19C3}</Project>
-      <Name>AngryTanks.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\References\Lidgren.Network.Gen3\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

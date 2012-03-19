@@ -137,6 +137,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AngryTanks.Common\AngryTanks.Common.csproj">
+      <Project>{916A9399-C7C6-4CA4-A2D1-EC23194D19C3}</Project>
+      <Name>AngryTanks.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\References\Lidgren.Network.Gen3\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}</Project>
       <Name>Lidgren.Network</Name>

@@ -3,30 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AngryTanks.Common;
 using Lidgren.Network;
 
 namespace AngryTanks.Client
 {
     class ServerLink : NetClient
     {
-        public readonly static Byte ProtocolVersion = 1;
-
-        enum MessageType
-        {
-            MsgEnter,
-            MsgWorld
-        }
-
-        enum TeamType
-        {
-            RogueTeam,
-            RedTeam,
-            GreenTeam,
-            BlueTeam,
-            PurpleTeam,
-            ObserverTeam
-        }
-
         private static NetPeerConfiguration Config;
 
         public ServerLink()
@@ -50,10 +33,10 @@ namespace AngryTanks.Client
         new public NetConnection Connect(string host, int port)
         {
             NetOutgoingMessage hailMessage = CreateMessage();
-
-            hailMessage.Write((byte)MessageType.MsgEnter);
-            hailMessage.Write((byte)ProtocolVersion);
-            hailMessage.Write((byte)TeamType.RogueTeam);
+            
+            hailMessage.Write((byte)Protocol.MessageType.MsgEnter);
+            hailMessage.Write((byte)Protocol.ProtocolVersion);
+            hailMessage.Write((byte)Protocol.TeamType.RogueTeam);
             hailMessage.Write("Player Callsign");
             hailMessage.Write("Player Tag");
 
