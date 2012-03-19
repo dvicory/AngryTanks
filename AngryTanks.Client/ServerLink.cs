@@ -29,11 +29,11 @@ namespace AngryTanks.Client
             return Config;
         }
 
-        // TODO: be able to change callsign/player
         new public NetConnection Connect(string host, int port)
         {
             NetOutgoingMessage hailMessage = CreateMessage();
-            
+
+            // TODO be able to change callsign/tag
             hailMessage.Write((byte)Protocol.MessageType.MsgEnter);
             hailMessage.Write((byte)Protocol.ProtocolVersion);
             hailMessage.Write((byte)Protocol.TeamType.RogueTeam);
@@ -67,7 +67,19 @@ namespace AngryTanks.Client
         // TODO actually handle data
         private void HandleData(NetIncomingMessage msg)
         {
-            return;
+            byte messageType = msg.ReadByte();
+
+            switch (messageType)
+            {
+                case (byte)Protocol.MessageType.MsgWorld:
+                    // TODO get the world to parser
+                    // call map class directly? use callback? decisions...
+                    break;
+                default:
+                    // if we get anything else we should fail
+                    // protocol version should protect us from unknowns
+                    break;
+            }
         }
     }
 }
