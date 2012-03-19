@@ -21,10 +21,15 @@ namespace AngryTanks.Client
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private static ServerLink ServerLink;
+
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            ServerLink = new ServerLink();
+            ServerLink.Connect("localhost", 5150);
         }
 
         /// <summary>
