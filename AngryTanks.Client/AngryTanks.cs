@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -22,6 +23,7 @@ namespace AngryTanks.Client
         SpriteBatch spriteBatch;
 
         private static ServerLink ServerLink;
+        private static Map map;
 
         public AngryTanks()
         {
@@ -41,6 +43,10 @@ namespace AngryTanks.Client
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            //Load the map with a dummy local mapfile
+            map = new Map(this, new StreamReader("../../../Content/map_test.txt"));
+            Components.Add(map);
 
             base.Initialize();
         }
@@ -89,9 +95,10 @@ namespace AngryTanks.Client
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            map.Draw(gameTime);
 
             base.Draw(gameTime);
         }

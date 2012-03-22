@@ -93,6 +93,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="AngryTanks.cs" />
     <Compile Include="ServerLink.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="StaticMapObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AngryTanks.ico" />
