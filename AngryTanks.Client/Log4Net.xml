@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<log4net>
+  <appender name="LogFileAppender" type="log4net.Appender.FileAppender">
+    <file value="log.txt" />
+    <!-- Example using environment variables in params -->
+    <!-- <file value="${TMP}\log-file.txt" /> -->
+    <appendToFile value="true" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger [%ndc] 
+                 &lt;%property{auth}&gt; - %message%newline" />
+    </layout>
+    <!-- Alternate layout using XML            
+    <layout type="log4net.Layout.XMLLayout" /> -->
+    <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
+  </appender>
+
+  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    </layout>
+  </appender>
+
+  <!-- Set the default logging level and add the active appenders -->
+  <root>
+    <level value="DEBUG" />
+    <appender-ref ref="LogFileAppender" />
+    <appender-ref ref="ConsoleAppender" />
+  </root>
+</log4net>
