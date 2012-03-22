@@ -20,9 +20,9 @@ namespace AngryTanks.Server
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static byte[] raw_world;
-
+        // TODO fixme
         public static NetServer Server;
+        public static byte[] raw_world;
 
         static void Main(string[] args)
         {
@@ -157,9 +157,8 @@ namespace AngryTanks.Server
         private static void AppLoop()
         {
             NetIncomingMessage msg;
-            NetConnection conn = null;
 
-            byte message_type;
+            Byte message_type;
 
             while (true)
             {
@@ -199,44 +198,29 @@ namespace AngryTanks.Server
                                 break;
                             }
 
-                            // spit out info
-                            Log.DebugFormat("Proto version: {0}", client_proto_version);
-                            Log.DebugFormat("Team: {0}", msg.ReadByte());
-                            Log.DebugFormat("Callsign: {0}", msg.ReadString());
-                            Log.DebugFormat("Tag: {0}", msg.ReadString());
+                            Int16 id = GameKeeper.AddPlayer(msg);
 
-                            // TODO here's where we should store the client
-                            msg.SenderConnection.Approve();
+                            // game is full if AddPlayer returns -1
+                            if (id < 0)
+                            {
+                                // TODO be able to get callsign, etc here without duplicating packet reading code
+                                Log.InfoFormat("Player from {0} tried to join, but the game was full", msg.SenderConnection);
+                                msg.SenderConnection.Deny("the game is currently full");
+                                break;
+                            }
 
-                            conn = msg.SenderConnection;
+                            Player joined_player = GameKeeper.GetPlayerByID((Byte)id);
+
+                            joined_player.Connection.Approve();
 
                             break;
 
                         case NetIncomingMessageType.Data:
-                            message_type = msg.ReadByte();
-
-                            switch (message_type)
-                            {
-                                // we got a request to get the world
-                                case (byte)MessageType.MsgWorld:
-                                    // TODO we should clamp world size to no more than UInt16.Max bytes large
-                                    NetOutgoingMessage world_msg = Server.CreateMessage(1 + 2 + raw_world.Length);
-                                    world_msg.Write((byte)MessageType.MsgWorld);
-                                    world_msg.Write((UInt16)raw_world.Length);
-                                    world_msg.Write(raw_world);
-
-                                    Server.SendMessage(world_msg, conn, NetDeliveryMethod.ReliableOrdered, 0);
-
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            GameKeeper.GetPlayerByConnection(msg.SenderConnection).HandleData(msg);
                             break;
-
+                            
                         default:
-                            // welp... what do we do?
+                            // welp... what shall we do?
                             break;
                     }
 

@@ -90,7 +90,7 @@ namespace AngryTanks.Client
         // TODO actually handle data
         private void HandleData(NetIncomingMessage msg)
         {
-            byte message_type = msg.ReadByte();
+            Byte message_type = msg.ReadByte();
 
             switch (message_type)
             {
@@ -114,7 +114,6 @@ namespace AngryTanks.Client
                     while ((line = sr.ReadLine()) != null)
                     {
                         System.Diagnostics.Debug.Write(line);
-                        ++x;
                     }
                     */
 
