@@ -38,7 +38,7 @@ namespace AngryTanks.Client
 
             // TODO be able to change callsign/tag
             hailMessage.Write((byte)MessageType.MsgEnter);
-            hailMessage.Write((byte)Protocol.ProtocolVersion);
+            hailMessage.Write(Protocol.ProtocolVersion);
             hailMessage.Write((byte)TeamType.RogueTeam);
             hailMessage.Write("Player Callsign");
             hailMessage.Write("Player Tag");

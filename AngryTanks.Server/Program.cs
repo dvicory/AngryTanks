@@ -59,7 +59,7 @@ namespace AngryTanks.Server
                                 break;
                             }
 
-                            byte clientProtoVersion = msg.ReadByte();
+                            UInt16 clientProtoVersion = msg.ReadUInt16();
 
                             if (clientProtoVersion != Protocol.ProtocolVersion)
                             {

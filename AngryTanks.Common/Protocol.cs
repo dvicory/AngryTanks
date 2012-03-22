@@ -7,7 +7,7 @@ namespace AngryTanks.Common
 {
     public class Protocol
     {
-        public readonly static Byte ProtocolVersion = 1;
+        public readonly static UInt16 ProtocolVersion = 2;
 
         public enum MessageType
         {
@@ -17,6 +17,7 @@ namespace AngryTanks.Common
 
         public enum TeamType
         {
+            AutomaticTeam = 240,
             RogueTeam,
             RedTeam,
             GreenTeam,
