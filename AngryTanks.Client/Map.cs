@@ -109,13 +109,18 @@ namespace AngryTanks.Client
         //TO DO: 
         //1) DONE Use world data to set this Map class's fields
         //2) DONE replace dummy box and pyramid construtors with the real ones
-        //3) Add support for finding rotation values
-        //4) Create sub-functions to reduce code duplication in algorithm
+        //3) DONE Add support for finding rotation values
+        //4) DONE Create sub-functions to reduce code duplication in algorithm
         private static LinkedList<StaticMapObject> parseMapFile(StreamReader sr)
         {
             LinkedList<StaticMapObject> map_objects = new LinkedList<StaticMapObject>();
             String line = sr.ReadLine();
-            bool no_corruption = true;
+            bool inBlock = false;
+            Vector2 position = Vector2.Zero;
+            Vector2 size = Vector2.Zero;
+            float rotation = 0;
+            String type = "";
+
             int bad_objects = 0;
 
 
@@ -139,238 +144,68 @@ namespace AngryTanks.Client
                     initialized = false;
                     return map_objects;
                 }
-
             }
             world_size = (float)Convert.ToDecimal(line.Trim().Substring(4, line.Length - 4).Trim());
 
-            Vector2 position;
-            Vector2 size;
-
-
+            //This is not a critical step
+            line = sr.ReadLine();//Flush the 'end' line of the world block (for debugging) 
+            
+            bool got_position = false;
+            bool got_size = false;            
             while ((line = sr.ReadLine()) != null)
             {
-
-                if (line.Contains("box"))
+                line = line.Trim();
+                if (line.Equals("box") || line.Equals("pyramid"))
                 {
-                    no_corruption = true; //Assume all data is there unless it is found to be missing
-
-                    while (!line.Contains("position") && !line.Contains("size"))
-                    {
-
-                        line = sr.ReadLine();
-                        if (line.Contains("end"))
-                        {
-                            bad_objects++;
-                            no_corruption = false;
-                            break;
-                        }
-                        if (line == null)
-                        {
-                            bad_objects++;
-                            return map_objects;
-                        }
-                    }
-
-                    if (no_corruption)
-                    {
-
-                        if (line.Contains("position"))
-                        {
-
-                            String[] coords_p = line.Trim().Substring(9).Split(' ');
-
-                            position.X = (float)Convert.ToDecimal(coords_p[0].Trim());
-                            position.Y = (float)Convert.ToDecimal(coords_p[1].Trim());
-
-                            while (!line.Contains("size"))
-                            {
-                                line = sr.ReadLine();
-                                if (line.Contains("end"))
-                                {
-                                    bad_objects++;
-                                    no_corruption = false;
-                                    break;
-                                }
-                                if (line == null)
-                                {
-                                    bad_objects++;
-                                    return map_objects;
-                                }
-                            }
-                            if (no_corruption)
-                            {
-                                String[] coords_s = line.Trim().Substring(5).Split(' ');
-
-                                size.X = (float)Convert.ToDecimal(coords_s[0].Trim());
-                                size.Y = (float)Convert.ToDecimal(coords_s[1].Trim());
-
-                                map_objects.AddLast(new StaticMapObject(box,
-                                                                        0.0f,
-                                                                        position,
-                                                                        size,
-                                                                        5,
-                                                                        60,
-                                                                        "Box"));
-                            }
-                            else { } //If size cannot be found load nothing from this object to map_objects
-
-                        }
-                        else if (line.Contains("size"))
-                        {
-                            String[] coord_s = line.Trim().Substring(5).Split(' ');
-
-                            size.X = (float)Convert.ToDecimal(coord_s[0].Trim());
-                            size.Y = (float)Convert.ToDecimal(coord_s[1].Trim());
-
-                            while (!line.Contains("position"))
-                            {
-                                line = sr.ReadLine();
-                                if (line.Contains("end"))
-                                {
-                                    bad_objects++;
-                                    no_corruption = false;
-                                    break;
-                                }
-                                if (line == null)
-                                {
-                                    bad_objects++;
-                                    return map_objects;
-                                }
-                            }
-                            //map_objects.AddLast("Exiting Box position loop. Line has: " + line);
-                            if (no_corruption)
-                            {
-                                String[] coords_s = line.Trim().Substring(9).Split(' ');
-
-                                position.X = (float)Convert.ToDecimal(coord_s[0].Trim());
-                                position.Y = (float)Convert.ToDecimal(coord_s[1].Trim());
-
-                                map_objects.AddLast(new StaticMapObject(box,
-                                                                        0.0f,
-                                                                        position,
-                                                                        size,
-                                                                        5,
-                                                                        60,
-                                                                        "Box"));
-                            }
-                            else { } //If size cannot be found load nothing from this object to map_objects
-
-                        } //map_objects.AddLast("Exiting Box size loop. Line has: " + line);
-                    } //map_objects.AddLast("Exiting Box position Or size loop. Line has: " + line);
-
-                    //map_objects.AddLast("Exiting Box if-block. Line has: " + line);
-                }
-                else if (line.Contains("pyramid"))
-                {
-                    no_corruption = true; //Assume all data is there unless it is found missing
-                    //map_objects.AddLast("Found a Pyramid line");
-                    while (!line.Contains("position") && !line.Contains("size"))
-                    {
-                        //map_objects.AddLast("Searching for position or size of object");
-                        line = sr.ReadLine();
-                        if (line.Contains("end"))
-                        {
-                            bad_objects++;
-                            no_corruption = false;
-                            break;
-                        }
-                        if (line == null)
-                        {
-                            bad_objects++;
-                            return map_objects;
-                        }
-                    }
-                    //map_objects.AddLast("Exiting pyramid position Or size loop: " + line);
-                    if (no_corruption)
-                    {
-                        //map_objects.AddLast("Found pyramid position or size line");
-                        if (line.Contains("position"))
-                        {
-                            //map_objects.AddLast("Found a pyramid Position line");
-                            String[] coords = line.Trim().Substring(9).Split(' ');
-
-                            position.X = (float)Convert.ToDecimal(coords[0].Trim());
-                            position.Y = (float)Convert.ToDecimal(coords[1].Trim());
-
-                            while (!line.Contains("size"))
-                            {
-                                line = sr.ReadLine();
-                                if (line.Contains("end"))
-                                {
-                                    bad_objects++;
-                                    no_corruption = false;
-                                    break;
-                                }
-                                if (line == null)
-                                {
-                                    bad_objects++;
-                                    return map_objects;
-                                }
-                            }
-                            if (no_corruption)
-                            {
-                                String[] coord_s = line.Trim().Substring(5).Split(' ');
-
-                                size.X = (float)Convert.ToDecimal(coord_s[0].Trim());
-                                size.Y = (float)Convert.ToDecimal(coord_s[1].Trim());
-
-                                map_objects.AddLast(new StaticMapObject(pyramid,
-                                                                        0.0f,
-                                                                        position,
-                                                                        size,
-                                                                        5,
-                                                                        60,
-                                                                        "Pyramid"));
-                            }
-                            else { } //If size cannot be found load nothing from this object to map_objects
-
-                        }
-                        else if (line.Contains("size"))
-                        {
-                            String[] coords_s = line.Trim().Substring(5).Split(' ');
-
-                            size.X = (float)Convert.ToDecimal(coords_s[0].Trim());
-                            size.Y = (float)Convert.ToDecimal(coords_s[1].Trim());
-
-                            while (!line.Contains("position"))
-                            {
-                                line = sr.ReadLine();
-                                if (line.Contains("end"))
-                                {
-                                    bad_objects++;
-                                    no_corruption = false;
-                                    break;
-                                }
-                                if (line == null)
-                                {
-                                    bad_objects++;
-                                    return map_objects;
-                                }
-                            }
-                            if (no_corruption)
-                            {
-                                String[] coordss_s = line.Trim().Substring(9).Split(' ');
-
-                                position.X = (float)Convert.ToDecimal(coordss_s[0].Trim());
-                                position.Y = (float)Convert.ToDecimal(coordss_s[1].Trim());
-
-                                map_objects.AddLast(new StaticMapObject(pyramid,
-                                                                        0.0f,
-                                                                        position,
-                                                                        size,
-                                                                        5,
-                                                                        60,
-                                                                        "Pyramid"));
-                            }
-                            else { } //If size cannot be found, load nothing from this object to map_objects
-                        }
-                    }
-
+                    inBlock = true;
+                    type = line.Split(' ')[0];
                 }
 
+                if (inBlock)
+                {
+                    if (line.Contains("position"))
+                    {
+                        position = new Vector2(0, 0);
+                        String[] coords = line.Trim().Substring(9).Split(' ');
+                        position.X = (float)Convert.ToDecimal(coords[0].Trim());
+                        position.Y = (float)Convert.ToDecimal(coords[1].Trim());
+                        got_position = true;
+                    }
+                    if (line.Contains("size"))
+                    {
+                        size = new Vector2(0, 0);
+                        String[] coords = line.Trim().Substring(5).Split(' ');
+                        size.X = (float)Convert.ToDecimal(coords[0].Trim());
+                        size.Y = (float)Convert.ToDecimal(coords[1].Trim());
+                        got_size = true;
+                    }
+                    if (line.Contains("rotation"))
+                    {
+                        String[] coords = line.Trim().Substring(9).Split(' ');
+                        rotation = (float)Convert.ToDecimal(coords[0].Trim());
+                    }
+                }
+                if (line.Equals("end"))
+                {
+                    inBlock = false;
+                    if (got_position && got_size)
+                    {
+                        if(type.Equals("box"))
+                            map_objects.AddLast(new StaticMapObject(box, rotation, position, size, 0, 60, type));
+                        if (type.Equals("pyramid"))
+                            map_objects.AddLast(new StaticMapObject(pyramid, rotation, position, size, 0, 60, type));
+                    }
+                    else
+                    {
+                        bad_objects++;
+                    }
+                    got_position = false;
+                    got_size = false;
+                    rotation = 0;
+                    
+                }
 
             }
-            //map_objects.AddLast("Object searching loop finished");   
             return map_objects;
         }
     }
