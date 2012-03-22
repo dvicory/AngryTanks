@@ -8,6 +8,9 @@ using Lidgren.Network;
 
 namespace AngryTanks.Client
 {
+    using MessageType = Protocol.MessageType;
+    using TeamType = Protocol.TeamType;
+
     class ServerLink : NetClient
     {
         private static NetPeerConfiguration Config;
@@ -34,9 +37,9 @@ namespace AngryTanks.Client
             NetOutgoingMessage hailMessage = CreateMessage();
 
             // TODO be able to change callsign/tag
-            hailMessage.Write((byte)Protocol.MessageType.MsgEnter);
+            hailMessage.Write((byte)MessageType.MsgEnter);
             hailMessage.Write((byte)Protocol.ProtocolVersion);
-            hailMessage.Write((byte)Protocol.TeamType.RogueTeam);
+            hailMessage.Write((byte)TeamType.RogueTeam);
             hailMessage.Write("Player Callsign");
             hailMessage.Write("Player Tag");
 
@@ -61,6 +64,9 @@ namespace AngryTanks.Client
                     default:
                         break;
                 }
+
+                // reduce GC pressure by recycling
+                Recycle(msg);
             }
         }
 
@@ -71,7 +77,7 @@ namespace AngryTanks.Client
 
             switch (messageType)
             {
-                case (byte)Protocol.MessageType.MsgWorld:
+                case (byte)MessageType.MsgWorld:
                     // TODO get the world to parser
                     // call map class directly? use callback? decisions...
                     break;

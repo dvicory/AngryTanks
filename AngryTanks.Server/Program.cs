@@ -83,6 +83,9 @@ namespace AngryTanks.Server
                             // welp... what do we do?
                             break;
                     }
+
+                    // reduce GC pressure by recycling
+                    Server.Recycle(msg);
                 }
 
                 // we must sleep otherwise we will lock everything up
