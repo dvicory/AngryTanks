@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using log4net;
+
 namespace AngryTanks.Client
 {
     /// <summary>
@@ -19,11 +21,13 @@ namespace AngryTanks.Client
     /// </summary>
     public class AngryTanks : Microsoft.Xna.Framework.Game
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         private static ServerLink ServerLink;
-        private static Map map;
+        public Map Map;
 
         public AngryTanks()
         {
@@ -31,7 +35,7 @@ namespace AngryTanks.Client
             Content.RootDirectory = "Content";
 
             ServerLink = new ServerLink();
-            ServerLink.Connect("localhost", 5150);
+            ServerLink.Connect("localhost", 5150, MapLoaded);
         }
 
         /// <summary>
@@ -44,9 +48,9 @@ namespace AngryTanks.Client
         {
             // TODO: Add your initialization logic here
 
-            //Load the map with a dummy local mapfile
-            map = new Map(this, new StreamReader("../../../Content/map_test.txt"));
-            Components.Add(map);
+            // intantiate a map
+            Map = new Map(this);
+            Map.Initialize(GraphicsDevice);
 
             base.Initialize();
         }
@@ -61,6 +65,7 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            Map.LoadContent(Content);
         }
 
         /// <summary>
@@ -98,9 +103,18 @@ namespace AngryTanks.Client
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            map.Draw(gameTime);
+            if (ServerLink.GotWorld)
+                Map.Draw(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        // TODO make this a more generic ServerLinkStateChanged
+        private void MapLoaded(StreamReader map)
+        {
+            Log.Debug("AngryTanks.MapLoaded");
+
+            Map.LoadMap(map);
         }
     }
 }

@@ -20,8 +20,17 @@ namespace AngryTanks.Client
 
         private static NetPeerConfiguration Config;
 
+        private Action<StreamReader> MapLoadedCallback;
+
         // TODO make this more robust... need connection state
         private bool got_world = false;
+        public bool GotWorld
+        {
+            get
+            {
+                return got_world;
+            }
+        }
 
         public ServerLink()
             : base(SetupConfig())
@@ -40,14 +49,16 @@ namespace AngryTanks.Client
             return Config;
         }
 
-        new public NetConnection Connect(string host, int port)
+        public NetConnection Connect(string host, int port, Action<StreamReader> mapLoadedCallback)
         {
+            MapLoadedCallback = mapLoadedCallback; 
+
             NetOutgoingMessage hailMessage = CreateMessage();
 
             // TODO be able to change callsign/tag
-            hailMessage.Write((byte)MessageType.MsgEnter);
+            hailMessage.Write((Byte)MessageType.MsgEnter);
             hailMessage.Write(Protocol.ProtocolVersion);
-            hailMessage.Write((byte)TeamType.RogueTeam);
+            hailMessage.Write((Byte)TeamType.RogueTeam);
             hailMessage.Write("Player Callsign");
             hailMessage.Write("Player Tag");
 
@@ -81,7 +92,7 @@ namespace AngryTanks.Client
             {
                 NetOutgoingMessage map_request = CreateMessage();
 
-                map_request.Write((byte)MessageType.MsgWorld);
+                map_request.Write((Byte)MessageType.MsgWorld);
 
                 SendMessage(map_request, NetDeliveryMethod.ReliableOrdered, 0);
             }
@@ -90,38 +101,32 @@ namespace AngryTanks.Client
         // TODO actually handle data
         private void HandleData(NetIncomingMessage msg)
         {
-            Byte message_type = msg.ReadByte();
+            Byte messageType = msg.ReadByte();
 
-            switch (message_type)
+            switch (messageType)
             {
-                case (byte)MessageType.MsgWorld:
-                    // TODO get the world to parser
-                    // call map class directly? use callback? decisions...
+                case (Byte)MessageType.MsgWorld:
                     Log.Debug("Got MsgWorld");
 
                     UInt16 map_len = msg.ReadUInt16();
 
-                    byte[] raw_world = new byte[map_len];
-                    raw_world = msg.ReadBytes((int)map_len);
+                    Byte[] raw_world = new Byte[map_len];
+                    raw_world = msg.ReadBytes(map_len);
 
                     got_world = true;
 
-                    /*
                     MemoryStream ms = new MemoryStream(raw_world);
                     StreamReader sr = new StreamReader(ms);
-                    string line;
 
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        System.Diagnostics.Debug.Write(line);
-                    }
-                    */
+                    MapLoadedCallback(sr);
 
                     break;
+
                 default:
                     // if we get anything else we should fail
                     // protocol version should protect us from unknowns
                     break;
+
             }
         }
     }

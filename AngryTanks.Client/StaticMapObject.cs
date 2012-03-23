@@ -31,11 +31,11 @@ namespace AngryTanks.Client
                                int collisionOffset,
                                int millisecondsPerFrame,
                                string type)
-            :base(textureImage, rotation, position, scale_size, /*frameSize*/ new Point(textureImage.Width, textureImage.Height),
+            : base(textureImage, rotation, position, scale_size, /*frameSize*/ new Point(textureImage.Width, textureImage.Height),
         collisionOffset, /*currentFrame*/Point.Zero, /*sheetSize*/ Point.Zero, /*speed*/Vector2.Zero,
         millisecondsPerFrame)
         {
-             this.type = type; 
+             this.type = type;
         }
     }
 }

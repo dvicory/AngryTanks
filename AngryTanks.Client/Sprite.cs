@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using log4net;
 
 namespace AngryTanks.Client
 {
@@ -23,6 +24,8 @@ namespace AngryTanks.Client
     /// </summary>
     public class Sprite 
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         Texture2D textureImage;
         protected float rotation;
         protected Vector2 position;
