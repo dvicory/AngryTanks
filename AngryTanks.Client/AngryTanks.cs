@@ -36,6 +36,7 @@ namespace AngryTanks.Client
 
             ServerLink = new ServerLink();
             ServerLink.Connect("localhost", 5150, MapLoaded);
+            
         }
 
         /// <summary>
@@ -51,6 +52,7 @@ namespace AngryTanks.Client
             // intantiate a map
             Map = new Map(this);
             Map.Initialize(GraphicsDevice);
+            
 
             base.Initialize();
         }
@@ -65,7 +67,7 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            Map.LoadContent(Content);
+            Map.LoadContent(Content);            
         }
 
         /// <summary>
