@@ -49,8 +49,8 @@ namespace AngryTanks.Client
         private void AttachTestEventHandlers()
         {
             PositionChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_PositionChangedEvent);
-            SizeChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_SizeChangedEvent);
-            RotationChangedEvent += new EventHandler<StateChangedEvent<Single>>(DynamicSprite_RotationChangedEvent);
+            SizeChangedEvent     += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_SizeChangedEvent);
+            RotationChangedEvent += new EventHandler<StateChangedEvent<Single>> (DynamicSprite_RotationChangedEvent);
             VelocityChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_VelocityChangedEvent);
         }
 
@@ -61,17 +61,17 @@ namespace AngryTanks.Client
 
         private void DynamicSprite_SizeChangedEvent(object sender, StateChangedEvent<Vector2> e)
         {
-            Log.DebugFormat("received size change event (old position: {0}, new position: {1}", e.OldValue, e.NewValue);
+            Log.DebugFormat("received size change event (old size: {0}, new size: {1}", e.OldValue, e.NewValue);
         }
 
         private void DynamicSprite_RotationChangedEvent(object sender, StateChangedEvent<Single> e)
         {
-            Log.DebugFormat("received rotation change event (old position: {0}, new position: {1}", e.OldValue, e.NewValue);
+            Log.DebugFormat("received rotation change event (old rotation: {0}, new rotation: {1}", e.OldValue, e.NewValue);
         }
 
         private void DynamicSprite_VelocityChangedEvent(object sender, StateChangedEvent<Vector2> e)
         {
-            Log.DebugFormat("received velocity change event (old position: {0}, new position: {1}", e.OldValue, e.NewValue);
+            Log.DebugFormat("received velocity change event (old velocity: {0}, new velocity: {1}", e.OldValue, e.NewValue);
         }
 
         #endregion
