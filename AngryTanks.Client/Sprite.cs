@@ -44,5 +44,10 @@ namespace AngryTanks.Client
             this.Size     = size;
             this.Rotation = rotation;
         }
+
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            // TODO actually draw, revisit parameters
+        }
     }
 }

@@ -85,62 +85,66 @@ namespace AngryTanks.Client
          * 
          */
 
+        private   Vector2 _Position;
         protected Vector2 OldPosition, NewPosition;
 
         protected override Vector2 Position
         {
             get
             {
-                return Position;
+                return _Position;
             }
             set
             {
                 FireChangeEvent<Vector2>(PositionChangedEvent, Position, value);
-                Position = value;
+                _Position = value;
             }
         }
+
+        private Vector2 _Size;
 
         protected override Vector2 Size
         {
             get
             {
-                return Size;
+                return _Size;
             }
             set
             {
                 FireChangeEvent<Vector2>(SizeChangedEvent, Size, value);
-                Size = value;
+                _Size = value;
             }
         }
+
+        private Single _Rotation;
 
         protected override Single Rotation
         {
             get
             {
-                return Rotation;
+                return _Rotation;
             }
             set
             {
                 FireChangeEvent<Single>(RotationChangedEvent, Rotation, value);
-                Rotation = value;
+                _Rotation = value;
             }
         }
 
         // Velocity is backed by _Velocity, this is so we can set it initially in the constructor without firing an event or doing our funky velocity stuff
         private   Vector2 _Velocity;
-
         protected Vector2 OldVelocity, NewVelocity;
 
         protected virtual Vector2 Velocity
         {
             get
             {
-                return Velocity;
+                return _Velocity;
             }
             set
             {
                 FireChangeEvent<Vector2>(VelocityChangedEvent, Velocity, value);
-                Velocity = value;
+                _Velocity = value;
             }
         }
 
@@ -165,11 +169,6 @@ namespace AngryTanks.Client
         public virtual void Update(GameTime gameTime)
         {
             // TODO implement changing position and velocity
-        }
-
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            // TODO actually draw, revisit parameters
         }
     }
 }
