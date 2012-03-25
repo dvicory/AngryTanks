@@ -33,7 +33,7 @@ namespace AngryTanks.Client
         private static Texture2D pyramid;   //Used to construct StaticMapObjects
         private static Texture2D box;       //Used to construct StaticMapObjects
         private static Texture2D background;//Used to tile a background (Not happening yet)
-        LinkedList<StaticMapObject> static_layer = new LinkedList<StaticMapObject>();
+        List<StaticMapObject> static_layer = new List<StaticMapObject>();
 
         //Return the status of the Map
         public bool isInitialized()
@@ -121,62 +121,53 @@ namespace AngryTanks.Client
          * Takes in a StreamReader object and returns a LinkList of Strings
          * describing the world, boxes, and pyramids found in the stream.
          * 
-         * TODO:
-         * 1) DONE Use world data to set this Map class's fields
-         * 2) DONE replace dummy box and pyramid construtors with the real ones
-         * 3) DONE Add support for finding rotation values
-         * 4) DONE Create sub-functions to reduce code duplication in algorithm
+         * IF THERE IS NO WORLD DATA this will set the world name and size to default
+         * values 'No Name' and 800.
          * 
          */
-        private static LinkedList<StaticMapObject> parseMapFile(StreamReader sr)
+        private static List<StaticMapObject> parseMapFile(StreamReader sr)
         {
-            LinkedList<StaticMapObject> map_objects = new LinkedList<StaticMapObject>();
-            String line = sr.ReadLine();
+            List<StaticMapObject> map_objects = new List<StaticMapObject>();
+            String line;
+            bool inWorldBlock = false;
             bool inBlock = false;
             Vector2 position = Vector2.Zero;
             Vector2 size = Vector2.Zero;
             float rotation = 0;
-            String type = "";
-
-            int bad_objects = 0;
-
-            while (!line.Trim().Contains("name"))
-            {
-                line = sr.ReadLine();
-                if (line == null)
-                {
-                    initialized = false;
-                    return map_objects;
-                }
-
-            }
-            world_name = line.Trim().Substring(4, line.Length - 4).Trim();
-
-            while (!line.Trim().Contains("size"))
-            {
-                line = sr.ReadLine();
-                if (line == null)
-                {
-                    initialized = false;
-                    return map_objects;
-                }
-            }
-            world_size = (int)Convert.ToDecimal(line.Trim().Substring(4, line.Length - 4).Trim());
-
-            // this is not a critical step
-            line = sr.ReadLine(); // flush the 'end' line of the world block (for debugging) 
-            
+            String type = ""; // Identifier to indicate which texture to construct
+            int bad_objects = 0; // Counts object blocks that failed to load                              
             bool got_position = false;
             bool got_size = false;
+
+            //Default values will be overidden if found in the file
+            world_name = "No Name";
+            world_size = 800;
+
             while ((line = sr.ReadLine()) != null)
             {
                 line = line.Trim();
+                if (line.Equals("world"))
+                {
+                    inWorldBlock = true;
+                    inBlock = false;
+                }
                 if (line.Equals("box") || line.Equals("pyramid"))
                 {
+                    inWorldBlock = false;
                     inBlock = true;
                     type = line.Split(' ')[0];
                 }
-
+                if (inWorldBlock)
+                {
+                    if (line.Contains("name"))
+                    {
+                        world_name = line.Trim().Substring(4, line.Length - 4).Trim();
+                    }
+                    if (line.Contains("size"))
+                    {
+                        world_size = (int)Convert.ToDecimal(line.Trim().Substring(4, line.Length - 4).Trim());
+                    }
+                }
                 if (inBlock)
                 {
                     if (line.Contains("position"))
@@ -206,10 +197,10 @@ namespace AngryTanks.Client
                     inBlock = false;
                     if (got_position && got_size)
                     {
-                        if(type.Equals("box"))
-                            map_objects.AddLast(new StaticMapObject(box, rotation, position, size, 0, 60, type));
+                        if (type.Equals("box"))
+                            map_objects.Add(new StaticMapObject(box, rotation, position, size, 0, 60, type));
                         if (type.Equals("pyramid"))
-                            map_objects.AddLast(new StaticMapObject(pyramid, rotation, position, size, 0, 60, type));
+                            map_objects.Add(new StaticMapObject(pyramid, rotation, position, size, 0, 60, type));
                     }
                     else
                     {
@@ -218,7 +209,6 @@ namespace AngryTanks.Client
                     got_position = false;
                     got_size = false;
                     rotation = 0;
-                    
                 }
 
             }
