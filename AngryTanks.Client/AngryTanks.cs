@@ -29,6 +29,10 @@ namespace AngryTanks.Client
         private static ServerLink ServerLink;
         public Map Map;
 
+        Texture2D texture;
+        Vector2 position;
+        PlayerControlledSprite playerSprite;
+
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,6 +40,7 @@ namespace AngryTanks.Client
 
             ServerLink = new ServerLink();
             ServerLink.Connect("localhost", 5150, MapLoaded);
+            
         }
 
         /// <summary>
@@ -52,6 +57,10 @@ namespace AngryTanks.Client
             Map = new Map(this);
             Map.Initialize(GraphicsDevice);
 
+            texture = Content.Load<Texture2D>("textures/tank");
+            position = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
+            playerSprite = new PlayerControlledSprite(texture, position, Vector2.Zero, 0.0f);
+
             base.Initialize();
         }
 
@@ -65,7 +74,7 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            Map.LoadContent(Content);
+            Map.LoadContent(Content);            
         }
 
         /// <summary>
@@ -91,6 +100,8 @@ namespace AngryTanks.Client
             // TODO: Add your update logic here
             ServerLink.Update();
 
+            playerSprite.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -105,6 +116,8 @@ namespace AngryTanks.Client
             // TODO: Add your drawing code here
             if (ServerLink.GotWorld)
                 Map.Draw(gameTime);
+
+            playerSprite.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }
