@@ -26,16 +26,18 @@ namespace AngryTanks.Client
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private static ServerLink ServerLink;
-        public Map Map;
+        private static ServerLink serverLink;
+        //public Map map;
+
+        private World world;
 
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            ServerLink = new ServerLink();
-            ServerLink.Connect("localhost", 5150, MapLoaded);
+            serverLink = new ServerLink();
+            serverLink.Connect("localhost", 5150, MapLoaded);
         }
 
         /// <summary>
@@ -49,8 +51,9 @@ namespace AngryTanks.Client
             // TODO: Add your initialization logic here
 
             // intantiate a map
-            Map = new Map(this);
-            Map.Initialize(GraphicsDevice);
+            //map = new Map(this);
+            //map.Initialize(GraphicsDevice);
+            world = new World(Services);
 
             base.Initialize();
         }
@@ -65,7 +68,8 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            Map.LoadContent(Content);
+            //map.LoadContent(Content);
+            world.LoadContent();
         }
 
         /// <summary>
@@ -89,7 +93,9 @@ namespace AngryTanks.Client
                 this.Exit();
 
             // TODO: Add your update logic here
-            ServerLink.Update();
+            serverLink.Update();
+
+            world.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -103,8 +109,11 @@ namespace AngryTanks.Client
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            if (ServerLink.GotWorld)
-                Map.Draw(gameTime);
+            /*
+            if (serverLink.GotWorld)
+                map.Draw(gameTime);
+            */
+            world.Draw(gameTime);
 
             base.Draw(gameTime);
         }
@@ -114,7 +123,7 @@ namespace AngryTanks.Client
         {
             Log.Debug("AngryTanks.MapLoaded");
 
-            Map.LoadMap(map);
+            //map.LoadMap(map);
         }
     }
 }

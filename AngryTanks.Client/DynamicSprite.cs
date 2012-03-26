@@ -10,7 +10,6 @@ namespace AngryTanks.Client
 {
     public class StateChangedEvent<T> : EventArgs
     {
-        public readonly string Message;
         public readonly T OldValue, NewValue;
 
         public StateChangedEvent(T oldValue, T newValue)
@@ -28,7 +27,7 @@ namespace AngryTanks.Client
 
         public event EventHandler<StateChangedEvent<Vector2>> PositionChangedEvent;
         public event EventHandler<StateChangedEvent<Vector2>> SizeChangedEvent;
-        public event EventHandler<StateChangedEvent<Single>>  RotationChangedEvent;
+        public event EventHandler<StateChangedEvent<Double>> RotationChangedEvent;
         public event EventHandler<StateChangedEvent<Vector2>> VelocityChangedEvent;
 
         protected void FireChangeEvent<T>(EventHandler<StateChangedEvent<T>> handler, T oldValue, T newValue)
@@ -50,7 +49,7 @@ namespace AngryTanks.Client
         {
             PositionChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_PositionChangedEvent);
             SizeChangedEvent     += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_SizeChangedEvent);
-            RotationChangedEvent += new EventHandler<StateChangedEvent<Single>> (DynamicSprite_RotationChangedEvent);
+            RotationChangedEvent += new EventHandler<StateChangedEvent<Double>>(DynamicSprite_RotationChangedEvent);
             VelocityChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_VelocityChangedEvent);
         }
 
@@ -64,7 +63,7 @@ namespace AngryTanks.Client
             Log.DebugFormat("received size change event (old size: {0}, new size: {1}", e.OldValue, e.NewValue);
         }
 
-        private void DynamicSprite_RotationChangedEvent(object sender, StateChangedEvent<Single> e)
+        private void DynamicSprite_RotationChangedEvent(object sender, StateChangedEvent<Double> e)
         {
             Log.DebugFormat("received rotation change event (old rotation: {0}, new rotation: {1}", e.OldValue, e.NewValue);
         }
@@ -85,82 +84,70 @@ namespace AngryTanks.Client
          * 
          */
 
-        private   Vector2 _Position;
-        protected Vector2 OldPosition, NewPosition;
+        private   Vector2 position;
+        protected Vector2 oldPosition, newPosition;
 
         protected override Vector2 Position
         {
-            get
-            {
-                return _Position;
-            }
+            get { return position; }
             set
             {
                 FireChangeEvent<Vector2>(PositionChangedEvent, Position, value);
-                _Position = value;
+                position = value;
             }
         }
 
-        private Vector2 _Size;
+        private Vector2 size;
 
         protected override Vector2 Size
         {
-            get
-            {
-                return _Size;
-            }
+            get { return size; }
             set
             {
                 FireChangeEvent<Vector2>(SizeChangedEvent, Size, value);
-                _Size = value;
+                size = value;
             }
         }
 
-        private Single _Rotation;
+        private Double rotation;
 
-        protected override Single Rotation
+        protected override Double Rotation
         {
-            get
-            {
-                return _Rotation;
-            }
+            get { return rotation; }
             set
             {
-                FireChangeEvent<Single>(RotationChangedEvent, Rotation, value);
-                _Rotation = value;
+                FireChangeEvent<Double>(RotationChangedEvent, Rotation, value);
+                rotation = value;
             }
         }
 
-        // Velocity is backed by _Velocity, this is so we can set it initially in the constructor without firing an event or doing our funky velocity stuff
-        private   Vector2 _Velocity;
-        protected Vector2 OldVelocity, NewVelocity;
+        // Velocity is backed by velocity, this is so we can set it initially in the constructor without firing an event or doing our funky velocity stuff
+        private   Vector2 velocity;
+        protected Vector2 oldVelocity, newVelocity;
 
         protected virtual Vector2 Velocity
         {
-            get
-            {
-                return _Velocity;
-            }
+            get { return velocity; }
             set
             {
                 FireChangeEvent<Vector2>(VelocityChangedEvent, Velocity, value);
-                _Velocity = value;
+                velocity = value;
             }
         }
 
         #endregion
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
             : base(texture, position, size, rotation)
         {
             if (Log.IsDebugEnabled)
                 AttachTestEventHandlers();
         }
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Vector2 velocity)
             : base(texture, position, size, rotation)
         {
-            this._Velocity = velocity;
+            this.velocity = velocity;
 
             if (Log.IsDebugEnabled)
                 AttachTestEventHandlers();

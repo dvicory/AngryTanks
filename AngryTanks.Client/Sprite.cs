@@ -13,31 +13,27 @@ namespace AngryTanks.Client
 
         protected virtual Texture2D Texture
         {
-            get;
-            set;
+            get; set;
         }
 
         protected virtual Vector2 Position
         {
-            get;
-            set;
+            get; set;
         }
 
         protected virtual Vector2 Size
         {
-            get;
-            set;
+            get; set;
         }
 
-        protected virtual Single Rotation
+        protected virtual Double Rotation
         {
-            get;
-            set;
+            get; set;
         }
 
         #endregion
 
-        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
         {
             this.Texture  = texture;
             this.Position = position;
