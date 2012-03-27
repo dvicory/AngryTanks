@@ -98,7 +98,7 @@ namespace AngryTanks.Client
                 this.Exit();
 
             // TODO: Add your update logic here
-            ServerLink.Update();
+            //ServerLink.Update();
 
             playerSprite.Update(gameTime);
 

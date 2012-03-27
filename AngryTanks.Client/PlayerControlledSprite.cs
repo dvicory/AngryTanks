@@ -50,21 +50,21 @@ namespace AngryTanks.Client
                  *  OldVelocity = Velocity;
                  *  Position += (OldVelocity + Velocity) * 0.5 * dt;
                  *  
-                 *  But.. the tanks move to the right, not forward.
+                 *  Fixed thanks to Daniel G.
                  */
 
-                velocityFactor = 1;
-                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Sin(Rotation);
-                NewVelocity.Y = velocityFactor * maxVelocity * -1 * (float)Math.Cos(Rotation);
+                velocityFactor = -1;
+                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Cos(Rotation + Math.PI / 2);
+                NewVelocity.Y = velocityFactor * maxVelocity * (float)Math.Sin(Rotation + Math.PI / 2);
 
                 OldVelocity = NewVelocity;
                 Position += (OldVelocity + NewVelocity) * 0.5f;
             }
             else if (kb.IsKeyDown(Keys.S))
             {
-                velocityFactor = -1;
-                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Sin(Rotation);
-                NewVelocity.Y = velocityFactor * maxVelocity * -1 * (float)Math.Cos(Rotation);
+                velocityFactor = 1;
+                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Cos(Rotation + Math.PI / 2);
+                NewVelocity.Y = velocityFactor * maxVelocity * (float)Math.Sin(Rotation + Math.PI / 2);
 
                 OldVelocity = NewVelocity;
                 Position += (OldVelocity + NewVelocity) * 0.5f;
