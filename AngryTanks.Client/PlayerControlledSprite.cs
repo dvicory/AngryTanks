@@ -54,14 +54,22 @@ namespace AngryTanks.Client
                  */
 
                 velocityFactor = 1;
-                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Cos(Rotation);
-                NewVelocity.Y = velocityFactor * maxVelocity * (float)Math.Sin(Rotation);
+                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Sin(Rotation);
+                NewVelocity.Y = velocityFactor * maxVelocity * -1 * (float)Math.Cos(Rotation);
 
-                Position += (OldVelocity + NewVelocity) * 0.5f;
                 OldVelocity = NewVelocity;
+                Position += (OldVelocity + NewVelocity) * 0.5f;
             }
-            //else if (kb.IsKeyDown(Keys.S))
-                
+            else if (kb.IsKeyDown(Keys.S))
+            {
+                velocityFactor = -1;
+                NewVelocity.X = velocityFactor * maxVelocity * (float)Math.Sin(Rotation);
+                NewVelocity.Y = velocityFactor * maxVelocity * -1 * (float)Math.Cos(Rotation);
+
+                OldVelocity = NewVelocity;
+                Position += (OldVelocity + NewVelocity) * 0.5f;
+            }
+            
 
 
             if (kb.IsKeyDown(Keys.A))
