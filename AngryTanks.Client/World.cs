@@ -58,12 +58,12 @@ namespace AngryTanks.Client
             backgroundTexture = contentManager.Load<Texture2D>("textures/bz/std_ground");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
 
-            // let's make some test boxes
-            mapObjects.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), -Math.PI, Color.Yellow));
+            // let's make some test boxes                        
             mapObjects.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
-            mapObjects.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
+            mapObjects.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));            
             mapObjects.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            mapObjects.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), -(Math.PI * 45 / 180), Color.Red));
+            mapObjects.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI/4, Color.Red));
+            mapObjects.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));            
         }
 
         public virtual void Update(GameTime gameTime)
@@ -163,14 +163,15 @@ namespace AngryTanks.Client
 
             spriteBatch.End();
 
-            // the explanation of Immediate mode and the Wrapping can be found in Box. ideally this should be fixed...
+            //Immediate mode and the Wrapping are no longer used for this Draw pass.
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                              SpriteSortMode.Immediate,
+                              SpriteSortMode.BackToFront, //Returned to BackToFront
                               SaveStateMode.None,
                               camera.GetViewMatrix());
 
-            graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            //No longer using Wrapping
+            //graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            //graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
             foreach (Sprite mapObject in mapObjects)
                 mapObject.Draw(gameTime, spriteBatch);

@@ -33,6 +33,8 @@ namespace AngryTanks.Client
         /*
          * TODO:
          * 1) check to make sure this is the correct box model
+         *  
+         * ** problem 2) is FIXED - I think**
          * 2) currently the source rectangle must be the full size (you can shift it so it starts in negative
          *    but it still must be the full size). another issue is that you must be in Immediate SpriteSortMode
          *    and Wrap TextureAddressMode. this means that your textures tile if the size is greater than the
@@ -78,8 +80,13 @@ namespace AngryTanks.Client
                                            (int)Position.Y,
                                            (int)Size.X,
                                            (int)Size.Y),
-                             new Rectangle(0, 0, (int)Size.X, (int)Size.Y),
-                             color, (float)Rotation, Size / 2, SpriteEffects.None, 0);
+                             //Set source relative to the texture dimensions
+                             new Rectangle(0, 0, (int)Texture.Width, (int)Texture.Height),
+                             color,
+                             (float)Rotation,
+                             //Set the origin relaitive to the textures dimensions
+                             new Vector2(Texture.Width/2,Texture.Height/2),
+                             SpriteEffects.None, 0);
         }
     }
 }
