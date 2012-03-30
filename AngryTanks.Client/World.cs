@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -30,7 +31,14 @@ namespace AngryTanks.Client
         private ContentManager contentManager;
 
         // background texture
-        private Texture2D backgroundTexture, boxTexture;
+        static private Texture2D backgroundTexture, boxTexture, pyramidTexture;
+
+        // the world data;
+        public static String world_name;
+        public static int world_size;
+
+        // world unit to pixel conversion factor
+        public static int worldToPixel = 10;
 
         // list of map objects, which are all static sprites
         private List<StaticSprite> mapObjects = new List<StaticSprite>();
@@ -55,15 +63,17 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // load textures
-            backgroundTexture = contentManager.Load<Texture2D>("textures/bz/std_ground");
+            backgroundTexture = contentManager.Load<Texture2D>("textures/bz/b");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
+            pyramidTexture = contentManager.Load<Texture2D>("textures/bz/pyramid");
 
-            // let's make some test boxes
-            mapObjects.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), -Math.PI, Color.Yellow));
+
+            // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED                       
             mapObjects.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
-            mapObjects.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
+            mapObjects.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));            
             mapObjects.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            mapObjects.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), -(Math.PI * 45 / 180), Color.Red));
+            mapObjects.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI/4, Color.Red));
+            mapObjects.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));            
         }
 
         public virtual void Update(GameTime gameTime)
@@ -73,13 +83,13 @@ namespace AngryTanks.Client
 
             // move the camera
             if (ks.IsKeyDown(Keys.Up))
-                camera.Move(new Vector2(0, -50), true);
+                camera.Move(new Vector2(0, -25), true);
             if (ks.IsKeyDown(Keys.Down))
-                camera.Move(new Vector2(0, 50), true);
+                camera.Move(new Vector2(0, 25), true);
             if (ks.IsKeyDown(Keys.Left))
-                camera.Move(new Vector2(-50, 0), true);
+                camera.Move(new Vector2(-25, 0), true);
             if (ks.IsKeyDown(Keys.Right))
-                camera.Move(new Vector2(50, 0), true);
+                camera.Move(new Vector2(25, 0), true);
             if (ks.IsKeyDown(Keys.Home))
                 camera.LookAt(Vector2.Zero);
 
@@ -163,19 +173,130 @@ namespace AngryTanks.Client
 
             spriteBatch.End();
 
-            // the explanation of Immediate mode and the Wrapping can be found in Box. ideally this should be fixed...
+            //Immediate mode and the Wrapping are no longer used for this Draw pass.
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                              SpriteSortMode.Immediate,
+                              SpriteSortMode.BackToFront, //Returned to BackToFront
                               SaveStateMode.None,
                               camera.GetViewMatrix());
 
-            graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            //No longer using Wrapping
+            //graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            //graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
             foreach (Sprite mapObject in mapObjects)
                 mapObject.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }
+
+        public void LoadMap(StreamReader sr)
+        {
+            // construct the StaticMapObjects from the stream
+            mapObjects = parseMapFile(sr);
+        }
+
+        /* parseMapFile()
+         * 
+         * Takes in a StreamReader object and returns a List of StaticSprites
+         * corresponding to the boxes and pyramids found in the stream.
+         * 
+         * IF THERE IS NO WORLD DATA this function will set the world name and size to default
+         * values 'No Name' and 800.
+         * 
+         */
+        private static List<StaticSprite> parseMapFile(StreamReader sr)
+        {
+            List<StaticSprite> map_objects = new List<StaticSprite>();
+            String line = "";
+            
+            Vector2 position = Vector2.Zero;
+            Vector2 size = Vector2.Zero;
+            double rotation = 0;
+            String type = "";    // Internal identifier to indicate which texture to construct
+            int bad_objects = 0; // Counts object blocks that failed to load  
+
+            //Control flags
+            bool inWorldBlock = false;
+            bool inBlock = false;             
+            bool got_position = false;
+            bool got_size = false;
+
+            //Default values for world data will be overidden if found in the file
+            world_name = "No Name";
+            world_size = 800;
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                line = line.Trim();
+                if (line.Equals("world"))
+                {
+                    inWorldBlock = true;
+                    inBlock = false;
+                }
+                if (line.Equals("box") || line.Equals("pyramid"))
+                {
+                    inWorldBlock = false;
+                    inBlock = true;
+                    type = line.Split(' ')[0];
+                }
+                if (inWorldBlock)
+                {
+                    if (line.Contains("name"))
+                    {
+                        world_name = line.Trim().Substring(4, line.Length - 4).Trim();
+                    }
+                    if (line.Contains("size"))
+                    {
+                        world_size = (int)Convert.ToDecimal(line.Trim().Substring(4, line.Length - 4).Trim());
+                    }
+                }
+                if (inBlock)
+                {
+                    if (line.Contains("position"))
+                    {
+                        position = new Vector2(0, 0);
+                        String[] coords = line.Trim().Substring(9).Split(' ');
+                        position.X = (float)Convert.ToDecimal(coords[0].Trim());
+                        position.Y = (float)Convert.ToDecimal(coords[1].Trim());
+                        got_position = true;
+                    }
+                    if (line.Contains("size"))
+                    {
+                        size = new Vector2(0, 0);
+                        String[] coords = line.Trim().Substring(5).Split(' ');
+                        size.X = (float)Convert.ToDecimal(coords[0].Trim());
+                        size.Y = (float)Convert.ToDecimal(coords[1].Trim());
+                        got_size = true;
+                    }
+                    if (line.Contains("rotation"))
+                    {
+                        String[] coords = line.Trim().Substring(9).Split(' ');
+                        rotation = (double)Convert.ToDecimal(coords[0].Trim());
+                    }
+                }
+                if (line.Equals("end"))
+                {
+                    inBlock = false;
+                    if (got_position && got_size)
+                    {
+                        if (type.Equals("box"))
+                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                        if (type.Equals("pyramid"))
+                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                    }
+                    else
+                    {
+                        bad_objects++;
+                    }
+                    //When finished with one block clear all variables 
+                    got_position = false;
+                    got_size = false;
+                    rotation = 0;
+                }
+
+            }
+            return map_objects;
+        }
+
     }
 }
