@@ -75,11 +75,13 @@ namespace AngryTanks.Client
          */
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color color)
         {
+            Vector2 pixel_position = Position * World.worldToPixel;
+            Vector2 pixel_size = Size * World.worldToPixel;
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)Position.X,
-                                           (int)Position.Y,
-                                           (int)Size.X,
-                                           (int)Size.Y),
+                             new Rectangle((int)pixel_position.X,
+                                           (int)pixel_position.Y,
+                                           (int)pixel_size.X,
+                                           (int)pixel_size.Y),
                              //Set source relative to the texture dimensions
                              new Rectangle(0, 0, (int)Texture.Width, (int)Texture.Height),
                              color,

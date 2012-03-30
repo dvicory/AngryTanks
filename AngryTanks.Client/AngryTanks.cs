@@ -36,8 +36,8 @@ namespace AngryTanks.Client
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            serverLink = new ServerLink();
-            serverLink.Connect("localhost", 5150, MapLoaded);
+           // serverLink = new ServerLink();
+           // serverLink.Connect("localhost", 5150, MapLoaded);
         }
 
         /// <summary>
@@ -70,6 +70,7 @@ namespace AngryTanks.Client
             // TODO: use this.Content to load your game content here
             //map.LoadContent(Content);
             world.LoadContent();
+            world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace AngryTanks.Client
                 this.Exit();
 
             // TODO: Add your update logic here
-            serverLink.Update();
+            //serverLink.Update();
 
             world.Update(gameTime);
 
