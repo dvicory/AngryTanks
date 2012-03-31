@@ -23,12 +23,7 @@ namespace AngryTanks.Client
             : base(texture, position, size, rotation)
         {
             this.color = color;
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            Draw(gameTime, spriteBatch, color);
-        }
+        }        
 
         /*
          * TODO:
@@ -73,22 +68,9 @@ namespace AngryTanks.Client
          *                    |
          * 
          */
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color color)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 pixel_position = Position * World.worldToPixel;
-            Vector2 pixel_size = Size * World.worldToPixel;
-            spriteBatch.Draw(Texture,
-                             new Rectangle((int)pixel_position.X,
-                                           (int)pixel_position.Y,
-                                           (int)pixel_size.X,
-                                           (int)pixel_size.Y),
-                             //Set source relative to the texture dimensions
-                             new Rectangle(0, 0, (int)Texture.Width, (int)Texture.Height),
-                             color,
-                             (float)Rotation,
-                             //Set the origin relaitive to the textures dimensions
-                             new Vector2(Texture.Width/2,Texture.Height/2),
-                             SpriteEffects.None, 0);
-        }
+            drawTiled(gameTime, spriteBatch);
+        }        
     }
 }

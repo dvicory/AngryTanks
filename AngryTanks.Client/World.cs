@@ -37,7 +37,7 @@ namespace AngryTanks.Client
         public static String world_name;
         public static int world_size;
 
-        // world unit to pixel conversion factor
+        // world-unit to pixel conversion factor
         public static int worldToPixel = 10;
 
         // list of map objects, which are all static sprites
@@ -63,7 +63,7 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // load textures
-            backgroundTexture = contentManager.Load<Texture2D>("textures/bz/b");
+            backgroundTexture = contentManager.Load<Texture2D>("textures/selfmade/b");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
             pyramidTexture = contentManager.Load<Texture2D>("textures/bz/pyramid");
 
@@ -198,7 +198,8 @@ namespace AngryTanks.Client
         /* parseMapFile()
          * 
          * Takes in a StreamReader object and returns a List of StaticSprites
-         * corresponding to the boxes and pyramids found in the stream.
+         * corresponding to the boxes and pyramids which have a zero Z-position
+         * found in the stream.
          * 
          * IF THERE IS NO WORLD DATA this function will set the world name and size to default
          * values 'No Name' and 800.
@@ -258,7 +259,24 @@ namespace AngryTanks.Client
                         String[] coords = line.Trim().Substring(9).Split(' ');
                         position.X = (float)Convert.ToDecimal(coords[0].Trim());
                         position.Y = (float)Convert.ToDecimal(coords[1].Trim());
-                        got_position = true;
+
+                        //Only load objects with a zero Z-position
+                        if (coords.Length == 3)
+                        {
+                            if (coords[2].Trim().Equals("0"))
+                            {
+                                got_position = true;
+                            }
+                            else
+                            {
+                                got_position = false;
+                            }
+                        }
+                        else
+                        {
+                            got_position = true;
+                        }
+                        
                     }
                     if (line.Contains("size"))
                     {
@@ -280,9 +298,9 @@ namespace AngryTanks.Client
                     if (got_position && got_size)
                     {
                         if (type.Equals("box"))
-                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                            map_objects.Add(new Box(boxTexture, position/2, size, rotation * (Math.PI / 180)));
                         if (type.Equals("pyramid"))
-                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                            map_objects.Add(new Box(pyramidTexture, position/2, size, rotation * (Math.PI / 180)));
                     }
                     else
                     {
