@@ -31,13 +31,18 @@ namespace AngryTanks.Client
 
         private World world;
 
+        Texture2D texture;
+        Vector2 position;
+        PlayerControlledSprite playerSprite;
+
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-           // serverLink = new ServerLink();
-           // serverLink.Connect("localhost", 5150, MapLoaded);
+            //serverLink = new ServerLink();
+            //serverLink.Connect("localhost", 5150, MapLoaded);
+            
         }
 
         /// <summary>
@@ -54,6 +59,10 @@ namespace AngryTanks.Client
             //map = new Map(this);
             //map.Initialize(GraphicsDevice);
             world = new World(Services);
+
+            texture = Content.Load<Texture2D>("textures/tank");
+            position = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
+            playerSprite = new PlayerControlledSprite(texture, position, Vector2.Zero, 0.0f);
 
             base.Initialize();
         }
@@ -97,6 +106,7 @@ namespace AngryTanks.Client
             //serverLink.Update();
 
             world.Update(gameTime);
+            playerSprite.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -114,7 +124,9 @@ namespace AngryTanks.Client
             if (serverLink.GotWorld)
                 map.Draw(gameTime);
             */
+
             world.Draw(gameTime);
+            playerSprite.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }
