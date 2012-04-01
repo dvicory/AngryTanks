@@ -31,9 +31,6 @@ namespace AngryTanks.Client
 
         private World world;
 
-        Texture2D tankTexture;
-        LocalPlayer playerSprite;
-
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,11 +56,6 @@ namespace AngryTanks.Client
             //map.Initialize(GraphicsDevice);
             world = new World(Services);
 
-            tankTexture = Content.Load<Texture2D>("textures/tank");
-            playerSprite = new LocalPlayer(tankTexture,
-                                                      new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2),
-                                                      new Vector2(tankTexture.Width / 2, tankTexture.Height / 2), 0);
-
             base.Initialize();
         }
 
@@ -79,7 +71,7 @@ namespace AngryTanks.Client
             // TODO: use this.Content to load your game content here
             //map.LoadContent(Content);
             world.LoadContent();
-            world.LoadMap(new StreamReader("../../../Content/maps/pillbox.bzw"));
+            world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
         }
 
         /// <summary>
@@ -106,7 +98,6 @@ namespace AngryTanks.Client
             //serverLink.Update();
 
             world.Update(gameTime);
-            playerSprite.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -126,7 +117,6 @@ namespace AngryTanks.Client
             */
 
             world.Draw(gameTime);
-            playerSprite.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }

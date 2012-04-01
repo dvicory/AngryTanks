@@ -69,20 +69,7 @@ namespace AngryTanks.Client
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.FrontToBack, SaveStateMode.None);
-
-            spriteBatch.Draw(Texture,
-                                Position,
-                                null,
-                                Color,
-                                (float)Rotation,
-                                Size,
-                                1f,
-                                SpriteEffects.None,
-                                0f
-                                );
-
-            spriteBatch.End();
+            drawStretched(gameTime, spriteBatch);
         }
     }
 }

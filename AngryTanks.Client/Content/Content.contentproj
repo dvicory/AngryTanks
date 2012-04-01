@@ -277,6 +277,10 @@
     <None Include="map_test.txt">
       <Name>map_test</Name>
     </None>
+    <None Include="textures\others\LICENSE">
+      <Name>LICENSE</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="textures\bz\pyramid.png">
@@ -291,15 +295,20 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="textures\bullet.png">
-      <Name>bullet</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\tank_white.png">
+      <Name>tank_white</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="textures\tank.png">
-      <Name>tank</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\others\grass.png">
+      <Name>grass</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

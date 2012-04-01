@@ -33,8 +33,7 @@ namespace AngryTanks.Client
 
         protected virtual Color Color
         {
-            get;
-            set;
+            get; set;
         }
 
         #endregion

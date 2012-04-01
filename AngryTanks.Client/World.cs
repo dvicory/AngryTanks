@@ -31,7 +31,7 @@ namespace AngryTanks.Client
         private ContentManager contentManager;
 
         // textures
-        private Texture2D backgroundTexture, boxTexture, pyramidTexture;
+        private Texture2D backgroundTexture, boxTexture, pyramidTexture, tankTexture;
 
         // world information
         private String worldName;
@@ -41,9 +41,9 @@ namespace AngryTanks.Client
             get { return worldName; }
         }
 
-        private UInt16 worldSize;
+        private Single worldSize = 800;
 
-        public UInt16 WorldSize
+        public Single WorldSize
         {
             get { return worldSize; }
         }
@@ -59,14 +59,17 @@ namespace AngryTanks.Client
         private List<StaticSprite> tiled = new List<StaticSprite>();
         private List<StaticSprite> stretched = new List<StaticSprite>();
 
-        //List of all Dynamic Sprites (tanks and flags), always drawn stretched.
+        // List of all Dynamic Sprites (tanks and flags), always drawn stretched.
         private List<StaticSprite> dynamic_objects = new List<StaticSprite>();
+
+        private LocalPlayer localPlayer;
 
         public World(IServiceProvider iservice)
         {
             IService = iservice;
 
-            // TODO what happens if the viewport changes?
+            // TODO if resolution changes on us, this will fail miserably
+            // we need a way to detect if it changes and to then update camera's viewprt
             IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
 
             graphicsDevice = graphicsDeviceService.GraphicsDevice;
@@ -82,10 +85,10 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // load textures
-            backgroundTexture = contentManager.Load<Texture2D>("textures/selfmade/b");
+            backgroundTexture = contentManager.Load<Texture2D>("textures/others/grass");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
             pyramidTexture = contentManager.Load<Texture2D>("textures/bz/pyramid");
-
+            tankTexture = contentManager.Load<Texture2D>("textures/tank_white");
 
             // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED 
             List<StaticSprite> tiled = new List<StaticSprite>();
@@ -95,6 +98,10 @@ namespace AngryTanks.Client
             tiled.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI / 4, Color.Red));
             tiled.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
+
+            // 2.8 width and 6 length are bzflag defaults, why is it so miniature in comparison to objects?
+            //localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(2.8f, 6), 0);
+            localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(8.1f, 10), 0);
         }
 
         public virtual void Update(GameTime gameTime)
@@ -130,6 +137,8 @@ namespace AngryTanks.Client
                 camera.Rotation -= 0.01f;
             if (ks.IsKeyDown(Keys.Home))
                 camera.Rotation = 0;
+
+            localPlayer.Update(gameTime);
         }
 
         public virtual void Draw(GameTime gameTime)
@@ -230,6 +239,8 @@ namespace AngryTanks.Client
                         
             foreach (Sprite sprite in dynamic_objects)
                 sprite.Draw(gameTime, spriteBatch);
+
+            localPlayer.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }
