@@ -14,9 +14,6 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace AngryTanks.Client
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class TankShell : DynamicSprite
     {
         
@@ -24,19 +21,14 @@ namespace AngryTanks.Client
             : base(texture, position, size, rotation)
         {
             // TODO: Construct any child components here
-            
         }
-
-        
-
         
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
             // Shell should be constantly moving in the direction the tank was facing when it fired it 
-            //  until it hits an object
+            // until it hits an object
 
-            
             base.Update(gameTime);
         }
 
@@ -48,7 +40,7 @@ namespace AngryTanks.Client
             spriteBatch.Draw(Texture,
                                 Position,
                                 null,
-                                Color.White,
+                                Color,
                                 (float)Rotation,
                                 Size,
                                 1f,

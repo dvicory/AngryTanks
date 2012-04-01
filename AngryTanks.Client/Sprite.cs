@@ -45,16 +45,16 @@ namespace AngryTanks.Client
             this.Position = position;
             this.Size     = size;
             this.Rotation = rotation;
-            this.Color = Color.White;
+            this.Color    = Color.White;
         }
 
         public Sprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
         {
-            this.Texture = texture;
+            this.Texture  = texture;
             this.Position = position;
-            this.Size = size;
+            this.Size     = size;
             this.Rotation = rotation;
-            this.Color = color;
+            this.Color    = color;
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -62,47 +62,51 @@ namespace AngryTanks.Client
             // TODO actually draw, revisit parameters
         }
 
-        /* drawStretched()
+        /* 
+         * drawStretched()
          * 
          * Call this function to draw sprites that should be stretched.           
          */
         public void drawStretched(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 pixel_position = Position * World.worldToPixel;
-            Vector2 pixel_size = Size * World.worldToPixel;
+            Vector2 pixelPosition = Position * World.worldToPixel;
+            Vector2 pixelSize = Size * World.worldToPixel;
+
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)pixel_position.X,
-                                           (int)pixel_position.Y,
-                                           (int)pixel_size.X,
-                                           (int)pixel_size.Y),
-                //For STRETCH MODE Set source relative to the texture dimensions
+                             new Rectangle((int)pixelPosition.X,
+                                           (int)pixelPosition.Y,
+                                           (int)pixelSize.X,
+                                           (int)pixelSize.Y),
+                             // for STRETCH MODE, set source relative to the texture's dimensions
                              new Rectangle(0, 0, (int)Texture.Width, (int)Texture.Height),
                              Color,
                              (float)Rotation,
-                //For STRETCH MODE Set the origin relative to the texture's dimensions
+                             // for STRETCH MODE, set the origin relative to the texture's dimensions
                              new Vector2(Texture.Width / 2, Texture.Height / 2),
                              SpriteEffects.None, 0);
         }
 
-        /* drawTiled()
+        /* 
+         * drawTiled()
          * 
          * Call this function to draw sprites that should be tiled.           
          */
         public void drawTiled(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 pixel_position = Position * World.worldToPixel;
-            Vector2 pixel_size = Size * World.worldToPixel;
+            Vector2 pixelPosition = Position * World.worldToPixel;
+            Vector2 pixelSize = Size * World.worldToPixel;
+
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)pixel_position.X,
-                                           (int)pixel_position.Y,
-                                           (int)pixel_size.X,
-                                           (int)pixel_size.Y),
-                //For TILE MODE Set source relative to the Size's dimensions
-                             new Rectangle(0, 0, (int)pixel_size.X, (int)pixel_size.Y),
+                             new Rectangle((int)pixelPosition.X,
+                                           (int)pixelPosition.Y,
+                                           (int)pixelSize.X,
+                                           (int)pixelSize.Y),
+                             // for TILE MODE, set source relative to the Size's dimensions
+                             new Rectangle(0, 0, (int)pixelSize.X, (int)pixelSize.Y),
                              Color,
                              (float)Rotation,
-                //For TILE MODE Set the origin relative to the Size's dimensions
-                             new Vector2(pixel_size.X / 2, pixel_size.Y / 2),
+                             // for TILE MODE, set the origin relative to the Size's dimensions
+                             new Vector2(pixelSize.X / 2, pixelSize.Y / 2),
                              SpriteEffects.None, 0);
         }
 

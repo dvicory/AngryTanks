@@ -12,8 +12,6 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Color color = Color.White;
-
         public Box(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
             : base(texture, position, size, rotation)
         {
@@ -22,7 +20,6 @@ namespace AngryTanks.Client
         public Box(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
             : base(texture, position, size, rotation)
         {
-            this.color = color;
         }        
 
         /*

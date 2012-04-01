@@ -14,36 +14,25 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace AngryTanks.Client
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class PlayerControlledSprite : DynamicSprite
     {
-        KeyboardState kb;
-        float maxVelocity, velocityFactor;
+        private KeyboardState kb;
+        private float maxVelocity, velocityFactor;
         
-
         public PlayerControlledSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
-            this.Size = new Vector2(Texture.Width / 2, Texture.Height / 2);
-            
             newVelocity = position;
             maxVelocity = 1.0f;
         }
 
-       
-
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
             kb = Keyboard.GetState();
+
             if (kb.IsKeyDown(Keys.W))
             {
-                /*  Basing my calcualtion on this:
+                /*  Basing my calculations on this:
                  *  Velocity.X = VelocityFactor * MaxVelocity.X * cos(Rotation)
                  *  Velocity.Y = VelocityFactor * MaxVelocity.X * sin(Rotation)
                  *  
@@ -70,11 +59,9 @@ namespace AngryTanks.Client
                 Position += (oldVelocity + newVelocity) * 0.5f;
             }
             
-
-
             if (kb.IsKeyDown(Keys.A))
                 Rotation -= 0.1f;
-            else if (kb.IsKeyDown(Keys.D))
+            if (kb.IsKeyDown(Keys.D))
                 Rotation += 0.1f;
 
             base.Update(gameTime);
@@ -87,7 +74,7 @@ namespace AngryTanks.Client
             spriteBatch.Draw(Texture,
                                 Position,
                                 null,
-                                Color.White,
+                                Color,
                                 (float)Rotation,
                                 Size,
                                 1f,
