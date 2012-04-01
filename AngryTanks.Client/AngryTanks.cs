@@ -32,7 +32,7 @@ namespace AngryTanks.Client
         private World world;
 
         Texture2D tankTexture;
-        PlayerControlledSprite playerSprite;
+        LocalPlayer playerSprite;
 
         public AngryTanks()
         {
@@ -60,7 +60,7 @@ namespace AngryTanks.Client
             world = new World(Services);
 
             tankTexture = Content.Load<Texture2D>("textures/tank");
-            playerSprite = new PlayerControlledSprite(tankTexture,
+            playerSprite = new LocalPlayer(tankTexture,
                                                       new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2),
                                                       new Vector2(tankTexture.Width / 2, tankTexture.Height / 2), 0);
 

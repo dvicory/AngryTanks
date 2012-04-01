@@ -11,13 +11,12 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-
 namespace AngryTanks.Client
 {
-    public class TankShell : DynamicSprite
+    public class Shot : DynamicSprite
     {
         
-        public TankShell(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
+        public Shot(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
             : base(texture, position, size, rotation)
         {
             // TODO: Construct any child components here

@@ -11,15 +11,15 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-
 namespace AngryTanks.Client
 {
-    public class PlayerControlledSprite : DynamicSprite
+    // TODO inherit from more generic Player
+    public class LocalPlayer : DynamicSprite
     {
         private KeyboardState kb;
         private float maxVelocity, velocityFactor;
         
-        public PlayerControlledSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+        public LocalPlayer(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
             newVelocity = position;
