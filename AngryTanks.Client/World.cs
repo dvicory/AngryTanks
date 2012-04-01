@@ -30,12 +30,23 @@ namespace AngryTanks.Client
         private SpriteBatch spriteBatch;
         private ContentManager contentManager;
 
-        // background texture
-        static private Texture2D backgroundTexture, boxTexture, pyramidTexture;
+        // textures
+        private Texture2D backgroundTexture, boxTexture, pyramidTexture;
 
-        // the world data;
-        public static String world_name;
-        public static int world_size;
+        // world information
+        private String worldName;
+
+        public String WorldName
+        {
+            get { return worldName; }
+        }
+
+        private UInt16 worldSize;
+
+        public UInt16 WorldSize
+        {
+            get { return worldSize; }
+        }
 
         // world-unit to pixel conversion factor
         public static int worldToPixel = 10;
@@ -239,119 +250,118 @@ namespace AngryTanks.Client
          * values 'No Name' and 800.
          * 
          */
-        private static Dictionary<String, List<StaticSprite>> parseMapFile(StreamReader sr)
+        private Dictionary<String, List<StaticSprite>> parseMapFile(StreamReader sr)
         {
             Dictionary<String, List<StaticSprite>> map_objects = new Dictionary<String, List<StaticSprite>>();
             List<StaticSprite> stretched = new List<StaticSprite>();
-            List<StaticSprite> tiled = new List<StaticSprite>();           
+            List<StaticSprite> tiled = new List<StaticSprite>();
             
-            String line = "";
-            
-            Vector2 position = Vector2.Zero;
-            Vector2 size = Vector2.Zero;
-            double rotation = 0;
-            String type = "";    // Internal identifier to indicate which texture to construct
-            int bad_objects = 0; // Counts object blocks that failed to load  
+            Vector2? position = null;
+            Vector2? size = null;
+            Double rotation = 0;
+            String currentType = ""; // internal identifier to indicate which texture to construct
+            int badObjects = 0; // counts object blocks that failed to load
 
-            //Control flags
+            // control flags
             bool inWorldBlock = false;
-            bool inBlock = false;             
-            bool got_position = false;
-            bool got_size = false;
+            bool inBlock = false;
 
-            //Default values for world data will be overidden if found in the file
-            world_name = "No Name";
-            world_size = 800;
+            // default values for world data will be overidden if found in the file
+            worldName = "No Name";
+            worldSize = 800;
+
+            String line = "";
 
             while ((line = sr.ReadLine()) != null)
             {
                 line = line.Trim();
-                if (line.Equals("world"))
+
+                if (line.StartsWith("world", StringComparison.InvariantCultureIgnoreCase))
                 {
                     inWorldBlock = true;
                     inBlock = false;
                 }
-                if (line.Equals("box") || line.Equals("pyramid"))
+
+                if (line.StartsWith("box", StringComparison.InvariantCultureIgnoreCase)
+                    || line.StartsWith("pyramid", StringComparison.InvariantCultureIgnoreCase))
                 {
                     inWorldBlock = false;
                     inBlock = true;
-                    type = line.Split(' ')[0];
+                    currentType = line.Split(' ')[0];
                 }
+
                 if (inWorldBlock)
                 {
-                    if (line.Contains("name"))
+                    if (line.StartsWith("name", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        world_name = line.Trim().Substring(4, line.Length - 4).Trim();
+                        worldName = line.Trim().Substring(4).Trim();
                     }
-                    if (line.Contains("size"))
+                    if (line.StartsWith("size", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        world_size = (int)Convert.ToDecimal(line.Trim().Substring(4, line.Length - 4).Trim());
+                        worldSize = (UInt16)Convert.ToUInt16(line.Trim().Substring(4).Trim());
                     }
                 }
+
                 if (inBlock)
                 {
-                    if (line.Contains("position"))
+                    if (line.StartsWith("position", StringComparison.InvariantCultureIgnoreCase)
+                        || line.StartsWith("pos", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        position = new Vector2(0, 0);
-                        String[] coords = line.Trim().Substring(9).Split(' ');
-                        position.X = (float)Convert.ToDecimal(coords[0].Trim());
-                        position.Y = (float)Convert.ToDecimal(coords[1].Trim());
+                        List<String> rawArgs = line.Trim().Substring(9).Split(' ').ToList();
+                        List<Single> coords = new List<Single>();
 
-                        //Only load objects with a zero Z-position
-                        if (coords.Length == 3)
+                        rawArgs.ForEach(v => coords.Add((Single)Convert.ToSingle(v)));
+
+                        // only load objects with at least x, y and a zero z-position
+                        if (coords.Count == 2 || ((coords.Count == 3) && (Math.Abs(coords[2]) < Single.Epsilon)))
                         {
-                            if (coords[2].Trim().Equals("0"))
-                            {
-                                got_position = true;
-                            }
-                            else
-                            {
-                                got_position = false;
-                            }
+                            position = new Vector2(coords[0], coords[1]);
                         }
-                        else
-                        {
-                            got_position = true;
-                        }
-                        
-                    }
-                    if (line.Contains("size"))
+                    } else if (line.StartsWith("size", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        size = new Vector2(0, 0);
-                        String[] coords = line.Trim().Substring(5).Split(' ');
-                        size.X = (float)Convert.ToDecimal(coords[0].Trim());
-                        size.Y = (float)Convert.ToDecimal(coords[1].Trim());
-                        got_size = true;
-                    }
-                    if (line.Contains("rotation"))
+                        List<String> rawArgs = line.Trim().Substring(5).Split(' ').ToList();
+                        List<Single> coords = new List<Single>();
+
+                        rawArgs.ForEach(v => coords.Add((Single)Convert.ToSingle(v)));
+
+                        // only load objects with at least x and y size
+                        if (coords.Count >= 2)
+                        {
+                            size = new Vector2(coords[0], coords[1]);
+                        }
+                    } else if (line.StartsWith("rotation", StringComparison.InvariantCultureIgnoreCase)
+                        || line.StartsWith("rot", StringComparison.InvariantCultureIgnoreCase))
                     {
                         String[] coords = line.Trim().Substring(9).Split(' ');
-                        rotation = (double)Convert.ToDecimal(coords[0].Trim());
+                        rotation = (Double)Convert.ToDouble(coords[0].Trim());
                     }
                 }
+
                 if (line.Equals("end"))
                 {
+                    if (position.HasValue && size.HasValue)
+                    {
+                        if (currentType.Equals("box"))
+                            tiled.Add(new Box(boxTexture, position.Value, size.Value * 2, rotation * (Math.PI / 180)));
+                        if (currentType.Equals("pyramid"))
+                            stretched.Add(new Pyramid(pyramidTexture, position.Value, size.Value * 2, rotation * (Math.PI / 180)));
+                    } else
+                    {
+                        badObjects++;
+                    }
+
+                    // when finished with one block clear all variables
                     inBlock = false;
-                    if (got_position && got_size)
-                    {
-                        if (type.Equals("box"))
-                            tiled.Add(new Box(boxTexture, position/2, size, rotation * (Math.PI / 180)));
-                        if (type.Equals("pyramid"))
-                            stretched.Add(new Pyramid(pyramidTexture, position/2, size, rotation * (Math.PI / 180)));
-                    }
-                    else
-                    {
-                        bad_objects++;
-                    }
-                    //When finished with one block clear all variables 
-                    got_position = false;
-                    got_size = false;
+                    position = null;
+                    size = null;
                     rotation = 0;
                 }
 
             }
+
             map_objects.Add("tiled", tiled);
             map_objects.Add("stretched", stretched);
+
             return map_objects;
         }
 
