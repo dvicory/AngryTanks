@@ -37,11 +37,19 @@ namespace AngryTanks.Client
         public static String world_name;
         public static int world_size;
 
-        // world unit to pixel conversion factor
+        // world-unit to pixel conversion factor
         public static int worldToPixel = 10;
 
-        // list of map objects, which are all static sprites
-        private List<StaticSprite> mapObjects = new List<StaticSprite>();
+        // A dictionary of lists of map objects, which are all static sprites
+        // once initialized it contains two Lists.
+        // Key "tiled" is a List of sprites to be tiled.
+        // Key "stretched" is a List of sprites to be stretched.
+        private Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
+        private List<StaticSprite> tiled = new List<StaticSprite>();
+        private List<StaticSprite> stretched = new List<StaticSprite>();
+
+        //List of all Dynamic Sprites (tanks and flags), always drawn stretched.
+        private List<StaticSprite> dynamic_objects = new List<StaticSprite>();
 
         public World(IServiceProvider iservice)
         {
@@ -63,17 +71,19 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // load textures
-            backgroundTexture = contentManager.Load<Texture2D>("textures/bz/b");
+            backgroundTexture = contentManager.Load<Texture2D>("textures/selfmade/b");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
             pyramidTexture = contentManager.Load<Texture2D>("textures/bz/pyramid");
 
 
-            // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED                       
-            mapObjects.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
-            mapObjects.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));            
-            mapObjects.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            mapObjects.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI/4, Color.Red));
-            mapObjects.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));            
+            // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED 
+            List<StaticSprite> tiled = new List<StaticSprite>();
+            tiled.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
+            tiled.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
+            tiled.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
+            tiled.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI / 4, Color.Red));
+            tiled.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
+            mapObjects.Add("tiled", tiled);
         }
 
         public virtual void Update(GameTime gameTime)
@@ -116,7 +126,7 @@ namespace AngryTanks.Client
             // TODO fix, breaks stuff, so keep it at 1
             float backgroundZoomFactor = 1f;
 
-            // immediate mode is required for tiling
+            // FIRST Draw pass: the background
             spriteBatch.Begin(SpriteBlendMode.None,
                               SpriteSortMode.Immediate,
                               SaveStateMode.None,
@@ -173,18 +183,42 @@ namespace AngryTanks.Client
 
             spriteBatch.End();
 
-            //Immediate mode and the Wrapping are no longer used for this Draw pass.
+            // SECOND Draw pass: draw the stretched map objects.
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                              SpriteSortMode.BackToFront, //Returned to BackToFront
+                              SpriteSortMode.BackToFront, 
+                              SaveStateMode.None,
+                              camera.GetViewMatrix());
+            
+            mapObjects.TryGetValue("stretched", out stretched);
+            foreach (Sprite mapObject in stretched)
+                mapObject.Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
+
+            // THIRD Draw pass: draw the tiled map objects.
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
+                              SpriteSortMode.Immediate, 
                               SaveStateMode.None,
                               camera.GetViewMatrix());
 
-            //No longer using Wrapping
-            //graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            //graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            //using Wrapping
+            graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
-            foreach (Sprite mapObject in mapObjects)
+            mapObjects.TryGetValue("tiled", out tiled);
+            foreach (Sprite mapObject in tiled)
                 mapObject.Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
+
+            // FOURTH Draw pass: draw the dynamic objects (stretched).
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
+                              SpriteSortMode.BackToFront,
+                              SaveStateMode.None,
+                              camera.GetViewMatrix());            
+                        
+            foreach (Sprite sprite in dynamic_objects)
+                sprite.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }
@@ -198,15 +232,19 @@ namespace AngryTanks.Client
         /* parseMapFile()
          * 
          * Takes in a StreamReader object and returns a List of StaticSprites
-         * corresponding to the boxes and pyramids found in the stream.
+         * corresponding to the boxes and pyramids which have a zero Z-position
+         * found in the stream.
          * 
          * IF THERE IS NO WORLD DATA this function will set the world name and size to default
          * values 'No Name' and 800.
          * 
          */
-        private static List<StaticSprite> parseMapFile(StreamReader sr)
+        private static Dictionary<String, List<StaticSprite>> parseMapFile(StreamReader sr)
         {
-            List<StaticSprite> map_objects = new List<StaticSprite>();
+            Dictionary<String, List<StaticSprite>> map_objects = new Dictionary<String, List<StaticSprite>>();
+            List<StaticSprite> stretched = new List<StaticSprite>();
+            List<StaticSprite> tiled = new List<StaticSprite>();           
+            
             String line = "";
             
             Vector2 position = Vector2.Zero;
@@ -258,7 +296,24 @@ namespace AngryTanks.Client
                         String[] coords = line.Trim().Substring(9).Split(' ');
                         position.X = (float)Convert.ToDecimal(coords[0].Trim());
                         position.Y = (float)Convert.ToDecimal(coords[1].Trim());
-                        got_position = true;
+
+                        //Only load objects with a zero Z-position
+                        if (coords.Length == 3)
+                        {
+                            if (coords[2].Trim().Equals("0"))
+                            {
+                                got_position = true;
+                            }
+                            else
+                            {
+                                got_position = false;
+                            }
+                        }
+                        else
+                        {
+                            got_position = true;
+                        }
+                        
                     }
                     if (line.Contains("size"))
                     {
@@ -280,9 +335,9 @@ namespace AngryTanks.Client
                     if (got_position && got_size)
                     {
                         if (type.Equals("box"))
-                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                            tiled.Add(new Box(boxTexture, position/2, size, rotation * (Math.PI / 180)));
                         if (type.Equals("pyramid"))
-                            map_objects.Add(new Box(boxTexture, position, size, rotation));
+                            stretched.Add(new Pyramid(pyramidTexture, position/2, size, rotation * (Math.PI / 180)));
                     }
                     else
                     {
@@ -295,6 +350,8 @@ namespace AngryTanks.Client
                 }
 
             }
+            map_objects.Add("tiled", tiled);
+            map_objects.Add("stretched", stretched);
             return map_objects;
         }
 

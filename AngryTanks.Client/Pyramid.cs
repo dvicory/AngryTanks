@@ -8,22 +8,22 @@ using log4net;
 
 namespace AngryTanks.Client
 {
-    class Box : StaticSprite
+    class Pyramid : StaticSprite
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected Color color = Color.White;
 
-        public Box(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
+        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
             : base(texture, position, size, rotation)
         {
         }
 
-        public Box(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
+        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
             : base(texture, position, size, rotation)
         {
             this.color = color;
-        }        
+        }
 
         /*
          * TODO:
@@ -70,7 +70,7 @@ namespace AngryTanks.Client
          */
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            drawTiled(gameTime, spriteBatch);
-        }        
+            drawStretched(gameTime, spriteBatch);
+        }
     }
 }
