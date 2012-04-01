@@ -286,7 +286,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="textures\bz\b.png">
+    <Compile Include="textures\selfmade\b.png">
       <Name>b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
