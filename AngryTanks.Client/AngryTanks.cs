@@ -70,7 +70,7 @@ namespace AngryTanks.Client
             // TODO: use this.Content to load your game content here
             //map.LoadContent(Content);
             world.LoadContent();
-            world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
+            world.LoadMap(new StreamReader("../../../Content/maps/pillbox.bzw"));
         }
 
         /// <summary>
