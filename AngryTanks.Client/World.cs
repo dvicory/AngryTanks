@@ -99,9 +99,9 @@ namespace AngryTanks.Client
             tiled.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
 
-            // 2.8 width and 6 length are bzflag defaults, why is it so miniature in comparison to objects?
-            //localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(2.8f, 6), 0);
-            localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(8.1f, 10), 0);
+            // 2.8 width and 6 length are bzflag defaults
+            // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
+            localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
         }
 
         public virtual void Update(GameTime gameTime)

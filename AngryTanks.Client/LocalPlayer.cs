@@ -18,12 +18,15 @@ namespace AngryTanks.Client
     {
         private KeyboardState kb;
         private float maxVelocity, velocityFactor;
-        
+        private float maxAngularVelocity, angularVelocityFactor;
+
+        private float oldAngularVelocity, newAngularVelocity;
+
         public LocalPlayer(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
-            newVelocity = position;
-            maxVelocity = 1.0f;
+            maxVelocity = 25f;
+            maxAngularVelocity = (float)Math.PI / 2;
         }
 
         public override void Update(GameTime gameTime)
@@ -42,27 +45,49 @@ namespace AngryTanks.Client
                  *  Fixed thanks to Daniel G.
                  */
 
+                oldVelocity = newVelocity;
+
                 velocityFactor = -1;
+
                 newVelocity.X = velocityFactor * maxVelocity * (float)Math.Cos(Rotation + Math.PI / 2);
                 newVelocity.Y = velocityFactor * maxVelocity * (float)Math.Sin(Rotation + Math.PI / 2);
 
-                oldVelocity = newVelocity;
-                Position += (oldVelocity + newVelocity) * 0.5f;
+                Position += (oldVelocity + newVelocity) * 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            else if (kb.IsKeyDown(Keys.S))
+
+            if (kb.IsKeyDown(Keys.S))
             {
+                oldVelocity = newVelocity;
+
                 velocityFactor = 1;
+
                 newVelocity.X = velocityFactor * maxVelocity * (float)Math.Cos(Rotation + Math.PI / 2);
                 newVelocity.Y = velocityFactor * maxVelocity * (float)Math.Sin(Rotation + Math.PI / 2);
 
-                oldVelocity = newVelocity;
-                Position += (oldVelocity + newVelocity) * 0.5f;
+                Position += (oldVelocity + newVelocity) * 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            
+
             if (kb.IsKeyDown(Keys.A))
-                Rotation -= 0.1f;
+            {
+                oldAngularVelocity = newAngularVelocity;
+
+                angularVelocityFactor = -1;
+
+                newAngularVelocity = angularVelocityFactor * maxAngularVelocity;
+
+                Rotation += (newAngularVelocity + oldAngularVelocity) * 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
             if (kb.IsKeyDown(Keys.D))
-                Rotation += 0.1f;
+            {
+                oldAngularVelocity = newAngularVelocity;
+
+                angularVelocityFactor = 1;
+
+                newAngularVelocity = angularVelocityFactor * maxAngularVelocity;
+
+                Rotation += (newAngularVelocity + oldAngularVelocity) * 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             base.Update(gameTime);
         }
