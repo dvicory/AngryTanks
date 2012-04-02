@@ -26,16 +26,17 @@ namespace AngryTanks.Client
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private static ServerLink ServerLink;
-        public Map Map;
+        private static ServerLink serverLink;
+
+        private World world;
 
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            ServerLink = new ServerLink();
-            ServerLink.Connect("localhost", 5150, MapLoaded);
+            //serverLink = new ServerLink();
+            //serverLink.Connect("localhost", 5150, MapLoaded);
             
         }
 
@@ -49,9 +50,8 @@ namespace AngryTanks.Client
         {
             // TODO: Add your initialization logic here
 
-            // intantiate a map
-            Map = new Map(this);
-            Map.Initialize(GraphicsDevice);
+            // intantiate the world
+            world = new World(Services);
             
 
             base.Initialize();
@@ -67,7 +67,8 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            Map.LoadContent(Content);            
+            world.LoadContent();
+            world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
         }
 
         /// <summary>
@@ -91,7 +92,9 @@ namespace AngryTanks.Client
                 this.Exit();
 
             // TODO: Add your update logic here
-            ServerLink.Update();
+            //serverLink.Update();
+
+            world.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -105,8 +108,8 @@ namespace AngryTanks.Client
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            if (ServerLink.GotWorld)
-                Map.Draw(gameTime);
+
+            world.Draw(gameTime);
 
             base.Draw(gameTime);
         }
@@ -115,8 +118,6 @@ namespace AngryTanks.Client
         private void MapLoaded(StreamReader map)
         {
             Log.Debug("AngryTanks.MapLoaded");
-
-            Map.LoadMap(map);
         }
     }
 }

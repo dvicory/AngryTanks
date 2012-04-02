@@ -75,6 +75,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -88,13 +89,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Map.cs" />
+    <Compile Include="Box.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="DynamicSprite.cs" />
+    <Compile Include="LocalPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AngryTanks.cs" />
+    <Compile Include="Pyramid.cs" />
     <Compile Include="ServerLink.cs" />
     <Compile Include="Sprite.cs" />
-    <Compile Include="StaticMapObject.cs" />
+    <Compile Include="StaticSprite.cs" />
+    <Compile Include="Shot.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AngryTanks.ico" />
