@@ -27,7 +27,6 @@ namespace AngryTanks.Client
         SpriteBatch spriteBatch;
 
         private static ServerLink serverLink;
-        //public Map map;
 
         private World world;
 
@@ -51,9 +50,7 @@ namespace AngryTanks.Client
         {
             // TODO: Add your initialization logic here
 
-            // intantiate a map
-            //map = new Map(this);
-            //map.Initialize(GraphicsDevice);
+            // intantiate the world
             world = new World(Services);
 
             base.Initialize();
@@ -69,7 +66,6 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            //map.LoadContent(Content);
             world.LoadContent();
             world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
         }
@@ -111,10 +107,6 @@ namespace AngryTanks.Client
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            /*
-            if (serverLink.GotWorld)
-                map.Draw(gameTime);
-            */
 
             world.Draw(gameTime);
 
@@ -125,8 +117,6 @@ namespace AngryTanks.Client
         private void MapLoaded(StreamReader map)
         {
             Log.Debug("AngryTanks.MapLoaded");
-
-            //map.LoadMap(map);
         }
     }
 }
