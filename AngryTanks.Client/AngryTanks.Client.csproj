@@ -99,7 +99,6 @@
     <Compile Include="Pyramid.cs" />
     <Compile Include="ServerLink.cs" />
     <Compile Include="Sprite.cs" />
-    <Compile Include="StaticMapObject.cs" />
     <Compile Include="StaticSprite.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="World.cs" />
