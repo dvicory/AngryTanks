@@ -26,7 +26,9 @@ namespace AngryTanks.Client
             Zoom = 1.0f;
         }
 
-        private Vector2 position;
+        public Vector2 Origin { get; set; }
+
+        private Vector2 position, panPosition;
 
         public Vector2 Position
         {
@@ -35,18 +37,54 @@ namespace AngryTanks.Client
             {
                 position = value;
 
-                // if there's a limit set and the camera is not transformed clamp position to limits
-                if (Limits != null && Zoom == 1.0f && Rotation == 0.0f)
-                {
-                    position.X = MathHelper.Clamp(position.X, Limits.Value.X, Limits.Value.X + Limits.Value.Width - viewport.Width);
-                    position.Y = MathHelper.Clamp(position.Y, Limits.Value.Y, Limits.Value.Y + Limits.Value.Height - viewport.Height);
-                }
+                // validate our position
+                position = ValidatePosition(position);
             }
         }
 
-        public Vector2 Origin { get; set; }
-        public Single Zoom { get; set; }
-        public Single Rotation { get; set; }
+        public Vector2 PanPosition
+        {
+            get { return panPosition; }
+            set
+            {
+                panPosition = value;
+
+                // validate our panned position
+                panPosition = ValidatePosition(panPosition);
+            }
+        }
+
+        public Vector2 CameraPosition
+        {
+            get { return Position + PanPosition; }
+        }
+
+        private Single zoom;
+
+        public Single Zoom
+        {
+            get { return zoom; }
+            set
+            {
+                zoom = value;
+
+                // validate everything
+                zoom = ValidateZoom(zoom);
+                panPosition = ValidatePosition(panPosition);
+                position = ValidatePosition(position);
+            }
+        }
+
+        private Single rotation;
+
+        public Single Rotation
+        {
+            get { return rotation; }
+            set
+            {
+                rotation = MathHelper.WrapAngle(value);
+            }
+        }
 
         private Rectangle? limits;
 
@@ -55,24 +93,12 @@ namespace AngryTanks.Client
             get { return limits; }
             set
             {
-                if (value != null)
-                {
-                    // assign limit but make sure it's always bigger than the viewport
-                    limits = new Rectangle
-                    {
-                        X = value.Value.X,
-                        Y = value.Value.Y,
-                        Width = System.Math.Max(viewport.Width, value.Value.Width),
-                        Height = System.Math.Max(viewport.Height, value.Value.Height)
-                    };
+                limits = value;
 
-                    // validate camera position with new limit
-                    Position = Position;
-                }
-                else
-                {
-                    limits = null;
-                }
+                // validate everything
+                zoom = ValidateZoom(zoom);
+                panPosition = ValidatePosition(panPosition);
+                position = ValidatePosition(position);
             }
         }
 
@@ -86,9 +112,19 @@ namespace AngryTanks.Client
             Position += displacement;
         }
 
+        public void Pan(Vector2 displacement, bool respectRotation)
+        {
+            if (respectRotation)
+            {
+                displacement = Vector2.Transform(displacement, Matrix.CreateRotationZ(-Rotation));
+            }
+
+            PanPosition += displacement;
+        }
+
         public void LookAt(Vector2 position)
         {
-            Position = position - new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f);
+            Position = position + panPosition - new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f);
         }
 
         public Matrix GetViewMatrix(Single zoomFactor, bool preventParallax)
@@ -116,7 +152,7 @@ namespace AngryTanks.Client
 
         public Matrix GetViewMatrix()
         {
-            return Matrix.CreateTranslation(new Vector3(-Position, 0)) *
+            return Matrix.CreateTranslation(new Vector3(-CameraPosition, 0)) *
                    Matrix.CreateTranslation(new Vector3(-Origin, 0)) *
                    Matrix.CreateRotationZ(Rotation) *
                    Matrix.CreateScale(Zoom, Zoom, 1) *
@@ -130,6 +166,31 @@ namespace AngryTanks.Client
                      Matrix.CreateRotationZ(Rotation) *
                      Matrix.CreateTranslation(new Vector3(Origin / textureSize, 0)) *
                      Matrix.CreateTranslation(new Vector3(Position / textureSize, 0));
+        }
+
+        private Single ValidateZoom(Single zoom)
+        {
+            if (limits.HasValue)
+            {
+                Single minZoomX = (Single)viewport.Width / limits.Value.Width;
+                Single minZoomY = (Single)viewport.Height / limits.Value.Height;
+                return MathHelper.Max(zoom, MathHelper.Max(minZoomX, minZoomY));
+            }
+            return zoom;
+        }
+
+        private Vector2 ValidatePosition(Vector2 pos)
+        {
+            if (limits.HasValue)
+            {
+                Vector2 cameraWorldMin = Vector2.Transform(Vector2.Zero, Matrix.Invert(GetViewMatrix()));
+                Vector2 cameraSize = new Vector2(viewport.Width, viewport.Height) / zoom;
+                Vector2 limitWorldMin = new Vector2(limits.Value.Left, limits.Value.Top);
+                Vector2 limitWorldMax = new Vector2(limits.Value.Right, limits.Value.Bottom);
+                Vector2 positionOffset = pos - cameraWorldMin;
+                return Vector2.Clamp(cameraWorldMin, limitWorldMin, limitWorldMax - cameraSize) + positionOffset;
+            }
+            return pos;
         }
     }
 }

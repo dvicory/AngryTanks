@@ -12,17 +12,14 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected Color color = Color.White;
-
-        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
+        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
         }
 
-        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
-            : base(texture, position, size, rotation)
+        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(texture, position, size, rotation, color)
         {
-            this.color = color;
         }
 
         /*
@@ -70,7 +67,7 @@ namespace AngryTanks.Client
          */
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            drawStretched(gameTime, spriteBatch);
+            DrawStretched(gameTime, spriteBatch);
         }
     }
 }

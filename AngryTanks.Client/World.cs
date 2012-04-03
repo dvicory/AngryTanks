@@ -49,6 +49,7 @@ namespace AngryTanks.Client
         }
 
         // world-unit to pixel conversion factor
+        // TODO make some helper methods (place in Resolution class?) that converts many different things back and forth
         public static int worldToPixel = 10;
 
         // A dictionary of lists of map objects, which are all static sprites
@@ -60,7 +61,7 @@ namespace AngryTanks.Client
         private List<StaticSprite> stretched = new List<StaticSprite>();
 
         // List of all Dynamic Sprites (tanks and flags), always drawn stretched.
-        private List<StaticSprite> dynamic_objects = new List<StaticSprite>();
+        private List<StaticSprite> dynamicObjects = new List<StaticSprite>();
 
         private LocalPlayer localPlayer;
 
@@ -76,6 +77,8 @@ namespace AngryTanks.Client
             contentManager = new ContentManager(IService, "Content");
 
             camera = new Camera(graphicsDevice.Viewport);
+            camera.Limits = new Rectangle((int)((-WorldSize / 2) * worldToPixel), (int)((-WorldSize / 2) * worldToPixel),
+                                          (int)(WorldSize * worldToPixel), (int)(WorldSize * worldToPixel));
             camera.LookAt(Vector2.Zero);
         }
 
@@ -95,7 +98,7 @@ namespace AngryTanks.Client
             tiled.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
             tiled.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
             tiled.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            tiled.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), Math.PI / 4, Color.Red));
+            tiled.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), (Single)Math.PI / 4, Color.Red));
             tiled.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
 
@@ -106,20 +109,21 @@ namespace AngryTanks.Client
 
         public virtual void Update(GameTime gameTime)
         {
-            // TODO make sure to move to UserInput helper class when available
+            // update the local player
+            localPlayer.Update(gameTime);
+
+            // TODO make sure to move to a better input solution
             KeyboardState ks = Keyboard.GetState();
 
-            // move the camera
+            // pan the camera
             if (ks.IsKeyDown(Keys.Up))
-                camera.Move(new Vector2(0, -25), true);
+                camera.Pan(new Vector2(0, -25), true);
             if (ks.IsKeyDown(Keys.Down))
-                camera.Move(new Vector2(0, 25), true);
+                camera.Pan(new Vector2(0, 25), true);
             if (ks.IsKeyDown(Keys.Left))
-                camera.Move(new Vector2(-25, 0), true);
+                camera.Pan(new Vector2(-25, 0), true);
             if (ks.IsKeyDown(Keys.Right))
-                camera.Move(new Vector2(25, 0), true);
-            if (ks.IsKeyDown(Keys.Home))
-                camera.LookAt(Vector2.Zero);
+                camera.Pan(new Vector2(25, 0), true);
 
             // TODO later test zooming also with scrollwheel
             // zoom in with pgup/pgdwn
@@ -127,24 +131,29 @@ namespace AngryTanks.Client
                 camera.Zoom *= 1.01f;
             if (ks.IsKeyDown(Keys.PageDown))
                 camera.Zoom *= 0.99f;
-            if (ks.IsKeyDown(Keys.Home))
-                camera.Zoom = 1;
 
             // rotation (testing only)
             if (ks.IsKeyDown(Keys.LeftShift))
                 camera.Rotation += 0.01f;
             if (ks.IsKeyDown(Keys.RightShift))
                 camera.Rotation -= 0.01f;
-            if (ks.IsKeyDown(Keys.Home))
-                camera.Rotation = 0;
 
-            localPlayer.Update(gameTime);
+            // reset back to tank
+            if (ks.IsKeyDown(Keys.Home))
+            {
+                camera.Zoom = 1;
+                camera.Rotation = 0;
+                camera.PanPosition = Vector2.Zero;
+            }
+
+            // now finally track the tank (disregards any panning)
+            camera.LookAt(localPlayer.Position * worldToPixel);
         }
 
         public virtual void Draw(GameTime gameTime)
         {
             // TODO fix, breaks stuff, so keep it at 1
-            float backgroundZoomFactor = 1f;
+            Single backgroundZoomFactor = 1f;
 
             // FIRST Draw pass: the background
             spriteBatch.Begin(SpriteBlendMode.None,
@@ -156,10 +165,10 @@ namespace AngryTanks.Client
             graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
-            Rectangle source = new Rectangle((int)camera.Position.X, (int)camera.Position.Y,
+            Rectangle source = new Rectangle((int)camera.CameraPosition.X, (int)camera.CameraPosition.Y,
                                              graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
 
-            Rectangle destination = new Rectangle((int)camera.Position.X, (int)camera.Position.Y,
+            Rectangle destination = new Rectangle((int)camera.CameraPosition.X, (int)camera.CameraPosition.Y,
                                                   graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
 
             /*
@@ -205,7 +214,7 @@ namespace AngryTanks.Client
 
             // SECOND Draw pass: draw the stretched map objects.
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                              SpriteSortMode.BackToFront, 
+                              SpriteSortMode.BackToFront,
                               SaveStateMode.None,
                               camera.GetViewMatrix());
             
@@ -217,11 +226,11 @@ namespace AngryTanks.Client
 
             // THIRD Draw pass: draw the tiled map objects.
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
-                              SpriteSortMode.Immediate, 
+                              SpriteSortMode.Immediate,
                               SaveStateMode.None,
                               camera.GetViewMatrix());
 
-            //using Wrapping
+            // using wrapping
             graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
@@ -235,9 +244,9 @@ namespace AngryTanks.Client
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
                               SpriteSortMode.BackToFront,
                               SaveStateMode.None,
-                              camera.GetViewMatrix());            
-                        
-            foreach (Sprite sprite in dynamic_objects)
+                              camera.GetViewMatrix());
+            
+            foreach (Sprite sprite in dynamicObjects)
                 sprite.Draw(gameTime, spriteBatch);
 
             localPlayer.Draw(gameTime, spriteBatch);
@@ -247,7 +256,7 @@ namespace AngryTanks.Client
 
         public void LoadMap(StreamReader sr)
         {
-            // construct the StaticMapObjects from the stream
+            // construct the StaticSprites from the stream
             mapObjects = parseMapFile(sr);
         }
 
@@ -263,13 +272,13 @@ namespace AngryTanks.Client
          */
         private Dictionary<String, List<StaticSprite>> parseMapFile(StreamReader sr)
         {
-            Dictionary<String, List<StaticSprite>> map_objects = new Dictionary<String, List<StaticSprite>>();
+            Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
             List<StaticSprite> stretched = new List<StaticSprite>();
             List<StaticSprite> tiled = new List<StaticSprite>();
             
             Vector2? position = null;
             Vector2? size = null;
-            Double rotation = 0;
+            Single rotation = 0;
             String currentType = ""; // internal identifier to indicate which texture to construct
             int badObjects = 0; // counts object blocks that failed to load
 
@@ -324,11 +333,12 @@ namespace AngryTanks.Client
                         rawArgs.ForEach(v => coords.Add((Single)Convert.ToSingle(v)));
 
                         // only load objects with at least x, y and a zero z-position
-                        if (coords.Count == 2 || ((coords.Count == 3) && (Math.Abs(coords[2]) < Single.Epsilon)))
+                        if (coords.Count == 2 || ((coords.Count == 3) && (Math.Abs(coords[2]) <= Single.Epsilon)))
                         {
                             position = new Vector2(coords[0], coords[1]);
                         }
-                    } else if (line.StartsWith("size", StringComparison.InvariantCultureIgnoreCase))
+                    }
+                    else if (line.StartsWith("size", StringComparison.InvariantCultureIgnoreCase))
                     {
                         List<String> rawArgs = line.Trim().Substring(5).Split(' ').ToList();
                         List<Single> coords = new List<Single>();
@@ -340,11 +350,12 @@ namespace AngryTanks.Client
                         {
                             size = new Vector2(coords[0], coords[1]);
                         }
-                    } else if (line.StartsWith("rotation", StringComparison.InvariantCultureIgnoreCase)
-                        || line.StartsWith("rot", StringComparison.InvariantCultureIgnoreCase))
+                    }
+                    else if (line.StartsWith("rotation", StringComparison.InvariantCultureIgnoreCase)
+                             || line.StartsWith("rot", StringComparison.InvariantCultureIgnoreCase))
                     {
                         String[] coords = line.Trim().Substring(9).Split(' ');
-                        rotation = (Double)Convert.ToDouble(coords[0].Trim());
+                        rotation = Convert.ToSingle(coords[0].Trim());
                     }
                 }
 
@@ -353,10 +364,11 @@ namespace AngryTanks.Client
                     if (position.HasValue && size.HasValue)
                     {
                         if (currentType.Equals("box"))
-                            tiled.Add(new Box(boxTexture, position.Value, size.Value * 2, rotation * (Math.PI / 180)));
+                            tiled.Add(new Box(boxTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
                         if (currentType.Equals("pyramid"))
-                            stretched.Add(new Pyramid(pyramidTexture, position.Value, size.Value * 2, rotation * (Math.PI / 180)));
-                    } else
+                            stretched.Add(new Pyramid(pyramidTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
+                    }
+                    else
                     {
                         badObjects++;
                     }
@@ -370,10 +382,10 @@ namespace AngryTanks.Client
 
             }
 
-            map_objects.Add("tiled", tiled);
-            map_objects.Add("stretched", stretched);
+            mapObjects.Add("tiled", tiled);
+            mapObjects.Add("stretched", stretched);
 
-            return map_objects;
+            return mapObjects;
         }
 
     }

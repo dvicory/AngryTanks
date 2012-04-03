@@ -27,8 +27,9 @@ namespace AngryTanks.Client
 
         public event EventHandler<StateChangedEvent<Vector2>> PositionChangedEvent;
         public event EventHandler<StateChangedEvent<Vector2>> SizeChangedEvent;
-        public event EventHandler<StateChangedEvent<Double>> RotationChangedEvent;
+        public event EventHandler<StateChangedEvent<Single>>  RotationChangedEvent;
         public event EventHandler<StateChangedEvent<Vector2>> VelocityChangedEvent;
+        public event EventHandler<StateChangedEvent<Single>>  AngularVelocityChangedEvent;
 
         protected void FireChangeEvent<T>(EventHandler<StateChangedEvent<T>> handler, T oldValue, T newValue)
         {
@@ -47,10 +48,11 @@ namespace AngryTanks.Client
 
         private void AttachTestEventHandlers()
         {
-            PositionChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_PositionChangedEvent);
-            SizeChangedEvent     += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_SizeChangedEvent);
-            RotationChangedEvent += new EventHandler<StateChangedEvent<Double>>(DynamicSprite_RotationChangedEvent);
-            VelocityChangedEvent += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_VelocityChangedEvent);
+            PositionChangedEvent        += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_PositionChangedEvent);
+            SizeChangedEvent            += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_SizeChangedEvent);
+            RotationChangedEvent        += new EventHandler<StateChangedEvent<Single>> (DynamicSprite_RotationChangedEvent);
+            VelocityChangedEvent        += new EventHandler<StateChangedEvent<Vector2>>(DynamicSprite_VelocityChangedEvent);
+            AngularVelocityChangedEvent += new EventHandler<StateChangedEvent<Single>> (DynamicSprite_AngularVelocityChangedEvent);
         }
 
         private void DynamicSprite_PositionChangedEvent(object sender, StateChangedEvent<Vector2> e)
@@ -63,7 +65,7 @@ namespace AngryTanks.Client
             Log.DebugFormat("received size change event (old size: {0}, new size: {1}", e.OldValue, e.NewValue);
         }
 
-        private void DynamicSprite_RotationChangedEvent(object sender, StateChangedEvent<Double> e)
+        private void DynamicSprite_RotationChangedEvent(object sender, StateChangedEvent<Single> e)
         {
             Log.DebugFormat("received rotation change event (old rotation: {0}, new rotation: {1}", e.OldValue, e.NewValue);
         }
@@ -71,6 +73,11 @@ namespace AngryTanks.Client
         private void DynamicSprite_VelocityChangedEvent(object sender, StateChangedEvent<Vector2> e)
         {
             Log.DebugFormat("received velocity change event (old velocity: {0}, new velocity: {1}", e.OldValue, e.NewValue);
+        }
+
+        private void DynamicSprite_AngularVelocityChangedEvent(object sender, StateChangedEvent<Single> e)
+        {
+            Log.DebugFormat("received angular velocity change event (old angular velocity: {0}, new angular velocity: {1}", e.OldValue, e.NewValue);
         }
 
         #endregion
@@ -87,7 +94,7 @@ namespace AngryTanks.Client
         private   Vector2 position;
         protected Vector2 oldPosition, newPosition;
 
-        protected override Vector2 Position
+        public override Vector2 Position
         {
             get { return position; }
             set
@@ -99,7 +106,7 @@ namespace AngryTanks.Client
 
         private Vector2 size;
 
-        protected override Vector2 Size
+        public override Vector2 Size
         {
             get { return size; }
             set
@@ -109,23 +116,22 @@ namespace AngryTanks.Client
             }
         }
 
-        private Double rotation;
+        private Single rotation;
 
-        protected override Double Rotation
+        public override Single Rotation
         {
             get { return rotation; }
             set
             {
-                FireChangeEvent<Double>(RotationChangedEvent, Rotation, value);
+                FireChangeEvent<Single>(RotationChangedEvent, Rotation, value);
                 rotation = value;
             }
         }
 
-        // Velocity is backed by velocity, this is so we can set it initially in the constructor without firing an event or doing our funky velocity stuff
         private   Vector2 velocity;
         protected Vector2 oldVelocity, newVelocity;
 
-        protected virtual Vector2 Velocity
+        public virtual Vector2 Velocity
         {
             get { return velocity; }
             set
@@ -135,17 +141,46 @@ namespace AngryTanks.Client
             }
         }
 
+        private   Single angularVelocity;
+        protected Single oldAngularVelocity, newAngularVelocity;
+
+        public virtual Single AngularVelocity
+        {
+            get { return angularVelocity; }
+            set
+            {
+                FireChangeEvent<Single>(AngularVelocityChangedEvent, AngularVelocity, value);
+                angularVelocity = value;
+            }
+        }
+
         #endregion
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
             if (Log.IsDebugEnabled)
                 AttachTestEventHandlers();
         }
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Vector2 velocity)
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(texture, position, size, rotation, color)
+        {
+            if (Log.IsDebugEnabled)
+                AttachTestEventHandlers();
+        }
+
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
             : base(texture, position, size, rotation)
+        {
+            this.velocity = velocity;
+
+            if (Log.IsDebugEnabled)
+                AttachTestEventHandlers();
+        }
+
+        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity, Color color)
+            : base(texture, position, size, rotation, color)
         {
             this.velocity = velocity;
 

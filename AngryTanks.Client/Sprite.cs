@@ -16,29 +16,29 @@ namespace AngryTanks.Client
             get; set;
         }
 
-        protected virtual Vector2 Position
+        public virtual Vector2 Position
         {
             get; set;
         }
 
-        protected virtual Vector2 Size
+        public virtual Vector2 Size
         {
             get; set;
         }
 
-        protected virtual Double Rotation
+        public virtual Single Rotation
         {
             get; set;
         }
 
-        protected virtual Color Color
+        public virtual Color Color
         {
             get; set;
         }
 
         #endregion
 
-        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation)
+        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
         {
             this.Texture  = texture;
             this.Position = position;
@@ -47,7 +47,7 @@ namespace AngryTanks.Client
             this.Color    = Color.White;
         }
 
-        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Double rotation, Color color)
+        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
         {
             this.Texture  = texture;
             this.Position = position;
@@ -66,7 +66,7 @@ namespace AngryTanks.Client
          * 
          * Call this function to draw sprites that should be stretched.           
          */
-        public void drawStretched(GameTime gameTime, SpriteBatch spriteBatch)
+        public void DrawStretched(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Vector2 pixelPosition = Position * World.worldToPixel;
             Vector2 pixelSize = Size * World.worldToPixel;
@@ -90,7 +90,7 @@ namespace AngryTanks.Client
          * 
          * Call this function to draw sprites that should be tiled.           
          */
-        public void drawTiled(GameTime gameTime, SpriteBatch spriteBatch)
+        public void DrawTiled(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Vector2 pixelPosition = Position * World.worldToPixel;
             Vector2 pixelSize = Size * World.worldToPixel;
