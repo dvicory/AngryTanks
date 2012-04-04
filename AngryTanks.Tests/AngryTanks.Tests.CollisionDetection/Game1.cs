@@ -68,8 +68,8 @@ namespace AngryTanks.Tests.CollisionDetection
             RectangleTexture = Content.Load<Texture2D>("Square");
             MyFont = Content.Load<SpriteFont>("MyFont");
 
-            RectangleA = new RotatedRectangle(new Rectangle(100, 200, RectangleTexture.Width, RectangleTexture.Height), 0.0f);
-            RectangleB = new RotatedRectangle(new Rectangle(300, 200, 130, 390), 0.0f);
+            RectangleA = new RotatedRectangle(new RectangleF(100, 200, RectangleTexture.Width, RectangleTexture.Height), 0.0f);
+            RectangleB = new RotatedRectangle(new RectangleF(300, 200, 130, 390), 0.0f);
         }
 
         /// <summary>
@@ -122,22 +122,22 @@ namespace AngryTanks.Tests.CollisionDetection
 
             if (CurrentKeyboard.IsKeyDown(Keys.Up))
             {
-                RectangleA.ChangePosition(0, -2);
+                RectangleA.Y -= 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Down))
             {
-                RectangleA.ChangePosition(0, 2);
+                RectangleA.Y += 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Left))
             {
-                RectangleA.ChangePosition(-2, 0);
+                RectangleA.X -= 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Right))
             {
-                RectangleA.ChangePosition(2, 0);
+                RectangleA.X += 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Space))
@@ -152,22 +152,22 @@ namespace AngryTanks.Tests.CollisionDetection
 
             if (CurrentKeyboard.IsKeyDown(Keys.Up))
             {
-                RectangleB.ChangePosition(0, -2);
+                RectangleB.Y -= 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Down))
             {
-                RectangleB.ChangePosition(0, 2);
+                RectangleB.Y += 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Left))
             {
-                RectangleB.ChangePosition(-2, 0);
+                RectangleB.X -= 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Right))
             {
-                RectangleB.ChangePosition(2, 0);
+                RectangleB.X += 2;
             }
 
             if (CurrentKeyboard.IsKeyDown(Keys.Space))
@@ -196,10 +196,10 @@ namespace AngryTanks.Tests.CollisionDetection
             spriteBatch.DrawString(MyFont, "Rotate the Rectangle using the Spacebar", new Vector2(60, 70), Color.White);
             spriteBatch.DrawString(MyFont, "Change the selected Rectangle using the Tab key", new Vector2(60, 110), Color.White);
 
-            Rectangle aPositionAdjusted = new Rectangle(RectangleA.X + (RectangleA.Width / 2), RectangleA.Y + (RectangleA.Height / 2), RectangleA.Width, RectangleA.Height);
+            Rectangle aPositionAdjusted = (Rectangle)new RectangleF(RectangleA.X + (RectangleA.Width / 2), RectangleA.Y + (RectangleA.Height / 2), RectangleA.Width, RectangleA.Height);
             spriteBatch.Draw(RectangleTexture, aPositionAdjusted, new Rectangle(0, 0, 2, 6), aColor, RectangleA.Rotation, new Vector2(2 / 2, 6 / 2), SpriteEffects.None, 0);
 
-            aPositionAdjusted = new Rectangle(RectangleB.X + (RectangleB.Width / 2), RectangleB.Y + (RectangleB.Height / 2), RectangleB.Width, RectangleB.Height);
+            aPositionAdjusted = (Rectangle)new RectangleF(RectangleB.X + (RectangleB.Width / 2), RectangleB.Y + (RectangleB.Height / 2), RectangleB.Width, RectangleB.Height);
             spriteBatch.Draw(RectangleTexture, aPositionAdjusted, new Rectangle(0, 0, 2, 6), aColor, RectangleB.Rotation, new Vector2(2 / 2, 6 / 2), SpriteEffects.None, 0);
 
             spriteBatch.End();

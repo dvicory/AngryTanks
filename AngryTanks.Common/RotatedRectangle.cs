@@ -11,31 +11,69 @@ namespace AngryTanks.Common
     /// It is used for collision detection.
     /// Based on in part from code by George W. Clingerman.
     /// </summary>
-    public class RotatedRectangle
+    public class RotatedRectangle : RectangleF
     {
-        public Rectangle CollisionRectangle;
+        #region Properties
+
         public Single Rotation;
         public Vector2 Origin;
 
-        public RotatedRectangle(Rectangle rectangle, Single rotation)
+        public Vector2 UpperLeft
         {
-            this.CollisionRectangle = rectangle;
-            this.Rotation = rotation;
-
-            // Calculate the Rectangle's origin. We assume the center of the Rectangle will
-            // be the point that we will be rotating around and we use that for the origin
-            Origin = new Vector2((int)rectangle.Width / 2, (int)rectangle.Height / 2);
+            get
+            {
+                Vector2 upperLeft = new Vector2(Left, Top);
+                return RotatePoint(upperLeft, upperLeft + Origin, Rotation);
+            }
         }
 
-        /// <summary>
-        /// Used for changing the X and Y position of the RotatedRectangle
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void ChangePosition(int x, int y)
+        public Vector2 UpperRight
         {
-            CollisionRectangle.X += x;
-            CollisionRectangle.Y += y;
+            get
+            {
+                Vector2 upperRight = new Vector2(Right, Top);
+                return RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
+            }
+        }
+
+        public Vector2 LowerLeft
+        {
+            get
+            {
+                Vector2 lowerLeft = new Vector2(Left, Bottom);
+                return RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
+            }
+        }
+
+        public Vector2 LowerRight
+        {
+            get
+            {
+                Vector2 lowerRight = new Vector2(Right, Bottom);
+                return RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
+            }
+        }
+
+        #endregion
+
+        public RotatedRectangle(Single x, Single y, Single width, Single height, Single rotation)
+            : base(x, y, width, height)
+        {
+            this.Rotation = rotation;
+
+            // Calculate the Rectangles origin. We assume the center of the Rectangle will
+            // be the point that we will be rotating around and we use that for the origin
+            Origin = new Vector2(Width / 2, Height / 2);
+        }
+
+        public RotatedRectangle(RectangleF rectangle, Single rotation)
+            : base(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height)
+        {
+            this.Rotation = rotation;
+
+            // Calculate the Rectangles origin. We assume the center of the Rectangle will
+            // be the point that we will be rotating around and we use that for the origin
+            Origin = new Vector2(Width / 2, Height / 2);
         }
 
         /// <summary>
@@ -44,9 +82,9 @@ namespace AngryTanks.Common
         /// </summary>
         /// <param name="rectangle"></param>
         /// <returns></returns>
-        public bool Intersects(Rectangle rectangle)
+        public bool Intersects(RectangleF rectangle)
         {
-            return Intersects(new RotatedRectangle(rectangle, 0.0f));
+            return Intersects(new RotatedRectangle(rectangle, 0));
         }
 
         /// <summary>
@@ -59,11 +97,13 @@ namespace AngryTanks.Common
             // Calculate the Axis we will use to determine if a collision has occurred
             // Since the objects are rectangles, we only have to generate 4 Axis (2 for
             // each rectangle) since we know the other 2 on a rectangle are parallel.
-            List<Vector2> rectangleAxis = new List<Vector2>();
-            rectangleAxis.Add(UpperRightCorner() - UpperLeftCorner());
-            rectangleAxis.Add(UpperRightCorner() - LowerRightCorner());
-            rectangleAxis.Add(rectangle.UpperLeftCorner() - rectangle.LowerLeftCorner());
-            rectangleAxis.Add(rectangle.UpperLeftCorner() - rectangle.UpperRightCorner());
+            Vector2[] rectangleAxis =
+            {
+                UpperRight - UpperLeft,
+                UpperRight - LowerRight,
+                rectangle.UpperLeft - rectangle.LowerLeft,
+                rectangle.UpperLeft - rectangle.UpperRight
+            };
 
             // Cycle through all of the Axis we need to check. If a collision does not occur
             // on ALL of the Axis, then a collision is NOT occurring. We can then exit out 
@@ -92,33 +132,37 @@ namespace AngryTanks.Common
         {
             // Project the corners of the Rectangle we are checking on to the Axis and
             // get a scalar value of that project we can then use for comparison
-            List<int> rectangleAScalars = new List<int>();
-            rectangleAScalars.Add(GenerateScalar(rectangle.UpperLeftCorner(), axis));
-            rectangleAScalars.Add(GenerateScalar(rectangle.UpperRightCorner(), axis));
-            rectangleAScalars.Add(GenerateScalar(rectangle.LowerLeftCorner(), axis));
-            rectangleAScalars.Add(GenerateScalar(rectangle.LowerRightCorner(), axis));
+            Single[] otherRectangleScalars =
+            {
+                GenerateScalar(rectangle.UpperLeft, axis),
+                GenerateScalar(rectangle.UpperRight, axis),
+                GenerateScalar(rectangle.LowerLeft, axis),
+                GenerateScalar(rectangle.LowerRight, axis)
+            };
 
             // Project the corners of the current Rectangle on to the Axis and
             // get a scalar value of that project we can then use for comparison
-            List<int> rectangleBScalars = new List<int>();
-            rectangleBScalars.Add(GenerateScalar(UpperLeftCorner(), axis));
-            rectangleBScalars.Add(GenerateScalar(UpperRightCorner(), axis));
-            rectangleBScalars.Add(GenerateScalar(LowerLeftCorner(), axis));
-            rectangleBScalars.Add(GenerateScalar(LowerRightCorner(), axis));
+            Single[] curRectangleScalars =
+            {
+                GenerateScalar(UpperLeft, axis),
+                GenerateScalar(UpperRight, axis),
+                GenerateScalar(LowerLeft, axis),
+                GenerateScalar(LowerRight, axis)
+            };
 
-            // Get the Maximum and Minium Scalar values for each of the Rectangles
-            int rectangleAMinimum = rectangleAScalars.Min();
-            int rectangleAMaximum = rectangleAScalars.Max();
-            int rectangleBMinimum = rectangleBScalars.Min();
-            int rectangleBMaximum = rectangleBScalars.Max();
+            // Get the Maximum and Minimum Scalar values for each of the Rectangles
+            Single otherRectangleMinimum = otherRectangleScalars.Min();
+            Single otherRectangleMaximum = otherRectangleScalars.Max();
+            Single curRectangleMinimum   = curRectangleScalars.Min();
+            Single curRectangleMaximum   = curRectangleScalars.Max();
 
             // If we have overlaps between the Rectangles (i.e. Min of B is less than Max of A)
             // then we are detecting a collision between the rectangles on this Axis
-            if (rectangleBMinimum <= rectangleAMaximum && rectangleBMaximum >= rectangleAMaximum)
+            if (curRectangleMinimum <= otherRectangleMaximum && curRectangleMaximum >= otherRectangleMaximum)
             {
                 return true;
             }
-            else if (rectangleAMinimum <= rectangleBMaximum && rectangleAMaximum >= rectangleBMaximum)
+            else if (otherRectangleMinimum <= curRectangleMaximum && otherRectangleMaximum >= curRectangleMaximum)
             {
                 return true;
             }
@@ -133,19 +177,14 @@ namespace AngryTanks.Common
         /// <param name="rectangleCorner"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        private int GenerateScalar(Vector2 rectangleCorner, Vector2 axis)
+        private Single GenerateScalar(Vector2 rectangleCorner, Vector2 axis)
         {
-            // Using the formula for Vector projection. Take the corner being passed in
-            // and project it onto the given Axis
-            Single aNumerator = (rectangleCorner.X * axis.X) + (rectangleCorner.Y * axis.Y);
-            Single denominator = (axis.X * axis.X) + (axis.Y * axis.Y);
-            Single divisionResult = aNumerator / denominator;
-            Vector2 cornerProjected = new Vector2(divisionResult * axis.X, divisionResult * axis.Y);
+            // Take the corner being passed in and project it onto the given Axis
+            Vector2 cornerProjected = Vector2.Reflect(rectangleCorner, axis);
 
             // Now that we have our projected Vector, calculate a scalar of that projection
             // that can be used to more easily do comparisons
-            Single scalar = (axis.X * cornerProjected.X) + (axis.Y * cornerProjected.Y);
-            return (int)scalar;
+            return Vector2.Dot(axis, cornerProjected);
         }
 
         /// <summary>
@@ -158,61 +197,10 @@ namespace AngryTanks.Common
         /// <returns></returns>
         private Vector2 RotatePoint(Vector2 point, Vector2 origin, Single rotation)
         {
-            Vector2 translatedPoint = new Vector2();
-            translatedPoint.X = (Single)(origin.X + (point.X - origin.X) * Math.Cos(rotation)
-                - (point.Y - origin.Y) * Math.Sin(rotation));
-            translatedPoint.Y = (Single)(origin.Y + (point.Y - origin.Y) * Math.Cos(rotation)
-                + (point.X - origin.X) * Math.Sin(rotation));
-            return translatedPoint;
+            return Vector2.Transform(point,
+                                     Matrix.CreateTranslation(new Vector3(-origin, 0)) *
+                                     Matrix.CreateRotationZ(rotation) *
+                                     Matrix.CreateTranslation(new Vector3(origin, 0)));
         }
-
-        public Vector2 UpperLeftCorner()
-        {
-            Vector2 upperLeft = new Vector2(CollisionRectangle.Left, CollisionRectangle.Top);
-            upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
-            return upperLeft;
-        }
-
-        public Vector2 UpperRightCorner()
-        {
-            Vector2 upperRight = new Vector2(CollisionRectangle.Right, CollisionRectangle.Top);
-            upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
-            return upperRight;
-        }
-
-        public Vector2 LowerLeftCorner()
-        {
-            Vector2 lowerLeft = new Vector2(CollisionRectangle.Left, CollisionRectangle.Bottom);
-            lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
-            return lowerLeft;
-        }
-
-        public Vector2 LowerRightCorner()
-        {
-            Vector2 lowerRight = new Vector2(CollisionRectangle.Right, CollisionRectangle.Bottom);
-            lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
-            return lowerRight;
-        }
-
-        public int X
-        {
-            get { return CollisionRectangle.X; }
-        }
-
-        public int Y
-        {
-            get { return CollisionRectangle.Y; }
-        }
-
-        public int Width
-        {
-            get { return CollisionRectangle.Width; }
-        }
-
-        public int Height
-        {
-            get { return CollisionRectangle.Height; }
-        }
-
     }
 }
