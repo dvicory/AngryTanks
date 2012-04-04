@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "Referenc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngryTanks.Common", "AngryTanks.Common\AngryTanks.Common.csproj", "{916A9399-C7C6-4CA4-A2D1-EC23194D19C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngryTanks.Tests.CollisionDetection", "AngryTanks.Tests\AngryTanks.Tests.CollisionDetection\AngryTanks.Tests.CollisionDetection.csproj", "{D9816D38-6394-4BAC-9551-098DC7E94876}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,22 @@ Global
 		{833C064F-7D59-4DAC-AC5D-5443618DF28C}.Release|Any CPU.ActiveCfg = Release|x86
 		{833C064F-7D59-4DAC-AC5D-5443618DF28C}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{833C064F-7D59-4DAC-AC5D-5443618DF28C}.Release|x86.ActiveCfg = Release|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Debug|x86.ActiveCfg = Debug|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Debug|x86.Build.0 = Debug|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Release|Any CPU.ActiveCfg = Release|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Release|x86.ActiveCfg = Release|x86
+		{D9816D38-6394-4BAC-9551-098DC7E94876}.Release|x86.Build.0 = Release|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Debug|x86.ActiveCfg = Debug|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Release|Any CPU.ActiveCfg = Release|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{5E38850E-DAED-4A9F-9B3F-A228425FA2A4}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
