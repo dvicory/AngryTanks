@@ -10,7 +10,18 @@ namespace AngryTanks.Common
         public readonly Type   Type;
         public readonly String Name, Description;
 
-        public Object DefaultValue;
+        private Object defaultValue;
+        public Object DefaultValue
+        {
+            get
+            {
+                return Convert.ChangeType(defaultValue, Type); ;
+            }
+            set
+            {
+                this.defaultValue = value;
+            }
+        }
 
         private Object value = null;
         public Object Value
@@ -18,7 +29,7 @@ namespace AngryTanks.Common
             get
             {
                 if (value != null)
-                    return value;
+                    return Convert.ChangeType(value, Type);
                 else
                     return DefaultValue;
             }
@@ -32,7 +43,7 @@ namespace AngryTanks.Common
         {
             get
             {
-                if (DefaultValue.Equals(Value))
+                if (DefaultValue.Equals(Value) || value == null)
                     return false;
                 else
                     return true;
@@ -41,10 +52,13 @@ namespace AngryTanks.Common
 
         public VariableStore(String name, String description, Object defaultValue, Type type)
         {
+            if (defaultValue == null)
+                throw new ArgumentNullException("defaultValue", "Default value can not be null");
+
             this.Name         = name;
             this.Description  = description;
             this.Type         = type;
-            this.DefaultValue = defaultValue;
+            this.defaultValue = defaultValue;
         }
 
         public void Reset()
@@ -131,6 +145,8 @@ namespace AngryTanks.Common
                         "Number of shot slots", 5, typeof(UInt16));
             AddVariable("shotSpeed",
                         "Speed of shots", 100, typeof(Single));
+            AddVariable("tankAngVel",
+                        "Angular speed (radians/sec) of the tank", (Single)Math.PI / 2, typeof(Single));
             AddVariable("tankLength",
                         "Length of the tank", 6f, typeof(Single));
             AddVariable("tankSpeed",

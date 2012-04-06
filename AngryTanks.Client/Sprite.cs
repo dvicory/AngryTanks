@@ -12,6 +12,11 @@ namespace AngryTanks.Client
     {
         #region Properties
 
+        protected World World
+        {
+            get; set;
+        }
+
         protected virtual Texture2D Texture
         {
             get; set;
@@ -39,20 +44,19 @@ namespace AngryTanks.Client
 
         public virtual RotatedRectangle RectangleBounds
         {
-            get;
-            protected set;
+            get; protected set;
         }
 
         public virtual bool Collided
         {
-            get;
-            set;
+            get; set;
         }
 
         #endregion
 
-        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+        public Sprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
         {
+            this.World    = world;
             this.Texture  = texture;
             this.Position = position;
             this.Size     = size;
@@ -63,8 +67,9 @@ namespace AngryTanks.Client
                                                         this.Rotation);
         }
 
-        public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+        public Sprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
         {
+            this.World    = world;
             this.Texture  = texture;
             this.Position = position;
             this.Size     = size;

@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using AngryTanks.Common;
+
 namespace AngryTanks.Client
 {
     // TODO inherit from more generic Player
@@ -18,26 +20,25 @@ namespace AngryTanks.Client
     {
         private KeyboardState kb;
 
-        private Single maxVelocity, velocityFactor;
-        private Single maxAngularVelocity, angularVelocityFactor;
+        private Single velocityFactor;
+        private Single angularVelocityFactor;
 
-        public LocalPlayer(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
-            : base(texture, position, size, rotation)
+        public LocalPlayer(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+            : base(world, texture, position, size, rotation)
         {
-            maxVelocity = 25f;
-            maxAngularVelocity = (Single)Math.PI / 2;
         }
 
-        public LocalPlayer(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
-            : base(texture, position, size, rotation, color)
+        public LocalPlayer(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(world, texture, position, size, rotation, color)
         {
-            maxVelocity = 25f;
-            maxAngularVelocity = (Single)Math.PI / 2;
         }
 
         public override void Update(GameTime gameTime)
         {
             kb = Keyboard.GetState();
+
+            Single maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
+            Single maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
 
             /*  Basing my calculations on this:
              *  Velocity.X = VelocityFactor * MaxVelocity.X * cos(Rotation)

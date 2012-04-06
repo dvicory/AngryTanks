@@ -67,9 +67,16 @@ namespace AngryTanks.Client
 
         private LocalPlayer localPlayer;
 
+        // holds the variables in play for the World
+        public VariableDatabase VarDB;
+
         public World(IServiceProvider iservice)
         {
             IService = iservice;
+
+            // initialize variable database
+            // TODO need to get variables from server and stick them in this structure
+            VarDB = new VariableDatabase();
 
             // TODO if resolution changes on us, this will fail miserably
             // we need a way to detect if it changes and to then update camera's viewprt
@@ -96,16 +103,16 @@ namespace AngryTanks.Client
 
             // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED 
             List<StaticSprite> tiled = new List<StaticSprite>();
-            tiled.Add(new Box(boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
-            tiled.Add(new Box(boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
-            tiled.Add(new Box(boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            tiled.Add(new Box(boxTexture, new Vector2(-100, -100), new Vector2(100, 100), (Single)Math.PI / 4, Color.Red));
-            tiled.Add(new Box(boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
+            tiled.Add(new Box(this, boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
+            tiled.Add(new Box(this, boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
+            tiled.Add(new Box(this, boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
+            tiled.Add(new Box(this, boxTexture, new Vector2(-100, -100), new Vector2(100, 100), (Single)Math.PI / 4, Color.Red));
+            tiled.Add(new Box(this, boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
 
             // 2.8 width and 6 length are bzflag defaults
             // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
-            localPlayer = new LocalPlayer(tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
+            localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
         }
 
         public virtual void Update(GameTime gameTime)
@@ -397,9 +404,9 @@ namespace AngryTanks.Client
                     if (position.HasValue && size.HasValue)
                     {
                         if (currentType.Equals("box"))
-                            tiled.Add(new Box(boxTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
+                            tiled.Add(new Box(this, boxTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
                         if (currentType.Equals("pyramid"))
-                            stretched.Add(new Pyramid(pyramidTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
+                            stretched.Add(new Pyramid(this, pyramidTexture, position.Value, size.Value * 2, MathHelper.ToRadians(rotation)));
                     }
                     else
                     {

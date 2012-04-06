@@ -15,9 +15,8 @@ namespace AngryTanks.Client
 {
     public class Shot : DynamicSprite
     {
-        
-        public Shot(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
-            : base(texture, position, size, rotation)
+        public Shot(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
+            : base(world, texture, position, size, rotation)
         {
             // TODO: Construct any child components here
         }
@@ -33,21 +32,7 @@ namespace AngryTanks.Client
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.FrontToBack, SaveStateMode.None);
-
-            spriteBatch.Draw(Texture,
-                                Position,
-                                null,
-                                Color,
-                                (float)Rotation,
-                                Size,
-                                1f,
-                                SpriteEffects.None,
-                                0f
-                                );
-
-            spriteBatch.End();
+            DrawStretched(gameTime, spriteBatch);
         }
     }
 }

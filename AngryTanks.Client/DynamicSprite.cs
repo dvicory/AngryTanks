@@ -157,34 +157,16 @@ namespace AngryTanks.Client
 
         #endregion
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
-            : base(texture, position, size, rotation)
-        {
-            //if (Log.IsDebugEnabled)
-                //AttachTestEventHandlers();
-        }
-
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
-            : base(texture, position, size, rotation, color)
+        public DynamicSprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+            : base(world, texture, position, size, rotation)
         {
             if (Log.IsDebugEnabled)
                 AttachTestEventHandlers();
         }
 
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity)
-            : base(texture, position, size, rotation)
+        public DynamicSprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(world, texture, position, size, rotation, color)
         {
-            this.velocity = velocity;
-
-            if (Log.IsDebugEnabled)
-                AttachTestEventHandlers();
-        }
-
-        public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Vector2 velocity, Color color)
-            : base(texture, position, size, rotation, color)
-        {
-            this.velocity = velocity;
-
             if (Log.IsDebugEnabled)
                 AttachTestEventHandlers();
         }

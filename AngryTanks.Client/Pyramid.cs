@@ -8,17 +8,17 @@ using log4net;
 
 namespace AngryTanks.Client
 {
-    class Pyramid : StaticSprite
+    public class Pyramid : StaticSprite
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
-            : base(texture, position, size, rotation)
+        public Pyramid(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+            : base(world, texture, position, size, rotation)
         {
         }
 
-        public Pyramid(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
-            : base(texture, position, size, rotation, color)
+        public Pyramid(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(world, texture, position, size, rotation, color)
         {
         }
 

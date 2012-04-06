@@ -8,13 +8,13 @@ namespace AngryTanks.Client
 {
     public class StaticSprite : Sprite
     {
-        public StaticSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
-            : base(texture, position, size, rotation)
+        public StaticSprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
+            : base(world, texture, position, size, rotation)
         {
         }
 
-        public StaticSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
-            : base(texture, position, size, rotation, color)
+        public StaticSprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
+            : base(world, texture, position, size, rotation, color)
         {
         }
     }
