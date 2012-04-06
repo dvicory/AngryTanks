@@ -116,7 +116,8 @@ namespace AngryTanks.Client
             }
         }
 
-        private Single rotation;
+        private   Single rotation;
+        protected Single oldRotation, newRotation;
 
         public override Single Rotation
         {
@@ -159,8 +160,8 @@ namespace AngryTanks.Client
         public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
             : base(texture, position, size, rotation)
         {
-            if (Log.IsDebugEnabled)
-                AttachTestEventHandlers();
+            //if (Log.IsDebugEnabled)
+                //AttachTestEventHandlers();
         }
 
         public DynamicSprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
@@ -191,6 +192,15 @@ namespace AngryTanks.Client
         public virtual void Update(GameTime gameTime)
         {
             // TODO implement changing position and velocity
+
+            // update rectangle bounds
+            RectangleBounds.X = Position.X - Size.X / 2;
+            RectangleBounds.Y = Position.Y - Size.Y / 2;
+            RectangleBounds.Rotation = Rotation;
+
+            // size doesn't *normally* change, but...
+            RectangleBounds.Width  = Size.X;
+            RectangleBounds.Height = Size.Y;
         }
     }
 }

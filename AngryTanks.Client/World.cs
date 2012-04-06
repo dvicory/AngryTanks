@@ -14,6 +14,8 @@ using Microsoft.Xna.Framework.Storage;
 
 using log4net;
 
+using AngryTanks.Common;
+
 namespace AngryTanks.Client
 {
     public class World
@@ -77,8 +79,7 @@ namespace AngryTanks.Client
             contentManager = new ContentManager(IService, "Content");
 
             camera = new Camera(graphicsDevice.Viewport);
-            camera.Limits = new Rectangle((int)((-WorldSize / 2) * worldToPixel), (int)((-WorldSize / 2) * worldToPixel),
-                                          (int)(WorldSize * worldToPixel), (int)(WorldSize * worldToPixel));
+            camera.Limits = WorldUnitsToPixels(new RectangleF(-WorldSize / 2, -WorldSize / 2, WorldSize, WorldSize));
             camera.LookAt(Vector2.Zero);
         }
 
@@ -109,9 +110,6 @@ namespace AngryTanks.Client
 
         public virtual void Update(GameTime gameTime)
         {
-            // update the local player
-            localPlayer.Update(gameTime);
-
             // TODO make sure to move to a better input solution
             KeyboardState ks = Keyboard.GetState();
 
@@ -148,28 +146,63 @@ namespace AngryTanks.Client
 
             // now finally track the tank (disregards any panning)
             camera.LookAt(localPlayer.Position * worldToPixel);
+
+            // update the local player
+            localPlayer.Update(gameTime);
+
+            // check for collisions
+            mapObjects.TryGetValue("stretched", out stretched);
+            foreach (Sprite mapObject in stretched)
+            {
+                if (localPlayer.Intersects(mapObject))
+                {
+                    if (!mapObject.Collided)
+                    {
+                        Log.DebugFormat("tank collided with object at {0}", localPlayer.Position);
+                        Log.DebugFormat("tank rectangle bounds: {0}", localPlayer.RectangleBounds);
+                        Log.DebugFormat("object rectangle bounds: {0}", mapObject.RectangleBounds);
+                    }
+                    mapObject.Color = Color.Red;
+                    mapObject.Collided = true;
+                }
+                else
+                    mapObject.Color = Color.White;
+            }
+
+            mapObjects.TryGetValue("tiled", out tiled);
+            foreach (Sprite mapObject in tiled)
+            {
+                if (localPlayer.Intersects(mapObject))
+                {
+                    if (!mapObject.Collided)
+                    {
+                        Log.DebugFormat("tank collided with object at {0}", localPlayer.Position);
+                        Log.DebugFormat("tank rectangle bounds: {0}", localPlayer.RectangleBounds);
+                        Log.DebugFormat("object rectangle bounds: {0}", mapObject.RectangleBounds);
+                    }
+                    mapObject.Color = Color.Red;
+                    mapObject.Collided = true;
+                }
+                else
+                    mapObject.Color = Color.White;
+            }
+
         }
 
         public virtual void Draw(GameTime gameTime)
         {
-            // TODO fix, breaks stuff, so keep it at 1
-            Single backgroundZoomFactor = 1f;
-
             // FIRST Draw pass: the background
             spriteBatch.Begin(SpriteBlendMode.None,
                               SpriteSortMode.Immediate,
                               SaveStateMode.None,
-                              camera.GetViewMatrix(backgroundZoomFactor, true));
+                              camera.GetViewMatrix());
 
             // magic to tile
             graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
-            Rectangle source = new Rectangle((int)camera.CameraPosition.X, (int)camera.CameraPosition.Y,
-                                             graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
-
-            Rectangle destination = new Rectangle((int)camera.CameraPosition.X, (int)camera.CameraPosition.Y,
-                                                  graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
+            RectangleF source, destination;
+            source = destination = new RectangleF(camera.CameraPosition, new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
 
             /*
              * following works for infinite scrolling background IF Camera.Origin = Vector2.Zero
@@ -194,8 +227,8 @@ namespace AngryTanks.Client
 
             // essentially the same as above commented out code, just stuck in variables to be faster
             // TODO someone much smarter than me check the math on this. it works, but I'm sure it's overdrawing
-            int resizeByX = Math.Abs((int)(camera.Origin.X / (backgroundZoomFactor * camera.Zoom)));
-            int resizeByY = Math.Abs((int)(camera.Origin.Y / (backgroundZoomFactor * camera.Zoom)));
+            Single resizeByX = Math.Abs(camera.Origin.X / camera.Zoom);
+            Single resizeByY = Math.Abs(camera.Origin.Y / camera.Zoom);
 
             source.X -= resizeByX;
             source.Y -= resizeByY;
@@ -208,7 +241,7 @@ namespace AngryTanks.Client
             destination.Height += 2 * resizeByY;
 
             // draw the grass background
-            spriteBatch.Draw(backgroundTexture, destination, source, Color.White);
+            spriteBatch.Draw(backgroundTexture, (Rectangle)destination, (Rectangle)source, Color.White);
 
             spriteBatch.End();
 
@@ -388,5 +421,15 @@ namespace AngryTanks.Client
             return mapObjects;
         }
 
+        public static Vector2 WorldUnitsToPixels(Vector2 vector)
+        {
+            return vector * worldToPixel;
+        }
+
+        public static RectangleF WorldUnitsToPixels(RectangleF rectangle)
+        {
+            return new RectangleF(rectangle.X * worldToPixel, rectangle.Y * worldToPixel,
+                                  rectangle.Width * worldToPixel, rectangle.Height * worldToPixel);
+        }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using log4net;
 
+using AngryTanks.Common;
+
 namespace AngryTanks.Client
 {
     /// <summary>
@@ -86,9 +88,9 @@ namespace AngryTanks.Client
             }
         }
 
-        private Rectangle? limits;
+        private RectangleF limits = null;
 
-        public Rectangle? Limits
+        public RectangleF Limits
         {
             get { return limits; }
             set
@@ -124,30 +126,7 @@ namespace AngryTanks.Client
 
         public void LookAt(Vector2 position)
         {
-            Position = position + panPosition - new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f);
-        }
-
-        public Matrix GetViewMatrix(Single zoomFactor, bool preventParallax)
-        {
-            // we want a view matrix with a specific zoom factor
-            // so save our existing zoom
-            Single savedZoom = Zoom;
-            Vector2 savedPosition = Position;
-
-            if (preventParallax)
-                Position /= zoomFactor;
-
-            // now get the matrix with the new zoom
-            Zoom *= zoomFactor;
-            Matrix matrix = GetViewMatrix();
-
-            // reset our zoom
-            Zoom = savedZoom;
-
-            if (preventParallax)
-                Position = savedPosition;
-
-            return matrix;
+            Position = position + panPosition - Origin;
         }
 
         public Matrix GetViewMatrix()
@@ -170,10 +149,10 @@ namespace AngryTanks.Client
 
         private Single ValidateZoom(Single zoom)
         {
-            if (limits.HasValue)
+            if (limits != null)
             {
-                Single minZoomX = (Single)viewport.Width / limits.Value.Width;
-                Single minZoomY = (Single)viewport.Height / limits.Value.Height;
+                Single minZoomX = viewport.Width / limits.Width;
+                Single minZoomY = viewport.Height / limits.Height;
                 return MathHelper.Max(zoom, MathHelper.Max(minZoomX, minZoomY));
             }
             return zoom;
@@ -181,12 +160,12 @@ namespace AngryTanks.Client
 
         private Vector2 ValidatePosition(Vector2 pos)
         {
-            if (limits.HasValue)
+            if (limits != null)
             {
                 Vector2 cameraWorldMin = Vector2.Transform(Vector2.Zero, Matrix.Invert(GetViewMatrix()));
                 Vector2 cameraSize = new Vector2(viewport.Width, viewport.Height) / zoom;
-                Vector2 limitWorldMin = new Vector2(limits.Value.Left, limits.Value.Top);
-                Vector2 limitWorldMax = new Vector2(limits.Value.Right, limits.Value.Bottom);
+                Vector2 limitWorldMin = new Vector2(limits.Left, limits.Top);
+                Vector2 limitWorldMax = new Vector2(limits.Right, limits.Bottom);
                 Vector2 positionOffset = pos - cameraWorldMin;
                 return Vector2.Clamp(cameraWorldMin, limitWorldMin, limitWorldMax - cameraSize) + positionOffset;
             }

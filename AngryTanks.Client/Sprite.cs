@@ -4,11 +4,12 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using AngryTanks.Common;
+
 namespace AngryTanks.Client
 {
     public abstract class Sprite
     {
-
         #region Properties
 
         protected virtual Texture2D Texture
@@ -36,6 +37,18 @@ namespace AngryTanks.Client
             get; set;
         }
 
+        public virtual RotatedRectangle RectangleBounds
+        {
+            get;
+            protected set;
+        }
+
+        public virtual bool Collided
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation)
@@ -45,6 +58,9 @@ namespace AngryTanks.Client
             this.Size     = size;
             this.Rotation = rotation;
             this.Color    = Color.White;
+
+            this.RectangleBounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
+                                                        this.Rotation);
         }
 
         public Sprite(Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
@@ -54,6 +70,14 @@ namespace AngryTanks.Client
             this.Size     = size;
             this.Rotation = rotation;
             this.Color    = color;
+
+            this.RectangleBounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
+                                                        this.Rotation);
+        }
+
+        public virtual bool Intersects(Sprite sprite)
+        {
+            return RectangleBounds.Intersects(sprite.RectangleBounds);
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -68,18 +92,15 @@ namespace AngryTanks.Client
          */
         public void DrawStretched(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 pixelPosition = Position * World.worldToPixel;
-            Vector2 pixelSize = Size * World.worldToPixel;
+            Vector2 pixelPosition = World.WorldUnitsToPixels(Position);
+            Vector2 pixelSize = World.WorldUnitsToPixels(Size);
 
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)pixelPosition.X,
-                                           (int)pixelPosition.Y,
-                                           (int)pixelSize.X,
-                                           (int)pixelSize.Y),
+                             (Rectangle)new RectangleF(pixelPosition, pixelSize),
                              // for STRETCH MODE, set source relative to the texture's dimensions
                              new Rectangle(0, 0, (int)Texture.Width, (int)Texture.Height),
                              Color,
-                             (float)Rotation,
+                             Rotation,
                              // for STRETCH MODE, set the origin relative to the texture's dimensions
                              new Vector2(Texture.Width / 2, Texture.Height / 2),
                              SpriteEffects.None, 0);
@@ -92,18 +113,15 @@ namespace AngryTanks.Client
          */
         public void DrawTiled(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 pixelPosition = Position * World.worldToPixel;
-            Vector2 pixelSize = Size * World.worldToPixel;
+            Vector2 pixelPosition = World.WorldUnitsToPixels(Position);
+            Vector2 pixelSize = World.WorldUnitsToPixels(Size);
 
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)pixelPosition.X,
-                                           (int)pixelPosition.Y,
-                                           (int)pixelSize.X,
-                                           (int)pixelSize.Y),
+                             (Rectangle)new RectangleF(pixelPosition, pixelSize),
                              // for TILE MODE, set source relative to the Size's dimensions
                              new Rectangle(0, 0, (int)pixelSize.X, (int)pixelSize.Y),
                              Color,
-                             (float)Rotation,
+                             Rotation,
                              // for TILE MODE, set the origin relative to the Size's dimensions
                              new Vector2(pixelSize.X / 2, pixelSize.Y / 2),
                              SpriteEffects.None, 0);

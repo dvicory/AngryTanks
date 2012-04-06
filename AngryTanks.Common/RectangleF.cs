@@ -42,6 +42,14 @@ namespace AngryTanks.Common
             this.Height = height;
         }
 
+        public RectangleF(Vector2 position, Vector2 size)
+        {
+            this.X = position.X;
+            this.Y = position.Y;
+            this.Width = size.X;
+            this.Height = size.Y;
+        }
+
         public static explicit operator Rectangle(RectangleF rect)
         {
             return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);

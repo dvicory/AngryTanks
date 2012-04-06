@@ -202,5 +202,10 @@ namespace AngryTanks.Common
                                      Matrix.CreateRotationZ(rotation) *
                                      Matrix.CreateTranslation(new Vector3(origin, 0)));
         }
+
+        public override String ToString()
+        {
+            return String.Format("{{X:{0} Y:{1} Width:{2} Height:{3} Rotation:{4}}}", X, Y, Width, Height, Rotation);
+        }
     }
 }

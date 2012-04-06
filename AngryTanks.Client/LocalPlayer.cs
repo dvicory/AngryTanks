@@ -59,12 +59,15 @@ namespace AngryTanks.Client
             if (kb.IsKeyDown(Keys.W) || kb.IsKeyDown(Keys.S))
             {
                 oldVelocity = newVelocity;
+                oldPosition = newPosition;
 
                 newVelocity.X = velocityFactor * maxVelocity * (Single)Math.Cos(Rotation - Math.PI / 2);
                 newVelocity.Y = velocityFactor * maxVelocity * (Single)Math.Sin(Rotation - Math.PI / 2);
 
                 Velocity = (oldVelocity + newVelocity) * 0.5f;
-                Position += Velocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+
+                newPosition += Velocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+                Position = newPosition;
             }
 
             if (kb.IsKeyDown(Keys.A))
@@ -77,11 +80,14 @@ namespace AngryTanks.Client
             if (kb.IsKeyDown(Keys.A) || kb.IsKeyDown(Keys.D))
             {
                 oldAngularVelocity = newAngularVelocity;
+                oldRotation = newRotation;
 
                 newAngularVelocity = angularVelocityFactor * maxAngularVelocity;
 
                 AngularVelocity = MathHelper.WrapAngle((Single)(newAngularVelocity + oldAngularVelocity) * 0.5f);
-                Rotation += AngularVelocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+
+                newRotation += AngularVelocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+                Rotation = newRotation;
             }
 
             base.Update(gameTime);
