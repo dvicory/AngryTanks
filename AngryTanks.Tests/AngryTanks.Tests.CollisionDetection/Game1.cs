@@ -32,6 +32,8 @@ namespace AngryTanks.Tests.CollisionDetection
         bool IsRectangleASelected = true;
         bool IsCollisionDetected = false;
 
+        Single CollisionOverlap = 0;
+
         KeyboardState PreviousKeyboardState;
 
         public Game1()
@@ -69,7 +71,7 @@ namespace AngryTanks.Tests.CollisionDetection
             MyFont = Content.Load<SpriteFont>("MyFont");
 
             RectangleA = new RotatedRectangle(new RectangleF(100, 200, RectangleTexture.Width, RectangleTexture.Height), 0.0f);
-            RectangleB = new RotatedRectangle(new RectangleF(300, 200, 130, 390), 0.0f);
+            RectangleB = new RotatedRectangle(new RectangleF(300, 200, 230, 390), 0.0f);
         }
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace AngryTanks.Tests.CollisionDetection
         {
             SwitchActiveRectangle();
             MoveRectangle();
-            IsCollisionDetected = RectangleA.Intersects(RectangleB);
+            IsCollisionDetected = RectangleA.Intersects(RectangleB, out CollisionOverlap);
             base.Update(gameTime);
         }
 
@@ -195,6 +197,7 @@ namespace AngryTanks.Tests.CollisionDetection
             spriteBatch.DrawString(MyFont, "Move the Rectangle using the Arrow Keys", new Vector2(60, 30), Color.White);
             spriteBatch.DrawString(MyFont, "Rotate the Rectangle using the Spacebar", new Vector2(60, 70), Color.White);
             spriteBatch.DrawString(MyFont, "Change the selected Rectangle using the Tab key", new Vector2(60, 110), Color.White);
+            spriteBatch.DrawString(MyFont, String.Format("Overlap for A: {0}", CollisionOverlap), new Vector2(60, 150), Color.White);
 
             Rectangle aPositionAdjusted = (Rectangle)new RectangleF(RectangleA.X + (RectangleA.Width / 2), RectangleA.Y + (RectangleA.Height / 2), RectangleA.Width, RectangleA.Height);
             spriteBatch.Draw(RectangleTexture, aPositionAdjusted, new Rectangle(0, 0, 2, 6), aColor, RectangleA.Rotation, new Vector2(2 / 2, 6 / 2), SpriteEffects.None, 0);

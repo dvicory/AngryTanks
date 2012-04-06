@@ -54,6 +54,15 @@ namespace AngryTanks.Common
             }
         }
 
+        private Vector2[] Vertices
+        {
+            get
+            {
+                Vector2[] vertices = { UpperLeft, UpperRight, LowerLeft, LowerRight };
+                return vertices;
+            }
+        }
+
         #endregion
 
         public RotatedRectangle(Single x, Single y, Single width, Single height, Single rotation)
@@ -61,7 +70,7 @@ namespace AngryTanks.Common
         {
             this.Rotation = rotation;
 
-            // Calculate the Rectangles origin. We assume the center of the Rectangle will
+            // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
         }
@@ -71,33 +80,34 @@ namespace AngryTanks.Common
         {
             this.Rotation = rotation;
 
-            // Calculate the Rectangles origin. We assume the center of the Rectangle will
+            // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
         }
 
         /// <summary>
-        /// This intersects method can be used to check a standard XNA framework Rectangle
-        /// object and see if it collides with a Rotated Rectangle object
+        /// Checks to see if a <see cref="RectangleF"/> has collided with a <see cref="RotatedRectangle"/>.
         /// </summary>
         /// <param name="rectangle"></param>
+        /// <param name="overlap"></param>
         /// <returns></returns>
-        public bool Intersects(RectangleF rectangle)
+        public bool Intersects(RectangleF rectangle, out Single overlap)
         {
-            return Intersects(new RotatedRectangle(rectangle, 0));
+            return Intersects(new RotatedRectangle(rectangle, 0), out overlap);
         }
 
         /// <summary>
-        /// Check to see if two Rotated Rectangles have collided
+        /// Check to see if two <see cref="RotatedRectangle"/>s have collided.
         /// </summary>
         /// <param name="rectangle"></param>
+        /// <param name="overlap"></param>
         /// <returns></returns>
-        public bool Intersects(RotatedRectangle rectangle)
+        public bool Intersects(RotatedRectangle rectangle, out Single overlap)
         {
-            // Calculate the Axis we will use to determine if a collision has occurred
-            // Since the objects are rectangles, we only have to generate 4 Axis (2 for
+            // Calculate the axes we will use to determine if a collision has occurred
+            // Since the objects are rectangles, we only have to generate 4 axes (2 for
             // each rectangle) since we know the other 2 on a rectangle are parallel.
-            Vector2[] rectangleAxis =
+            Vector2[] axes =
             {
                 UpperRight - UpperLeft,
                 UpperRight - LowerRight,
@@ -105,19 +115,36 @@ namespace AngryTanks.Common
                 rectangle.UpperLeft - rectangle.UpperRight
             };
 
-            // Cycle through all of the Axis we need to check. If a collision does not occur
-            // on ALL of the Axis, then a collision is NOT occurring. We can then exit out 
+            // Cycle through all of the axes we need to check. If a collision does not occur
+            // on ALL of the axes, then a collision is NOT occurring. We can then exit out 
             // immediately and notify the calling function that no collision was detected. If
-            // a collision DOES occur on ALL of the Axis, then there is a collision occurring
-            // between the rotated rectangles. We know this to be true by the Seperating Axis Theorem
-            foreach (Vector2 axis in rectangleAxis)
+            // a collision DOES occur on ALL of the axes, then there is a collision occurring
+            // between the rotated rectangles. We know this to be true by the Seperating Axis Theorem.
+
+            // In addition, overlap is tracked so that the smallest overlap can be stored for the caller.
+            Single bestOverlap = Single.MaxValue;
+            Single o;
+
+            foreach (Vector2 axis in axes)
             {
-                if (!IsAxisCollision(rectangle, axis))
+                if (!IsAxisCollision(rectangle, axis, out o))
                 {
+                    // if there is no axis collision, we can guarantee they do not overlap
+                    overlap = 0;
                     return false;
+                }
+                else
+                {
+                    // do we have the smallest overlap yet?
+                    if (o < bestOverlap)
+                    {
+                        bestOverlap = o;
+                    }
                 }
             }
 
+            // it is now guaranteed that the rectangles intersect for us to have gotten this far
+            overlap = bestOverlap;
             return true;
         }
 
@@ -126,65 +153,70 @@ namespace AngryTanks.Common
         /// planes parallel to the Rectangle
         /// </summary>
         /// <param name="rectangle"></param>
-        /// <param name="axis"></param>
+        /// <param name="axes"></param>
         /// <returns></returns>
-        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis)
+        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap)
         {
-            // Project the corners of the Rectangle we are checking on to the Axis and
-            // get a scalar value of that project we can then use for comparison
-            Single[] otherRectangleScalars =
-            {
-                GenerateScalar(rectangle.UpperLeft, axis),
-                GenerateScalar(rectangle.UpperRight, axis),
-                GenerateScalar(rectangle.LowerLeft, axis),
-                GenerateScalar(rectangle.LowerRight, axis)
-            };
+            // project both rectangles onto the axis
+            Projection curProj   = this.Project(axis);
+            Projection otherProj = rectangle.Project(axis);
 
-            // Project the corners of the current Rectangle on to the Axis and
-            // get a scalar value of that project we can then use for comparison
-            Single[] curRectangleScalars =
+            // do the projections overlap?
+            if (!curProj.Overlaps(otherProj))
             {
-                GenerateScalar(UpperLeft, axis),
-                GenerateScalar(UpperRight, axis),
-                GenerateScalar(LowerLeft, axis),
-                GenerateScalar(LowerRight, axis)
-            };
-
-            // Get the Maximum and Minimum Scalar values for each of the Rectangles
-            Single otherRectangleMinimum = otherRectangleScalars.Min();
-            Single otherRectangleMaximum = otherRectangleScalars.Max();
-            Single curRectangleMinimum   = curRectangleScalars.Min();
-            Single curRectangleMaximum   = curRectangleScalars.Max();
-
-            // If we have overlaps between the Rectangles (i.e. Min of B is less than Max of A)
-            // then we are detecting a collision between the rectangles on this Axis
-            if (curRectangleMinimum <= otherRectangleMaximum && curRectangleMaximum >= otherRectangleMaximum)
+                overlap = 0;
+                return false;
+            }
+            else
             {
+                // get the overlap
+                overlap = curProj.GetOverlap(otherProj);
+
+                // TODO does this work?
+                // check for containment
+                if (curProj.Contains(otherProj) || otherProj.Contains(curProj))
+                {
+                    // get the overlap plus the distance from the minimum end points
+                    Single mins = Math.Abs(curProj.Min - otherProj.Min);
+                    Single maxs = Math.Abs(curProj.Max - otherProj.Max);
+
+                    // NOTE: depending on which is smalelr you may need to negate the separating axis
+                    if (mins < maxs)
+                        overlap += mins;
+                    else
+                        overlap += maxs;
+                }
+
+                // and return true for an axis collision
                 return true;
             }
-            else if (otherRectangleMinimum <= curRectangleMaximum && otherRectangleMaximum >= curRectangleMaximum)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
-        /// Generates a scalar value that can be used to compare where corners of 
-        /// a rectangle have been projected onto a particular axis. 
+        /// Projects the <see cref="RotatedRectangle"/> onto an axis.
         /// </summary>
-        /// <param name="rectangleCorner"></param>
-        /// <param name="axis"></param>
-        /// <returns></returns>
-        private Single GenerateScalar(Vector2 rectangleCorner, Vector2 axis)
+        /// <param name="axis">The axis to project.</param>
+        /// <returns>A <see cref="Projection"/> of this <see cref="RotatedRectangle"/> on the given <paramref name="axis"/>.</returns>
+        private Projection Project(Vector2 axis)
         {
-            // Take the corner being passed in and project it onto the given Axis
-            Vector2 cornerProjected = Vector2.Reflect(rectangleCorner, axis);
+            // required to get accurate projections
+            axis.Normalize();
 
-            // Now that we have our projected Vector, calculate a scalar of that projection
-            // that can be used to more easily do comparisons
-            return Vector2.Dot(axis, cornerProjected);
+            Vector2[] vertices = this.Vertices;
+
+            Single min = Vector2.Dot(axis, vertices[0]);
+            Single max = min;
+
+            foreach (Vector2 vertice in vertices)
+            {
+                Single p = Vector2.Dot(axis, vertice);
+                if (p < min)
+                    min = p;
+                else if (p > max)
+                    max = p;
+            }
+
+            return new Projection(min, max);
         }
 
         /// <summary>
