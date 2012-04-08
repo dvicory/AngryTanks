@@ -68,8 +68,11 @@ namespace AngryTanks.Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            world.LoadContent();
-            world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
+            if (world != null)
+            {
+                world.LoadContent();
+                world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
+            }
         }
 
         /// <summary>
