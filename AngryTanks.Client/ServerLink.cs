@@ -3,39 +3,122 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 using log4net;
 using Lidgren.Network;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Protocol;
+using AngryTanks.Common.Messages;
 
 namespace AngryTanks.Client
 {
-    using MessageType = Protocol.MessageType;
-    using TeamType    = Protocol.TeamType;
+    /// <summary>
+    /// Status for a <see cref="ServerLink"/> instance
+    /// </summary>
+    public enum NetServerLinkStatus
+    {
+        /// <summary>
+        /// No connection, or attempt, in place
+        /// </summary>
+        None,
 
-    class ServerLink : NetClient
+        /// <summary>
+        /// Connection in progress
+        /// </summary>
+        Connecting,
+
+        /// <summary>
+        /// Received MsgAccept and will begin to receive initial state
+        /// </summary>
+        Accepted,
+
+        /// <summary>
+        /// In the process of receiving state
+        /// </summary>
+        GettingState,
+
+        /// <summary>
+        /// Connected to server and received initial state
+        /// </summary>
+        Connected,
+
+        /// <summary>
+        /// In the process of disconnecting
+        /// </summary>
+        Disconnecting,
+
+        /// <summary>
+        /// Disconnected from server
+        /// </summary>
+        Disconnected
+    }
+
+    public class ServerLinkStateChangedEvent<T> : EventArgs
+    {
+        public readonly T OldValue, NewValue;
+
+        public ServerLinkStateChangedEvent(T oldValue, T newValue)
+        {
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+    }
+
+    public class ServerLinkMessageEvent : EventArgs
+    {
+        public readonly MessageType MessageType;
+        public readonly MsgBaseData MessageData;
+
+        public ServerLinkMessageEvent(MessageType messageType, MsgBaseData messageData)
+        {
+            MessageType = messageType;
+            MessageData = messageData;
+        }
+    }
+
+    public class ServerLink
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Configuration for <see cref="NetClient"/>
+        /// </summary>
         private static NetPeerConfiguration Config;
 
-        private Action<StreamReader> MapLoadedCallback;
+        /// <summary>
+        /// Reference to the <see cref="NetClient"/> instance
+        /// </summary>
+        private NetClient Client;
 
-        // TODO make this more robust... need connection state
-        private bool got_world = false;
-        public bool GotWorld
+        /// <summary>
+        /// Backs ServerLinkStatus property
+        /// </summary>
+        private NetServerLinkStatus serverLinkStatus = NetServerLinkStatus.None;
+
+        /// <summary>
+        /// Get the status of <see cref="ServerLink"/>
+        /// </summary>
+        public NetServerLinkStatus ServerLinkStatus
         {
-            get
+            get { return serverLinkStatus; }
+            set
             {
-                return got_world;
+                // TODO fire event
+                serverLinkStatus = value;
             }
         }
 
+        /// <summary>
+        /// Event hook to receive messages
+        /// </summary>
+        public event EventHandler<ServerLinkMessageEvent> MessageReceivedEvent;
+
         public ServerLink()
-            : base(SetupConfig())
         {
-            Start();
+            Client = new NetClient(SetupConfig());
+            Client.Start();
         }
 
         private static NetPeerConfiguration SetupConfig()
@@ -49,20 +132,29 @@ namespace AngryTanks.Client
             return Config;
         }
 
-        public NetConnection Connect(string host, int port, Action<StreamReader> mapLoadedCallback)
+        public NetConnection Connect(string host, UInt16 port)
         {
-            MapLoadedCallback = mapLoadedCallback; 
-
-            NetOutgoingMessage hailMessage = CreateMessage();
+            NetOutgoingMessage hailMessage = Client.CreateMessage();
 
             // TODO be able to change callsign/tag
             hailMessage.Write((Byte)MessageType.MsgEnter);
-            hailMessage.Write(Protocol.ProtocolVersion);
+            hailMessage.Write(ProtocolInformation.ProtocolVersion);
             hailMessage.Write((Byte)TeamType.RogueTeam);
             hailMessage.Write("Player Callsign");
             hailMessage.Write("Player Tag");
 
-            return base.Connect(host, port, hailMessage);
+            // we are now initiating the connect, so change status
+            ServerLinkStatus = NetServerLinkStatus.Connecting;
+            
+            return Client.Connect(host, port, hailMessage);
+        }
+
+        public void Disconnect(string byeMessage)
+        {
+            Client.Disconnect(byeMessage);
+
+            // in the processing of disconnecting... now
+            ServerLinkStatus = NetServerLinkStatus.Disconnecting;
         }
 
         public void Update()
@@ -70,55 +162,98 @@ namespace AngryTanks.Client
             NetIncomingMessage msg;
 
             // are there any messages for us to read?
-            while ((msg = ReadMessage()) != null)
+            while ((msg = Client.ReadMessage()) != null)
             {
                 switch (msg.MessageType)
                 {
+                    case NetIncomingMessageType.WarningMessage:
+                        Log.Warn(msg.ReadString());
+                        break;
+
+                    case NetIncomingMessageType.ErrorMessage:
+                        Log.Error(msg.ReadString());
+                        break;
+
+                    case NetIncomingMessageType.DebugMessage:
+                        Log.Debug(msg.ReadString());
+                        break;
+
+                    case NetIncomingMessageType.ConnectionLatencyUpdated:
+                        Log.InfoFormat("Connection latency: {0}", msg.ReadSingle());
+                        break;
+
+                    case NetIncomingMessageType.StatusChanged:
+                        NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+
+                        switch (status)
+                        {
+                            case NetConnectionStatus.Connected:
+                                ServerLinkStatus = NetServerLinkStatus.Accepted;
+                                break;
+                            case NetConnectionStatus.Disconnected:
+                                ServerLinkStatus = NetServerLinkStatus.Disconnected;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        string reason = msg.ReadString();
+                        Log.DebugFormat("New status: {0} ({1})", status, reason);
+
+                        break;
+
                     case NetIncomingMessageType.Data:
-                        Log.Debug("Got Data");
                         HandleData(msg);
                         break;
+
                     default:
-                        Log.DebugFormat("Got Default: {0}", msg.MessageType);
+                        Log.DebugFormat("Hit default message handler for {0}", msg.MessageType);
                         break;
                 }
 
                 // reduce GC pressure by recycling
-                Recycle(msg);
+                Client.Recycle(msg);
             }
 
-            // TODO we should check state and see what to do, this is hacked in
-            if (!got_world)
+            // let server know we're ready to start receiving state if we've been accepted
+            if (ServerLinkStatus == NetServerLinkStatus.Accepted)
             {
-                NetOutgoingMessage map_request = CreateMessage();
+                NetOutgoingMessage msgReady = Client.CreateMessage();
 
-                map_request.Write((Byte)MessageType.MsgWorld);
+                msgReady.Write((Byte)MessageType.MsgState);
 
-                SendMessage(map_request, NetDeliveryMethod.ReliableOrdered, 0);
+                Client.SendMessage(msgReady, NetDeliveryMethod.ReliableOrdered, 0);
+
+                // we now move to getting initial state
+                ServerLinkStatus = NetServerLinkStatus.GettingState;
             }
         }
 
-        // TODO actually handle data
         private void HandleData(NetIncomingMessage msg)
         {
             Byte messageType = msg.ReadByte();
 
             switch (messageType)
             {
+                case (Byte)MessageType.MsgState:
+                    // we finished receiving state at this point
+                    ServerLinkStatus = NetServerLinkStatus.Connected;
+                    break;
+
                 case (Byte)MessageType.MsgWorld:
                     Log.Debug("Got MsgWorld");
 
-                    UInt16 map_len = msg.ReadUInt16();
+                    UInt16 mapLength = msg.ReadUInt16();
 
-                    Byte[] raw_world = new Byte[map_len];
-                    raw_world = msg.ReadBytes(map_len);
+                    Byte[] rawWorld = new Byte[mapLength];
+                    rawWorld = msg.ReadBytes(mapLength);
 
-                    got_world = true;
-
-                    MemoryStream ms = new MemoryStream(raw_world);
+                    MemoryStream ms = new MemoryStream(rawWorld);
                     StreamReader sr = new StreamReader(ms);
 
-                    MapLoadedCallback(sr);
+                    MsgWorldData msgWorldEventData = new MsgWorldData(sr);
+
+                    FireEvent(msgWorldEventData);
 
                     break;
 
@@ -127,6 +262,19 @@ namespace AngryTanks.Client
                     // protocol version should protect us from unknowns
                     break;
 
+            }
+        }
+
+        private void FireEvent(MsgBaseData msgData)
+        {
+            EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
+
+            // prevent race condition
+            if (handler != null)
+            {
+                // notify delegates attached to event
+                ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData);
+                handler(this, e);
             }
         }
     }

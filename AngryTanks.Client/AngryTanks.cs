@@ -14,6 +14,9 @@ using Microsoft.Xna.Framework.Storage;
 
 using log4net;
 
+using AngryTanks.Common.Protocol;
+using AngryTanks.Common.Messages;
+
 namespace AngryTanks.Client
 {
     /// <summary>
@@ -35,9 +38,8 @@ namespace AngryTanks.Client
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            //serverLink = new ServerLink();
-            //serverLink.Connect("localhost", 5150, MapLoaded);
-            
+            serverLink = new ServerLink();
+            serverLink.MessageReceivedEvent += ReceiveMessage;
         }
 
         /// <summary>
@@ -50,9 +52,8 @@ namespace AngryTanks.Client
         {
             // TODO: Add your initialization logic here
 
-            // intantiate the world
+            // instantiate the world
             world = new World(Services);
-            
 
             base.Initialize();
         }
@@ -68,7 +69,7 @@ namespace AngryTanks.Client
 
             // TODO: use this.Content to load your game content here
             world.LoadContent();
-            world.LoadMap(new StreamReader("../../../Content/maps/pillbox2.bzw"));
+            world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
         }
 
         /// <summary>
@@ -91,10 +92,51 @@ namespace AngryTanks.Client
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
-            //serverLink.Update();
+            KeyboardState kb = Keyboard.GetState();
 
-            world.Update(gameTime);
+            // TODO these keys are temporary
+
+            if (kb.IsKeyDown(Keys.F1))
+            {
+                graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+                graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+                graphics.IsFullScreen = true;
+                graphics.ApplyChanges();
+            }
+
+            // connect to the server when you press C
+            if (kb.IsKeyDown(Keys.C)
+                && (serverLink.ServerLinkStatus == NetServerLinkStatus.None
+                    || serverLink.ServerLinkStatus == NetServerLinkStatus.Disconnected))
+            {
+                if (world != null)
+                {
+                    world.Dispose();
+                    world = null;
+                }
+
+                world = new World(Services);
+                world.LoadContent();
+                serverLink.Connect("localhost", 5150);
+            }
+
+            //  disconnect when you press X
+            if (kb.IsKeyDown(Keys.X)
+                && serverLink.ServerLinkStatus == NetServerLinkStatus.Connected)
+            {
+                if (world != null)
+                {
+                    world.Dispose();
+                    world = null;
+                }
+
+                serverLink.Disconnect("player initiated disconnect");
+            }
+
+            serverLink.Update();
+
+            if (world != null)
+                world.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -109,15 +151,31 @@ namespace AngryTanks.Client
 
             // TODO: Add your drawing code here
 
-            world.Draw(gameTime);
+            if (world != null)
+                world.Draw(gameTime);
 
             base.Draw(gameTime);
         }
 
-        // TODO make this a more generic ServerLinkStateChanged
-        private void MapLoaded(StreamReader map)
+        private void ReceiveMessage(object sender, ServerLinkMessageEvent message)
         {
-            Log.Debug("AngryTanks.MapLoaded");
+            Log.Debug("AngryTanks.ReceiveMessage");
+
+            switch (message.MessageType)
+            {
+                case MessageType.MsgWorld:
+                    Log.Debug("Received MsgWorld");
+
+                    MsgWorldData msgWorldData = (MsgWorldData)message.MessageData;
+
+                    if (world != null)
+                        world.LoadMap(msgWorldData.Map);
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

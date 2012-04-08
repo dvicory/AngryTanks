@@ -275,6 +275,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="maps\ducati_style_random.bzw">
+      <Name>ducati_style_random</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="maps\pillbox.bzw">
+      <Name>pillbox</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="maps\pillbox2.bzw">
+      <Name>pillbox2</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="map_test.txt">
       <Name>map_test</Name>
     </None>
