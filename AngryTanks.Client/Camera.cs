@@ -72,8 +72,8 @@ namespace AngryTanks.Client
 
                 // validate everything
                 zoom = ValidateZoom(zoom);
-                panPosition = ValidatePosition(panPosition);
                 position = ValidatePosition(position);
+                panPosition = ValidatePosition(panPosition);
             }
         }
 
@@ -99,8 +99,8 @@ namespace AngryTanks.Client
 
                 // validate everything
                 zoom = ValidateZoom(zoom);
-                panPosition = ValidatePosition(panPosition);
                 position = ValidatePosition(position);
+                panPosition = ValidatePosition(panPosition);
             }
         }
 
