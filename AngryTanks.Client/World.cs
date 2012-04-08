@@ -18,14 +18,62 @@ using AngryTanks.Common;
 
 namespace AngryTanks.Client
 {
-    public class World
+    public class World : IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        // allows us to get a reference to things like IGraphicsDeviceService
+        #region Public Properties
+
+        private bool disposed = false;
+
+        /// <summary>
+        /// True if Dispose() has been called
+        /// </summary>
+        public bool Disposed
+        {
+            get { return disposed; }
+        }
+
+        // world-unit to pixel conversion factor
+        public static int WorldToPixel = 10;
+
+        private String worldName;
+
+        /// <summary>
+        /// Gets the name of the world
+        /// </summary>
+        public String WorldName
+        {
+            get { return worldName; }
+        }
+
+        private Single worldSize = 800;
+
+        /// <summary>
+        /// Gets the size of the world
+        /// </summary>
+        public Single WorldSize
+        {
+            get { return worldSize; }
+        }
+
+        private VariableDatabase varDB;
+
+        /// <summary>
+        /// Holds the variables in play for <see cref="World"/>
+        /// </summary>
+        public VariableDatabase VarDB
+        {
+            get { return varDB; }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Allows us to get a reference to various services
+        /// </summary>
         protected readonly IServiceProvider IService;
 
-        // world manages the camera
         private Camera camera;
 
         private GraphicsDevice graphicsDevice;
@@ -34,25 +82,6 @@ namespace AngryTanks.Client
 
         // textures
         private Texture2D backgroundTexture, boxTexture, pyramidTexture, tankTexture;
-
-        // world information
-        private String worldName;
-
-        public String WorldName
-        {
-            get { return worldName; }
-        }
-
-        private Single worldSize = 800;
-
-        public Single WorldSize
-        {
-            get { return worldSize; }
-        }
-
-        // world-unit to pixel conversion factor
-        // TODO make some helper methods (place in Resolution class?) that converts many different things back and forth
-        public static int worldToPixel = 10;
 
         // A dictionary of lists of map objects, which are all static sprites
         // once initialized it contains two Lists.
@@ -66,17 +95,18 @@ namespace AngryTanks.Client
         private List<StaticSprite> dynamicObjects = new List<StaticSprite>();
 
         private LocalPlayer localPlayer;
-
-        // holds the variables in play for the World
-        public VariableDatabase VarDB;
+        private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
         public World(IServiceProvider iservice)
         {
             IService = iservice;
 
+            tiled = new List<StaticSprite>();
+            stretched = new List<StaticSprite>();
+
             // initialize variable database
             // TODO need to get variables from server and stick them in this structure
-            VarDB = new VariableDatabase();
+            varDB = new VariableDatabase();
 
             // TODO if resolution changes on us, this will fail miserably
             // we need a way to detect if it changes and to then update camera's viewprt
@@ -90,8 +120,39 @@ namespace AngryTanks.Client
             camera.LookAt(Vector2.Zero);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || Disposed)
+                return;
+
+            mapObjects.Clear();
+            tiled.Clear();
+            stretched.Clear();
+
+            localPlayer = null;
+
+            spriteBatch.Dispose();
+            contentManager.Unload();
+
+            disposed = true;
+        }
+
+        ~World()
+        {
+            Dispose(false);
+        }
+
         public virtual void LoadContent()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
             // create our spritebatch
             spriteBatch = new SpriteBatch(graphicsDevice);
 
@@ -103,12 +164,15 @@ namespace AngryTanks.Client
 
             // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED 
             List<StaticSprite> tiled = new List<StaticSprite>();
-            tiled.Add(new Box(this, boxTexture, new Vector2(-100, 100), new Vector2(100, 100), 0, Color.Blue));
-            tiled.Add(new Box(this, boxTexture, new Vector2(100, 100), new Vector2(100, 100), 0, Color.Purple));
-            tiled.Add(new Box(this, boxTexture, new Vector2(100, -100), new Vector2(100, 100), 0, Color.Green));
-            tiled.Add(new Box(this, boxTexture, new Vector2(-100, -100), new Vector2(100, 100), (Single)Math.PI / 4, Color.Red));
-            tiled.Add(new Box(this, boxTexture, new Vector2(0, 0), new Vector2(512, 512), 0, Color.Yellow));
+            tiled.Add(new Box(this, boxTexture, new Vector2(-10, 10), new Vector2(10, 10), 0, Color.Blue));
+            tiled.Add(new Box(this, boxTexture, new Vector2(10, 10), new Vector2(10, 10), 0, Color.Purple));
+            tiled.Add(new Box(this, boxTexture, new Vector2(10, -10), new Vector2(10, 10), 0, Color.Green));
+            tiled.Add(new Box(this, boxTexture, new Vector2(-10, -10), new Vector2(10, 10), (Single)Math.PI / 4, Color.Red));
+            tiled.Add(new Box(this, boxTexture, new Vector2(0, 0), new Vector2(10, 10), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
+
+            List<StaticSprite> stretched = new List<StaticSprite>();
+            mapObjects.Add("stretched", stretched);
 
             // 2.8 width and 6 length are bzflag defaults
             // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
@@ -117,6 +181,9 @@ namespace AngryTanks.Client
 
         public virtual void Update(GameTime gameTime)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
             // TODO make sure to move to a better input solution
             KeyboardState ks = Keyboard.GetState();
 
@@ -151,53 +218,25 @@ namespace AngryTanks.Client
                 camera.PanPosition = Vector2.Zero;
             }
 
-            // now finally track the tank (disregards any panning)
-            camera.LookAt(localPlayer.Position * worldToPixel);
+            // update local player
+            List<StaticSprite> collisionObjects = new List<StaticSprite>();
+            collisionObjects.AddRange(stretched.ToList());
+            collisionObjects.AddRange(tiled.ToList());
 
             // update the local player
-            localPlayer.Update(gameTime);
+            lastPlayerPosition = localPlayer.Position;
+            localPlayer.Update(gameTime, collisionObjects);
 
-            // check for collisions
-            mapObjects.TryGetValue("stretched", out stretched);
-            foreach (Sprite mapObject in stretched)
-            {
-                if (localPlayer.Intersects(mapObject))
-                {
-                    if (!mapObject.Collided)
-                    {
-                        Log.DebugFormat("tank collided with object at {0}", localPlayer.Position);
-                        Log.DebugFormat("tank rectangle bounds: {0}", localPlayer.RectangleBounds);
-                        Log.DebugFormat("object rectangle bounds: {0}", mapObject.RectangleBounds);
-                    }
-                    mapObject.Color = Color.Red;
-                    mapObject.Collided = true;
-                }
-                else
-                    mapObject.Color = Color.White;
-            }
-
-            mapObjects.TryGetValue("tiled", out tiled);
-            foreach (Sprite mapObject in tiled)
-            {
-                if (localPlayer.Intersects(mapObject))
-                {
-                    if (!mapObject.Collided)
-                    {
-                        Log.DebugFormat("tank collided with object at {0}", localPlayer.Position);
-                        Log.DebugFormat("tank rectangle bounds: {0}", localPlayer.RectangleBounds);
-                        Log.DebugFormat("object rectangle bounds: {0}", mapObject.RectangleBounds);
-                    }
-                    mapObject.Color = Color.Red;
-                    mapObject.Collided = true;
-                }
-                else
-                    mapObject.Color = Color.White;
-            }
-
+            // now finally track the tank (disregards any panning)
+            // smoothstep helps smooth the camera if player gets stuck
+            camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
         }
 
         public virtual void Draw(GameTime gameTime)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
             // FIRST Draw pass: the background
             spriteBatch.Begin(SpriteBlendMode.None,
                               SpriteSortMode.Immediate,
@@ -208,47 +247,20 @@ namespace AngryTanks.Client
             graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
-            RectangleF source, destination;
-            source = destination = new RectangleF(camera.CameraPosition, new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
+            RectangleF bgRect = new RectangleF(camera.CameraPosition,
+                                               new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
 
-            /*
-             * following works for infinite scrolling background IF Camera.Origin = Vector2.Zero
-            source.Width += Math.Abs((int)(GraphicsDevice.Viewport.Width / Camera.Zoom));
-            source.Height += Math.Abs((int)(GraphicsDevice.Viewport.Height / Camera.Zoom));
-            destination.Width += Math.Abs((int)(GraphicsDevice.Viewport.Width / Camera.Zoom));
-            destination.Height += Math.Abs((int)(GraphicsDevice.Viewport.Height / Camera.Zoom));
-            */
-
-            /*
-             * works but I think the math is wrong resulting in drawing more than required
-            source.X -= Math.Abs((int)(Camera.Origin.X / Camera.Zoom));
-            source.Y -= Math.Abs((int)(Camera.Origin.Y / Camera.Zoom));
-            destination.X -= Math.Abs((int)(Camera.Origin.X / Camera.Zoom));
-            destination.Y -= Math.Abs((int)(Camera.Origin.Y / Camera.Zoom));
-
-            source.Width += Math.Abs(2 * (int)(Camera.Origin.X / Camera.Zoom));
-            source.Height += Math.Abs(2 * (int)(Camera.Origin.Y / Camera.Zoom));
-            destination.Width += Math.Abs(2 * (int)(Camera.Origin.X / Camera.Zoom));
-            destination.Height += Math.Abs(2 * (int)(Camera.Origin.Y / Camera.Zoom));
-            */
-
-            // essentially the same as above commented out code, just stuck in variables to be faster
-            // TODO someone much smarter than me check the math on this. it works, but I'm sure it's overdrawing
             Single resizeByX = Math.Abs(camera.Origin.X / camera.Zoom);
             Single resizeByY = Math.Abs(camera.Origin.Y / camera.Zoom);
 
-            source.X -= resizeByX;
-            source.Y -= resizeByY;
-            destination.X -= resizeByX;
-            destination.Y -= resizeByY;
+            bgRect.X -= resizeByX;
+            bgRect.Y -= resizeByY;
 
-            source.Width += 2 * resizeByX;
-            source.Height += 2 * resizeByY;
-            destination.Width += 2 * resizeByX;
-            destination.Height += 2 * resizeByY;
+            bgRect.Width += 2 * resizeByX;
+            bgRect.Height += 2 * resizeByY;
 
             // draw the grass background
-            spriteBatch.Draw(backgroundTexture, (Rectangle)destination, (Rectangle)source, Color.White);
+            spriteBatch.Draw(backgroundTexture, (Rectangle)bgRect, (Rectangle)bgRect, Color.White);
 
             spriteBatch.End();
 
@@ -296,8 +308,11 @@ namespace AngryTanks.Client
 
         public void LoadMap(StreamReader sr)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
             // construct the StaticSprites from the stream
-            mapObjects = parseMapFile(sr);
+            mapObjects = ParseMapFile(sr);
         }
 
         /* parseMapFile()
@@ -310,8 +325,11 @@ namespace AngryTanks.Client
          * values 'No Name' and 800.
          * 
          */
-        private Dictionary<String, List<StaticSprite>> parseMapFile(StreamReader sr)
+        private Dictionary<String, List<StaticSprite>> ParseMapFile(StreamReader sr)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
             Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
             List<StaticSprite> stretched = new List<StaticSprite>();
             List<StaticSprite> tiled = new List<StaticSprite>();
@@ -358,7 +376,7 @@ namespace AngryTanks.Client
                     }
                     if (line.StartsWith("size", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        worldSize = (UInt16)Convert.ToUInt16(line.Trim().Substring(4).Trim());
+                        worldSize = (Single)Convert.ToSingle(line.Trim().Substring(4).Trim());
                     }
                 }
 
@@ -430,13 +448,13 @@ namespace AngryTanks.Client
 
         public static Vector2 WorldUnitsToPixels(Vector2 vector)
         {
-            return vector * worldToPixel;
+            return vector * WorldToPixel;
         }
 
         public static RectangleF WorldUnitsToPixels(RectangleF rectangle)
         {
-            return new RectangleF(rectangle.X * worldToPixel, rectangle.Y * worldToPixel,
-                                  rectangle.Width * worldToPixel, rectangle.Height * worldToPixel);
+            return new RectangleF(rectangle.X * WorldToPixel, rectangle.Y * WorldToPixel,
+                                  rectangle.Width * WorldToPixel, rectangle.Height * WorldToPixel);
         }
     }
 }

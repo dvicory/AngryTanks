@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using log4net;
+
 using AngryTanks.Common;
 
 namespace AngryTanks.Client
@@ -18,6 +20,8 @@ namespace AngryTanks.Client
     // TODO inherit from more generic Player
     public class LocalPlayer : DynamicSprite
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private KeyboardState kb;
 
         private Single velocityFactor;
@@ -33,7 +37,7 @@ namespace AngryTanks.Client
         {
         }
 
-        public override void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, List<StaticSprite> collisionObjects)
         {
             kb = Keyboard.GetState();
 
@@ -90,8 +94,57 @@ namespace AngryTanks.Client
                 newRotation += AngularVelocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
                 Rotation = newRotation;
             }
+            
+            // check for any collisions at our new location
+            Single overlap;
+            Vector2 collisionProjection;
+
+            if (FindCollisions(collisionObjects, out overlap, out collisionProjection))
+            {
+                // reset our position
+                newPosition += overlap * collisionProjection;
+                oldPosition = newPosition;
+                Position = newPosition;
+            }
+
+            if (kb.IsKeyDown(Keys.P))
+            {
+                Log.DebugFormat("tank is at: {0}, rotation: {1}", Position, Rotation);
+            }
 
             base.Update(gameTime);
+        }
+
+        public virtual bool FindCollisions(List<StaticSprite> collisionObjects, out Single overlap, out Vector2 collisionProjection)
+        {
+            Single largestOverlap = 0;
+            Vector2 largestCollisionProjection = Vector2.Zero;
+
+            foreach (StaticSprite collisionObject in collisionObjects)
+            {
+                if (!Intersects(collisionObject, out overlap, out collisionProjection))
+                    continue;
+
+                if (overlap > largestOverlap)
+                {
+                    largestOverlap = overlap;
+                    largestCollisionProjection = collisionProjection;
+                }
+            }
+
+            // we found no collisions
+            if (largestOverlap == 0)
+            {
+                overlap = 0;
+                collisionProjection = Vector2.Zero;
+                return false;
+            }
+
+            // we did find a collision otherwise
+            overlap = largestOverlap;
+            collisionProjection = largestCollisionProjection;
+
+            return true;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

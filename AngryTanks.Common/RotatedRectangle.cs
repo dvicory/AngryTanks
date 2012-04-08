@@ -132,7 +132,9 @@ namespace AngryTanks.Common
                 // required for accurate projections
                 axis.Normalize();
 
-                if (!IsAxisCollision(rectangle, axis, out o))
+                bool switchDirection;
+
+                if (!IsAxisCollision(rectangle, axis, out o, out switchDirection))
                 {
                     // if there is no axis collision, we can guarantee they do not overlap
                     overlap = 0;
@@ -145,19 +147,16 @@ namespace AngryTanks.Common
                 {
                     bestOverlap = o;
                     bestCollisionProjection = axis;
+
+                    if (switchDirection)
+                        bestCollisionProjection = Vector2.Negate(bestCollisionProjection);
                 }
             }
 
             // it is now guaranteed that the rectangles intersect for us to have gotten this far
             overlap = bestOverlap;
             collisionProjection = bestCollisionProjection;
-
-            Vector2 otherCenterToCurCenter = rectangle.Origin - this.Origin;
-
-            // check if the normal is in the direction of the other center to cur center vector
-            if (Vector2.Dot(otherCenterToCurCenter, collisionProjection) < 0)
-                collisionProjection = Vector2.Negate(collisionProjection);
-
+            
             return true;
         }
 
@@ -166,9 +165,14 @@ namespace AngryTanks.Common
         /// </summary>
         /// <param name="rectangle"></param>
         /// <param name="axis"></param>
+        /// <param name="overlap"></param>
+        /// <param name="switchDirection"></param>
         /// <returns></returns>
-        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap)
+        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap, out bool switchDirection)
         {
+            // initially we don' want to switch directions
+            switchDirection = false;
+
             // project both rectangles onto the axis
             Projection curProj   = this.Project(axis);
             Projection otherProj = rectangle.Project(axis);
@@ -177,30 +181,33 @@ namespace AngryTanks.Common
             if (curProj.GetOverlap(otherProj) < 0)
             {
                 overlap = 0;
+                axis = Vector2.Zero;
                 return false;
             }
-            else
+
+            // get the overlap
+            overlap = curProj.GetOverlap(otherProj);
+
+            // do we need to switch directions?
+            if (!curProj.LowerOf(otherProj))
+                    switchDirection = true;
+
+            // check for containment
+            if (curProj.Contains(otherProj) || otherProj.Contains(curProj))
             {
-                // get the overlap
-                overlap = curProj.GetOverlap(otherProj);
+                // get the overlap plus the distance from the minimum end points
+                Single mins = Math.Abs(curProj.Min - otherProj.Min);
+                Single maxs = Math.Abs(curProj.Max - otherProj.Max);
 
-                // check for containment
-                if (curProj.Contains(otherProj) || otherProj.Contains(curProj))
-                {
-                    // get the overlap plus the distance from the minimum end points
-                    Single mins = Math.Abs(curProj.Min - otherProj.Min);
-                    Single maxs = Math.Abs(curProj.Max - otherProj.Max);
-
-                    // NOTE: depending on which is smalelr you may need to negate the separating axis
-                    if (mins < maxs)
-                        overlap += mins;
-                    else
-                        overlap += maxs;
-                }
-
-                // and return true for an axis collision
-                return true;
+                // NOTE: depending on which is smaller you may need to negate the separating axis
+                if (mins < maxs)
+                    overlap += mins;
+                else
+                    overlap += maxs;
             }
+
+            // and return true for an axis collision
+            return true;
         }
 
         /// <summary>

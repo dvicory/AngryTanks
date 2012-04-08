@@ -198,7 +198,7 @@ namespace AngryTanks.Tests.CollisionDetection
             spriteBatch.DrawString(MyFont, "Move the Rectangle using the Arrow Keys", new Vector2(60, 30), Color.White);
             spriteBatch.DrawString(MyFont, "Rotate the Rectangle using the Spacebar", new Vector2(60, 70), Color.White);
             spriteBatch.DrawString(MyFont, "Change the selected Rectangle using the Tab key", new Vector2(60, 110), Color.White);
-            spriteBatch.DrawString(MyFont, String.Format("Overlap for A: {0}, Axis: {1}", CollisionOverlap, CollisionProjection), new Vector2(60, 150), Color.White);
+            spriteBatch.DrawString(MyFont, String.Format("Overlap for A: {0}, Projection Vector: {1}", CollisionOverlap, CollisionProjection), new Vector2(60, 150), Color.White);
 
             Rectangle aPositionAdjusted = (Rectangle)new RectangleF(RectangleA.X + (RectangleA.Width / 2), RectangleA.Y + (RectangleA.Height / 2), RectangleA.Width, RectangleA.Height);
             spriteBatch.Draw(RectangleTexture, aPositionAdjusted, new Rectangle(0, 0, 2, 6), aColor, RectangleA.Rotation, new Vector2(2 / 2, 6 / 2), SpriteEffects.None, 0);
