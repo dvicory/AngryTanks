@@ -91,9 +91,9 @@ namespace AngryTanks.Common
         /// <param name="rectangle"></param>
         /// <param name="overlap"></param>
         /// <returns></returns>
-        public bool Intersects(RectangleF rectangle, out Single overlap)
+        public bool Intersects(RectangleF rectangle, out Single overlap, out Vector2 collisionProjection)
         {
-            return Intersects(new RotatedRectangle(rectangle, 0), out overlap);
+            return Intersects(new RotatedRectangle(rectangle, 0), out overlap, out collisionProjection);
         }
 
         /// <summary>
@@ -101,8 +101,9 @@ namespace AngryTanks.Common
         /// </summary>
         /// <param name="rectangle"></param>
         /// <param name="overlap"></param>
+        /// <param name="collisionProjection"></param>
         /// <returns></returns>
-        public bool Intersects(RotatedRectangle rectangle, out Single overlap)
+        public bool Intersects(RotatedRectangle rectangle, out Single overlap, out Vector2 collisionProjection)
         {
             // Calculate the axes we will use to determine if a collision has occurred
             // Since the objects are rectangles, we only have to generate 4 axes (2 for
@@ -123,37 +124,48 @@ namespace AngryTanks.Common
 
             // In addition, overlap is tracked so that the smallest overlap can be stored for the caller.
             Single bestOverlap = Single.MaxValue;
+            Vector2 bestCollisionProjection = Vector2.Zero;
             Single o;
 
             foreach (Vector2 axis in axes)
             {
+                // required for accurate projections
+                axis.Normalize();
+
                 if (!IsAxisCollision(rectangle, axis, out o))
                 {
                     // if there is no axis collision, we can guarantee they do not overlap
                     overlap = 0;
+                    collisionProjection = Vector2.Zero;
                     return false;
                 }
-                else
+
+                // do we have the smallest overlap yet?
+                if (o < bestOverlap)
                 {
-                    // do we have the smallest overlap yet?
-                    if (o < bestOverlap)
-                    {
-                        bestOverlap = o;
-                    }
+                    bestOverlap = o;
+                    bestCollisionProjection = axis;
                 }
             }
 
             // it is now guaranteed that the rectangles intersect for us to have gotten this far
             overlap = bestOverlap;
+            collisionProjection = bestCollisionProjection;
+
+            Vector2 otherCenterToCurCenter = rectangle.Origin - this.Origin;
+
+            // check if the normal is in the direction of the other center to cur center vector
+            if (Vector2.Dot(otherCenterToCurCenter, collisionProjection) < 0)
+                collisionProjection = Vector2.Negate(collisionProjection);
+
             return true;
         }
 
         /// <summary>
-        /// Determines if a collision has occurred on an Axis of one of the
-        /// planes parallel to the Rectangle
+        /// Determines if a collision has occurred on an axis of one of the planes parallel to the Rectangle.
         /// </summary>
         /// <param name="rectangle"></param>
-        /// <param name="axes"></param>
+        /// <param name="axis"></param>
         /// <returns></returns>
         private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap)
         {
@@ -162,7 +174,7 @@ namespace AngryTanks.Common
             Projection otherProj = rectangle.Project(axis);
 
             // do the projections overlap?
-            if (!curProj.Overlaps(otherProj))
+            if (curProj.GetOverlap(otherProj) < 0)
             {
                 overlap = 0;
                 return false;
@@ -172,7 +184,6 @@ namespace AngryTanks.Common
                 // get the overlap
                 overlap = curProj.GetOverlap(otherProj);
 
-                // TODO does this work?
                 // check for containment
                 if (curProj.Contains(otherProj) || otherProj.Contains(curProj))
                 {
@@ -199,9 +210,6 @@ namespace AngryTanks.Common
         /// <returns>A <see cref="Projection"/> of this <see cref="RotatedRectangle"/> on the given <paramref name="axis"/>.</returns>
         private Projection Project(Vector2 axis)
         {
-            // required to get accurate projections
-            axis.Normalize();
-
             Vector2[] vertices = this.Vertices;
 
             Single min = Vector2.Dot(axis, vertices[0]);
@@ -220,8 +228,7 @@ namespace AngryTanks.Common
         }
 
         /// <summary>
-        /// Rotate a point from a given location and adjust using the Origin we
-        /// are rotating around
+        /// Rotate a point from a given location and adjust using the Origin we are rotating around.
         /// </summary>
         /// <param name="point"></param>
         /// <param name="origin"></param>

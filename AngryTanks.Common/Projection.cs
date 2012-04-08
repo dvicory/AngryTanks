@@ -35,15 +35,10 @@ namespace AngryTanks.Common
         /// Gets the overlap between this projection and another <see cref="Projection"/>.
         /// </summary>
         /// <param name="projection">The other projection to test against.</param>
-        /// <returns>The amount of overlap with <paramref name="projection"/>, or 0 if no overlap.</returns>
+        /// <returns>The amount of overlap with <paramref name="projection"/> (will be negative if no overlap).</returns>
         public Single GetOverlap(Projection projection)
         {
-            // make sure they overlap
-            if (this.Overlaps(projection))
-            {
-                return Math.Min(this.Max, projection.Max) - Math.Max(this.Min, projection.Min);
-            }
-            return 0;
+            return Math.Min(projection.Max - this.Min, this.Max - projection.Min);
         }
 
         /// <summary>

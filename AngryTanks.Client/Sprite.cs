@@ -83,7 +83,13 @@ namespace AngryTanks.Client
         public virtual bool Intersects(Sprite sprite)
         {
             Single overlap;
-            return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap);
+            Vector2 collisionProjection;
+            return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap, out collisionProjection);
+        }
+
+        public virtual bool Intersects(Sprite sprite, out Single overlap, out Vector2 collisionProjection)
+        {
+            return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap, out collisionProjection);
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
