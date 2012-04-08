@@ -132,9 +132,7 @@ namespace AngryTanks.Common
                 // required for accurate projections
                 axis.Normalize();
 
-                bool switchDirection;
-
-                if (!IsAxisCollision(rectangle, axis, out o, out switchDirection))
+                if (!IsAxisCollision(rectangle, axis, out o))
                 {
                     // if there is no axis collision, we can guarantee they do not overlap
                     overlap = 0;
@@ -147,9 +145,6 @@ namespace AngryTanks.Common
                 {
                     bestOverlap = o;
                     bestCollisionProjection = axis;
-
-                    if (switchDirection)
-                        bestCollisionProjection = Vector2.Negate(bestCollisionProjection);
                 }
             }
 
@@ -157,6 +152,14 @@ namespace AngryTanks.Common
             overlap = bestOverlap;
             collisionProjection = bestCollisionProjection;
             
+            // now we want to make sure the collision projection vector points from the other rectangle to us
+            Vector2 centerToCenter;
+            centerToCenter.X = (rectangle.X + rectangle.Origin.X) - (this.X + this.Origin.X);
+            centerToCenter.Y = (rectangle.Y + rectangle.Origin.Y) - (this.Y + this.Origin.Y);
+
+            if (Vector2.Dot(collisionProjection, centerToCenter) > 0)
+                Vector2.Negate(ref collisionProjection, out collisionProjection);
+
             return true;
         }
 
@@ -166,13 +169,9 @@ namespace AngryTanks.Common
         /// <param name="rectangle"></param>
         /// <param name="axis"></param>
         /// <param name="overlap"></param>
-        /// <param name="switchDirection"></param>
         /// <returns></returns>
-        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap, out bool switchDirection)
+        private bool IsAxisCollision(RotatedRectangle rectangle, Vector2 axis, out Single overlap)
         {
-            // initially we don' want to switch directions
-            switchDirection = false;
-
             // project both rectangles onto the axis
             Projection curProj   = this.Project(axis);
             Projection otherProj = rectangle.Project(axis);
@@ -187,10 +186,6 @@ namespace AngryTanks.Common
 
             // get the overlap
             overlap = curProj.GetOverlap(otherProj);
-
-            // do we need to switch directions?
-            if (!curProj.LowerOf(otherProj))
-                    switchDirection = true;
 
             // check for containment
             if (curProj.Contains(otherProj) || otherProj.Contains(curProj))
