@@ -9,8 +9,8 @@ using log4net;
 using Lidgren.Network;
 
 using AngryTanks.Common;
-using AngryTanks.Common.Protocol;
 using AngryTanks.Common.Messages;
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
@@ -66,6 +66,7 @@ namespace AngryTanks.Client
         }
     }
 
+    /*
     public class ServerLinkMessageEvent : EventArgs
     {
         public readonly MessageType MessageType;
@@ -75,6 +76,21 @@ namespace AngryTanks.Client
         {
             MessageType = messageType;
             MessageData = messageData;
+        }
+    }
+    */
+
+    public class ServerLinkMessageEvent : EventArgs
+    {
+        public readonly MessageType MessageType;
+        public readonly MsgBasePacket MessageData;
+        public readonly NetServerLinkStatus ServerLinkStatus;
+
+        public ServerLinkMessageEvent(MessageType messageType, MsgBasePacket messageData, NetServerLinkStatus serverLinkStatus)
+        {
+            MessageType      = messageType;
+            MessageData      = messageData;
+            ServerLinkStatus = serverLinkStatus;
         }
     }
 
@@ -190,9 +206,11 @@ namespace AngryTanks.Client
                             case NetConnectionStatus.Connected:
                                 ServerLinkStatus = NetServerLinkStatus.Accepted;
                                 break;
+
                             case NetConnectionStatus.Disconnected:
                                 ServerLinkStatus = NetServerLinkStatus.Disconnected;
                                 break;
+
                             default:
                                 break;
                         }
@@ -231,31 +249,76 @@ namespace AngryTanks.Client
 
         private void HandleData(NetIncomingMessage msg)
         {
-            Byte messageType = msg.ReadByte();
+            MessageType messageType = (MessageType)msg.ReadByte();
 
             switch (messageType)
             {
-                case (Byte)MessageType.MsgState:
-                    // we finished receiving state at this point
-                    ServerLinkStatus = NetServerLinkStatus.Connected;
-                    break;
+                case MessageType.MsgState:
+                    {
+                        Log.DebugFormat("Got MsgState ({0} bytes)", msg.LengthBytes);
 
-                case (Byte)MessageType.MsgWorld:
-                    Log.Debug("Got MsgWorld");
+                        // we finished receiving state at this point
+                        ServerLinkStatus = NetServerLinkStatus.Connected;
 
-                    UInt16 mapLength = msg.ReadUInt16();
+                        break;
+                    }
 
-                    Byte[] rawWorld = new Byte[mapLength];
-                    rawWorld = msg.ReadBytes(mapLength);
+                case MessageType.MsgAddPlayer:
+                    {
+                        Log.DebugFormat("Got MsgAddPlayer ({0} bytes)", msg.LengthBytes);
 
-                    MemoryStream ms = new MemoryStream(rawWorld);
-                    StreamReader sr = new StreamReader(ms);
+                        /*
+                        Byte slot = msg.ReadByte();
+                        TeamType team = ProtocolHelpers.TeamByteToType(msg.ReadByte());
+                        String callsign = msg.ReadString();
+                        String tag = msg.ReadString();
 
-                    MsgWorldData msgWorldEventData = new MsgWorldData(sr);
+                        PlayerInformation player = new PlayerInformation(slot, callsign, tag, team);
+                        MsgAddPlayerData msgAddPlayerData = new MsgAddPlayerData(player);
+                        */
 
-                    FireEvent(msgWorldEventData);
+                        MsgAddPlayerPacket message = MsgAddPlayerPacket.Read(msg);
 
-                    break;
+                        FireEvent(message);
+
+                        break;
+                    }
+
+                case MessageType.MsgRemovePlayer:
+                    {
+                        Log.DebugFormat("Got MsgRemovePlayer ({0} bytes)", msg.LengthBytes);
+
+                        /*
+                        Byte slot = msg.ReadByte();
+                        String reason = msg.ReadString();
+
+                        MsgRemovePlayerData msgRemovePlayerData = new MsgRemovePlayerData(slot, reason);
+                        */
+
+                        MsgRemovePlayerPacket message = MsgRemovePlayerPacket.Read(msg);
+
+                        FireEvent(message);
+
+                        break;
+                    }
+
+                case MessageType.MsgWorld:
+                    {
+                        Log.DebugFormat("Got MsgWorld ({0} bytes)", msg.LengthBytes);
+
+                        UInt16 mapLength = msg.ReadUInt16();
+                        Byte[] rawWorld = new Byte[mapLength];
+                        msg.ReadBytes(mapLength, out rawWorld);
+
+                        MemoryStream ms = new MemoryStream(rawWorld);
+                        StreamReader sr = new StreamReader(ms);
+
+                        MsgWorldPacket msgWorldEventData = new MsgWorldPacket(mapLength, sr);
+
+                        FireEvent(msgWorldEventData);
+
+                        break;
+                    }
 
                 default:
                     // if we get anything else we should fail
@@ -265,6 +328,7 @@ namespace AngryTanks.Client
             }
         }
 
+        /*
         private void FireEvent(MsgBaseData msgData)
         {
             EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
@@ -274,6 +338,20 @@ namespace AngryTanks.Client
             {
                 // notify delegates attached to event
                 ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData);
+                handler(this, e);
+            }
+        }
+        */
+
+        private void FireEvent(MsgBasePacket msgData)
+        {
+            EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
+
+            // prevent race condition
+            if (handler != null)
+            {
+                // notify delegates attached to event
+                ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData, ServerLinkStatus);
                 handler(this, e);
             }
         }

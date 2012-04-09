@@ -15,6 +15,8 @@ using Microsoft.Xna.Framework.Storage;
 using log4net;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Messages;
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
@@ -72,13 +74,13 @@ namespace AngryTanks.Client
         /// <summary>
         /// Allows us to get a reference to various services
         /// </summary>
-        protected readonly IServiceProvider IService;
-
-        private Camera camera;
+        private readonly IServiceProvider IService;
 
         private GraphicsDevice graphicsDevice;
-        private SpriteBatch spriteBatch;
         private ContentManager contentManager;
+        private SpriteBatch spriteBatch;
+
+        private Camera camera;
 
         // textures
         private Texture2D backgroundTexture, boxTexture, pyramidTexture, tankTexture;
@@ -99,25 +101,19 @@ namespace AngryTanks.Client
 
         public World(IServiceProvider iservice)
         {
-            IService = iservice;
+            this.IService = iservice;
 
-            tiled = new List<StaticSprite>();
-            stretched = new List<StaticSprite>();
+            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
+            this.graphicsDevice = graphicsDeviceService.GraphicsDevice;
+
+            this.tiled = new List<StaticSprite>();
+            this.stretched = new List<StaticSprite>();
 
             // initialize variable database
             // TODO need to get variables from server and stick them in this structure
-            varDB = new VariableDatabase();
+            this.varDB = new VariableDatabase();
 
-            // TODO if resolution changes on us, this will fail miserably
-            // we need a way to detect if it changes and to then update camera's viewprt
-            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
-
-            graphicsDevice = graphicsDeviceService.GraphicsDevice;
-            contentManager = new ContentManager(IService, "Content");
-
-            camera = new Camera(graphicsDevice.Viewport);
-            camera.Limits = WorldUnitsToPixels(new RectangleF(-WorldSize / 2, -WorldSize / 2, WorldSize, WorldSize));
-            camera.LookAt(Vector2.Zero);
+            AngryTanks.ServerLink.MessageReceivedEvent += ReceiveMessage;
         }
 
         public void Dispose()
@@ -140,6 +136,9 @@ namespace AngryTanks.Client
             spriteBatch.Dispose();
             contentManager.Unload();
 
+            graphicsDevice.DeviceReset -= GraphicsDeviceReset;
+            AngryTanks.ServerLink.MessageReceivedEvent -= ReceiveMessage;
+
             disposed = true;
         }
 
@@ -148,13 +147,38 @@ namespace AngryTanks.Client
             Dispose(false);
         }
 
-        public virtual void LoadContent()
+        public void Initialize()
         {
             if (Disposed)
                 throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
+            // create our content manager
+            contentManager = new ContentManager(IService, "Content");
+
             // create our spritebatch
             spriteBatch = new SpriteBatch(graphicsDevice);
+
+            // setup camera
+            camera = new Camera(graphicsDevice.Viewport);
+            camera.Limits = WorldUnitsToPixels(new RectangleF(-WorldSize / 2, -WorldSize / 2, WorldSize, WorldSize));
+            camera.LookAt(Vector2.Zero);
+
+            graphicsDevice.DeviceReset += GraphicsDeviceReset;
+        }
+
+        private void GraphicsDeviceReset(object sender, EventArgs e)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
+            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
+            camera.Viewport = graphicsDeviceService.GraphicsDevice.Viewport;
+        }
+
+        public void LoadContent()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
             // load textures
             backgroundTexture = contentManager.Load<Texture2D>("textures/others/grass");
@@ -179,7 +203,15 @@ namespace AngryTanks.Client
             localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
         }
 
-        public virtual void Update(GameTime gameTime)
+        public void UnloadContent()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
+            //contentManager.Unload();
+        }
+
+        public void Update(GameTime gameTime)
         {
             if (Disposed)
                 throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -232,7 +264,7 @@ namespace AngryTanks.Client
             camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
         }
 
-        public virtual void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             if (Disposed)
                 throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
@@ -304,6 +336,49 @@ namespace AngryTanks.Client
             localPlayer.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+        }
+
+        private void ReceiveMessage(object sender, ServerLinkMessageEvent message)
+        {
+            switch (message.MessageType)
+            {
+                case MessageType.MsgAddPlayer:
+                    {
+                        MsgAddPlayerPacket packet = (MsgAddPlayerPacket)message.MessageData;
+
+                        if (message.ServerLinkStatus == NetServerLinkStatus.Connected)
+                            AngryTanks.Console.WriteLine(String.Format("{0} has joined the {1}",
+                                                         packet.Player.Callsign, packet.Player.Team));
+                        else if (message.ServerLinkStatus == NetServerLinkStatus.GettingState)
+                            AngryTanks.Console.WriteLine(String.Format("{0} is on the {1}",
+                                                         packet.Player.Callsign, packet.Player.Team));
+
+                        break;
+                    }
+
+                case MessageType.MsgRemovePlayer:
+                    {
+                        MsgRemovePlayerPacket packet = (MsgRemovePlayerPacket)message.MessageData;
+
+                        AngryTanks.Console.WriteLine(String.Format("Player {0} has left the server ({1})", packet.Slot, packet.Reason));
+
+                        break;
+                    }
+
+                case MessageType.MsgWorld:
+                    AngryTanks.Console.WriteLine("Loading map...");
+
+                    MsgWorldPacket msgWorldData = (MsgWorldPacket)message.MessageData;
+                    
+                    LoadMap(msgWorldData.Map);
+
+                    AngryTanks.Console.WriteLine(String.Format("Map \"{0}\" loaded.", WorldName));
+
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         public void LoadMap(StreamReader sr)

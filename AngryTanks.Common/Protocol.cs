@@ -7,10 +7,11 @@ namespace AngryTanks.Common
 {
     namespace Protocol
     {
-        public class ProtocolInformation
+        public static class ProtocolInformation
         {
-            public static readonly UInt16 ProtocolVersion = 3;
+            public static readonly UInt16 ProtocolVersion = 4;
             public static readonly Byte MaxPlayers = 100;
+            public static readonly Byte DummySlot = 255;
         }
 
         public enum MessageType
@@ -18,8 +19,11 @@ namespace AngryTanks.Common
             MsgEnter,
             MsgState,
             MsgAddPlayer,
+            MsgRemovePlayer,
             MsgWorld,
-            MsgPlayerUpdate
+            MsgPlayerUpdate,       // soon obsolete
+            MsgPlayerClientUpdate, // from client to server
+            MsgPlayerServerUpdate  // from server to client
         }
 
         public enum TeamType
@@ -36,12 +40,14 @@ namespace AngryTanks.Common
 
         public enum PlayerState
         {
+            Joining,
+            Leaving,
             Dead,
             Alive,
-            Spawning
+            Spawning,
         }
 
-        public class ProtocolHelpers
+        public static class ProtocolHelpers
         {
             public static TeamType TeamByteToType(Byte team_byte)
             {

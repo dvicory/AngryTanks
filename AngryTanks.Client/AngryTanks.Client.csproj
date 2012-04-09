@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Box.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="GameConsole.cs" />
     <Compile Include="DynamicSprite.cs" />
     <Compile Include="LocalPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

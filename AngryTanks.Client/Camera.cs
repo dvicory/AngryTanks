@@ -19,16 +19,30 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Viewport viewport;
+        private Viewport viewport;
+
+        public Viewport Viewport
+        {
+            get { return viewport; }
+            set
+            {
+                viewport = value;
+            }
+        }
+
+        public Vector2 Origin
+        {
+            get
+            {
+                return new Vector2(Viewport.Width / 2.0f, Viewport.Height / 2.0f);
+            }
+        }
 
         public Camera(Viewport viewport)
         {
             this.viewport = viewport;
-            Origin = new Vector2(this.viewport.Width / 2.0f, this.viewport.Height / 2.0f);
             Zoom = 1.0f;
         }
-
-        public Vector2 Origin { get; set; }
 
         private Vector2 position, panPosition;
 

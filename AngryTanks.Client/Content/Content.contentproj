@@ -275,6 +275,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="fonts\ConsoleFont10.spritefont">
+      <Name>ConsoleFont10</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <None Include="maps\ducati_style_random.bzw">
       <Name>ducati_style_random</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

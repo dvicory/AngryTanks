@@ -10,6 +10,7 @@ using NDesk.Options;
 using Lidgren.Network;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Messages;
 using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Server
@@ -155,68 +156,78 @@ namespace AngryTanks.Server
         private static void AppLoop()
         {
             NetIncomingMessage msg;
-
-            Byte messageType;
-
+            
             while (true)
             {
                 if ((msg = Server.ReadMessage()) != null)
                 {
                     switch (msg.MessageType)
                     {
-                        case NetIncomingMessageType.DebugMessage:
-                            using (log4net.NDC.Push("Lidgren"))
-                            {
-                                Log.Debug(msg.ReadString());
-                            }
+                        case NetIncomingMessageType.WarningMessage:
+                            Log.Warn(msg.ReadString());
                             break;
-                        // TODO implement local LAN discovery
+
+                        case NetIncomingMessageType.ErrorMessage:
+                            Log.Error(msg.ReadString());
+                            break;
+
+                        case NetIncomingMessageType.DebugMessage:
+                            Log.Debug(msg.ReadString());
+                            break;
+
                         case NetIncomingMessageType.DiscoveryRequest:
                             break;
+
+                        case NetIncomingMessageType.StatusChanged:
+                            {
+                                // we're not interested in status changes on the server yet
+                                if (msg.SenderConnection == null)
+                                    break;
+
+                                GameKeeper.HandleStatusChange(msg);
+
+                                break;
+                            }
+
                         case NetIncomingMessageType.ConnectionApproval:
-                            // chop off header
-                            messageType = msg.ReadByte();
-
-                            // WTF?
-                            if (messageType != (byte)MessageType.MsgEnter)
                             {
-                                String rejection = String.Format("message type not as expected (expected {0}, you sent {1})",
-                                                                 MessageType.MsgEnter, messageType);
-                                msg.SenderConnection.Deny(rejection);
+                                // chop off header
+                                MessageType messageType = (MessageType)msg.ReadByte();
+
+                                // WTF?
+                                if (messageType != MessageType.MsgEnter)
+                                {
+                                    String rejection = String.Format("message type not as expected (expected {0}, you sent {1})",
+                                                                     MessageType.MsgEnter, messageType);
+                                    msg.SenderConnection.Deny(rejection);
+                                    break;
+                                }
+
+                                UInt16 clientProtoVersion = msg.ReadUInt16();
+
+                                if (clientProtoVersion != ProtocolInformation.ProtocolVersion)
+                                {
+                                    String rejection = String.Format("protocol versions do not match (server is {0}, you are {1})",
+                                                                     ProtocolInformation.ProtocolVersion, clientProtoVersion);
+                                    msg.SenderConnection.Deny(rejection);
+                                    break;
+                                }
+
+                                TeamType team = ProtocolHelpers.TeamByteToType(msg.ReadByte());
+                                String callsign = msg.ReadString();
+                                String tag = msg.ReadString();
+
+                                PlayerInformation playerInfo = new PlayerInformation(ProtocolInformation.DummySlot, callsign, tag, team);
+
+                                GameKeeper.AddPlayer(msg.SenderConnection, playerInfo);
+
                                 break;
                             }
-
-                            UInt16 clientProtoVersion = msg.ReadUInt16();
-
-                            if (clientProtoVersion != ProtocolInformation.ProtocolVersion)
-                            {
-                                String rejection = String.Format("protocol versions do not match (server is {0}, you are {1})",
-                                                                 ProtocolInformation.ProtocolVersion, clientProtoVersion);
-                                msg.SenderConnection.Deny(rejection);
-                                break;
-                            }
-
-                            Int16 id = GameKeeper.AddPlayer(msg);
-
-                            // game is full if AddPlayer returns -1
-                            if (id < 0)
-                            {
-                                // TODO be able to get callsign, etc here without duplicating packet reading code
-                                Log.InfoFormat("Player from {0} tried to join, but the game was full", msg.SenderConnection);
-                                msg.SenderConnection.Deny("the game is currently full");
-                                break;
-                            }
-
-                            Player joinedPlayer = GameKeeper.GetPlayerByID((Byte)id);
-
-                            joinedPlayer.Connection.Approve();
-
-                            break;
 
                         case NetIncomingMessageType.Data:
-                            GameKeeper.GetPlayerByConnection(msg.SenderConnection).HandleData(msg);
+                            GameKeeper.HandleIncomingData(msg);
                             break;
-                            
+
                         default:
                             // welp... what shall we do?
                             break;

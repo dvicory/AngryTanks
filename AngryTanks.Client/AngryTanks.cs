@@ -14,9 +14,6 @@ using Microsoft.Xna.Framework.Storage;
 
 using log4net;
 
-using AngryTanks.Common.Protocol;
-using AngryTanks.Common.Messages;
-
 namespace AngryTanks.Client
 {
     /// <summary>
@@ -29,17 +26,33 @@ namespace AngryTanks.Client
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private static ServerLink serverLink;
+        private bool fullscreen = false;
 
-        private World world;
+        private static ServerLink serverLink;
+        public static ServerLink ServerLink
+        {
+            get { return serverLink; }
+        }
+
+        private static World world;
+        public static World World
+        {
+            get { return world; }
+        }
+
+        private static GameConsole gameConsole;
+        public static GameConsole Console
+        {
+            get { return gameConsole; }
+        }
 
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            // instantiate server link
             serverLink = new ServerLink();
-            serverLink.MessageReceivedEvent += ReceiveMessage;
         }
 
         /// <summary>
@@ -50,10 +63,13 @@ namespace AngryTanks.Client
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             // instantiate the world
             world = new World(Services);
+            world.Initialize();
+
+            // instantiate game console
+            gameConsole = new GameConsole(Services, new Vector2(0, 400), new Vector2(800, 200));
+            gameConsole.Initialize();
 
             base.Initialize();
         }
@@ -67,12 +83,15 @@ namespace AngryTanks.Client
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             if (world != null)
             {
                 world.LoadContent();
                 world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
             }
+
+            gameConsole.LoadContent();
+
+            base.LoadContent();
         }
 
         /// <summary>
@@ -81,7 +100,12 @@ namespace AngryTanks.Client
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            if (world != null)
+                world.UnloadContent();
+
+            gameConsole.UnloadContent();
+
+            base.UnloadContent();
         }
 
         /// <summary>
@@ -101,10 +125,24 @@ namespace AngryTanks.Client
 
             if (kb.IsKeyDown(Keys.F1))
             {
-                graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
-                graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-                graphics.IsFullScreen = true;
-                graphics.ApplyChanges();
+                if (!fullscreen)
+                {
+                    graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+                    graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+                    graphics.IsFullScreen = true;
+                    graphics.ApplyChanges();
+
+                    fullscreen = !fullscreen;
+                }
+                else
+                {
+                    graphics.PreferredBackBufferWidth = 800;
+                    graphics.PreferredBackBufferHeight = 600;
+                    graphics.IsFullScreen = false;
+                    graphics.ApplyChanges();
+
+                    fullscreen = !fullscreen;
+                }
             }
 
             // connect to the server when you press C
@@ -114,12 +152,16 @@ namespace AngryTanks.Client
             {
                 if (world != null)
                 {
+                    world.UnloadContent();
                     world.Dispose();
                     world = null;
                 }
 
                 world = new World(Services);
+                world.Initialize();
                 world.LoadContent();
+
+                Console.WriteLine("Connecting to server...");
                 serverLink.Connect("localhost", 5150);
             }
 
@@ -129,11 +171,17 @@ namespace AngryTanks.Client
             {
                 if (world != null)
                 {
+                    world.UnloadContent();
                     world.Dispose();
                     world = null;
                 }
 
-                serverLink.Disconnect("player initiated disconnect");
+                world = new World(Services);
+                world.Initialize();
+                world.LoadContent();
+
+                Console.WriteLine("Disconnecting from server.");
+                serverLink.Disconnect("player disconnected");
             }
 
             serverLink.Update();
@@ -152,33 +200,12 @@ namespace AngryTanks.Client
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
-
             if (world != null)
                 world.Draw(gameTime);
 
+            gameConsole.Draw(gameTime);
+
             base.Draw(gameTime);
-        }
-
-        private void ReceiveMessage(object sender, ServerLinkMessageEvent message)
-        {
-            Log.Debug("AngryTanks.ReceiveMessage");
-
-            switch (message.MessageType)
-            {
-                case MessageType.MsgWorld:
-                    Log.Debug("Received MsgWorld");
-
-                    MsgWorldData msgWorldData = (MsgWorldData)message.MessageData;
-
-                    if (world != null)
-                        world.LoadMap(msgWorldData.Map);
-
-                    break;
-
-                default:
-                    break;
-            }
         }
     }
 }
