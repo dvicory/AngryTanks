@@ -55,6 +55,33 @@ namespace AngryTanks.Common
             }
         }
 
+        public class MsgStatePacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgState; }
+            }
+
+            public readonly Byte Slot;
+
+            public MsgStatePacket(Byte slot)
+            {
+                this.Slot = slot;
+            }
+
+            public static MsgStatePacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+
+                return new MsgStatePacket(slot);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(Slot);
+            }
+        }
+
         public class MsgEnterPacket : MsgBasePacket
         {
             public override MessageType MsgType

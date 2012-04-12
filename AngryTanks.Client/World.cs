@@ -73,10 +73,16 @@ namespace AngryTanks.Client
             get { return console; }
         }
 
+        private ContentManager content;
+
+        public ContentManager Content
+        {
+            get { return content; }
+        }
+
         #endregion
 
         private GraphicsDevice graphicsDevice;
-        private ContentManager contentManager;
         private SpriteBatch spriteBatch;
 
         // textures
@@ -86,12 +92,12 @@ namespace AngryTanks.Client
         // once initialized it contains two Lists.
         // Key "tiled" is a List of sprites to be tiled.
         // Key "stretched" is a List of sprites to be stretched.
-        private Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
-        private List<StaticSprite> tiled = new List<StaticSprite>();
-        private List<StaticSprite> stretched = new List<StaticSprite>();
+        private Dictionary<String, List<Sprite>> mapObjects = new Dictionary<String, List<Sprite>>();
+        private List<Sprite> tiled = new List<Sprite>();
+        private List<Sprite> stretched = new List<Sprite>();
 
         // List of all Dynamic Sprites (tanks and flags), always drawn stretched.
-        private List<StaticSprite> dynamicObjects = new List<StaticSprite>();
+        private List<Sprite> dynamicObjects = new List<Sprite>();
 
         private LocalPlayer localPlayer;
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
@@ -99,8 +105,8 @@ namespace AngryTanks.Client
         public World(Game game)
             : base(game)
         {
-            this.tiled = new List<StaticSprite>();
-            this.stretched = new List<StaticSprite>();
+            this.tiled = new List<Sprite>();
+            this.stretched = new List<Sprite>();
 
             // initialize variable database
             // TODO need to get variables from server and stick them in this structure
@@ -118,7 +124,7 @@ namespace AngryTanks.Client
                 localPlayer = null;
 
                 spriteBatch.Dispose();
-                contentManager.Unload();
+                content.Unload();
 
                 graphicsDevice.DeviceReset -= GraphicsDeviceReset;
                 AngryTanks.ServerLink.MessageReceivedEvent -= ReceiveMessage;
@@ -133,7 +139,7 @@ namespace AngryTanks.Client
             graphicsDevice = Game.GraphicsDevice;
 
             // create our content manager
-            contentManager = new ContentManager(Game.Services, Game.Content.RootDirectory);
+            content = new ContentManager(Game.Services, Game.Content.RootDirectory);
 
             // create our spritebatch
             spriteBatch = new SpriteBatch(graphicsDevice);
@@ -160,13 +166,13 @@ namespace AngryTanks.Client
         protected override void LoadContent()
         {
             // load textures
-            backgroundTexture = contentManager.Load<Texture2D>("textures/others/grass");
-            boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
-            pyramidTexture = contentManager.Load<Texture2D>("textures/bz/pyramid");
-            tankTexture = contentManager.Load<Texture2D>("textures/tank_white");
+            backgroundTexture = Content.Load<Texture2D>("textures/others/grass");
+            boxTexture = Content.Load<Texture2D>("textures/bz/boxwall");
+            pyramidTexture = Content.Load<Texture2D>("textures/bz/pyramid");
+            tankTexture = Content.Load<Texture2D>("textures/tank_white");
 
             // let's make some test boxes - THESE ARE OVERRIDEN IF A MAP IS LOADED 
-            List<StaticSprite> tiled = new List<StaticSprite>();
+            List<Sprite> tiled = new List<Sprite>();
             tiled.Add(new Box(this, boxTexture, new Vector2(-10, 10), new Vector2(10, 10), 0, Color.Blue));
             tiled.Add(new Box(this, boxTexture, new Vector2(10, 10), new Vector2(10, 10), 0, Color.Purple));
             tiled.Add(new Box(this, boxTexture, new Vector2(10, -10), new Vector2(10, 10), 0, Color.Green));
@@ -174,12 +180,13 @@ namespace AngryTanks.Client
             tiled.Add(new Box(this, boxTexture, new Vector2(0, 0), new Vector2(10, 10), 0, Color.Yellow));
             mapObjects.Add("tiled", tiled);
 
-            List<StaticSprite> stretched = new List<StaticSprite>();
+            List<Sprite> stretched = new List<Sprite>();
             mapObjects.Add("stretched", stretched);
 
             // 2.8 width and 6 length are bzflag defaults
             // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
-            localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
+            //localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
+            localPlayer = new LocalPlayer(this, new PlayerInformation(0, "test", "test", TeamType.RogueTeam));
 
             base.LoadContent();
         }
@@ -188,8 +195,8 @@ namespace AngryTanks.Client
         {
             HandleKeyDown(Keyboard.GetState());
 
-            // update local player
-            List<StaticSprite> collisionObjects = new List<StaticSprite>();
+            // update collidable objects
+            List<Sprite> collisionObjects = new List<Sprite>();
             collisionObjects.AddRange(stretched.ToList());
             collisionObjects.AddRange(tiled.ToList());
 
@@ -366,7 +373,7 @@ namespace AngryTanks.Client
 
         /* parseMapFile()
          * 
-         * Takes in a StreamReader object and returns a List of StaticSprites
+         * Takes in a StreamReader object and returns a List of Sprites
          * corresponding to the boxes and pyramids which have a zero Z-position
          * found in the stream.
          * 
@@ -374,11 +381,11 @@ namespace AngryTanks.Client
          * values 'No Name' and 800.
          * 
          */
-        private Dictionary<String, List<StaticSprite>> ParseMapFile(StreamReader sr)
+        private Dictionary<String, List<Sprite>> ParseMapFile(StreamReader sr)
         {
-            Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
-            List<StaticSprite> stretched = new List<StaticSprite>();
-            List<StaticSprite> tiled = new List<StaticSprite>();
+            Dictionary<String, List<Sprite>> mapObjects = new Dictionary<String, List<Sprite>>();
+            List<Sprite> stretched = new List<Sprite>();
+            List<Sprite> tiled = new List<Sprite>();
             
             Vector2? position = null;
             Vector2? size = null;

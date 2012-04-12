@@ -14,35 +14,30 @@ using Microsoft.Xna.Framework.Storage;
 using log4net;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Messages;
 
 namespace AngryTanks.Client
 {
-    // TODO inherit from more generic Player
-    public class LocalPlayer : DynamicSprite
+    public class LocalPlayer : Player
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private KeyboardState kb;
 
-        private Single velocityFactor;
-        private Single angularVelocityFactor;
+        private Single velocityFactor, angularVelocityFactor;
+        private Single maxVelocity, maxAngularVelocity;
 
-        public LocalPlayer(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
-            : base(world, texture, position, size, rotation)
+        public LocalPlayer(World world, PlayerInformation playerInfo)
+            : base(world, playerInfo)
         {
+            // TODO support if these variables change
+            this.maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
+            this.maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
         }
 
-        public LocalPlayer(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
-            : base(world, texture, position, size, rotation, color)
-        {
-        }
-
-        public virtual void Update(GameTime gameTime, List<StaticSprite> collisionObjects)
+        public override void Update(GameTime gameTime, List<Sprite> collisionObjects)
         {
             kb = Keyboard.GetState();
-
-            Single maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
-            Single maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
 
             /*  Basing my calculations on this:
              *  Velocity.X = VelocityFactor * MaxVelocity.X * cos(Rotation)
@@ -107,7 +102,7 @@ namespace AngryTanks.Client
             Single overlap;
             Vector2 collisionProjection;
 
-            if (FindCollisions(collisionObjects, out overlap, out collisionProjection))
+            if (FindNearestCollision(collisionObjects, out overlap, out collisionProjection))
             {
                 // move our position back to old position
                 newPosition += overlap * collisionProjection;
@@ -119,38 +114,6 @@ namespace AngryTanks.Client
             Rotation = newRotation;
 
             base.Update(gameTime);
-        }
-
-        public virtual bool FindCollisions(List<StaticSprite> collisionObjects, out Single overlap, out Vector2 collisionProjection)
-        {
-            Single largestOverlap = 0;
-            Vector2 largestCollisionProjection = Vector2.Zero;
-
-            foreach (StaticSprite collisionObject in collisionObjects)
-            {
-                if (!Intersects(collisionObject, out overlap, out collisionProjection))
-                    continue;
-
-                if (overlap > largestOverlap)
-                {
-                    largestOverlap = overlap;
-                    largestCollisionProjection = collisionProjection;
-                }
-            }
-
-            // we found no collisions
-            if (largestOverlap == 0)
-            {
-                overlap = 0;
-                collisionProjection = Vector2.Zero;
-                return false;
-            }
-
-            // we did find a collision otherwise, so assign variables
-            overlap = largestOverlap;
-            collisionProjection = largestCollisionProjection;
-
-            return true;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

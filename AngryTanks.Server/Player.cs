@@ -90,35 +90,31 @@ namespace AngryTanks.Server
                 if (otherPlayer.Slot == this.Slot)
                     continue;
 
-                /*
-                NetOutgoingMessage msgAddPlayer = Program.Server.CreateMessage();
-                msgAddPlayer.Write((Byte)MessageType.MsgAddPlayer);
-                msgAddPlayer.Write(otherPlayer.Slot);
-                msgAddPlayer.Write((Byte)otherPlayer.Team);
-                msgAddPlayer.Write(otherPlayer.Callsign);
-                msgAddPlayer.Write(otherPlayer.Tag);
-                */
+                NetOutgoingMessage addPlayerMessage = Program.Server.CreateMessage();
 
-                NetOutgoingMessage packet = Program.Server.CreateMessage();
-
-                MsgAddPlayerPacket message =
+                MsgAddPlayerPacket addPlayerPacket =
                     new MsgAddPlayerPacket(new PlayerInformation(otherPlayer.Slot, otherPlayer.Callsign, otherPlayer.Tag, otherPlayer.Team));
 
-                packet.Write((Byte)message.MsgType);
-                message.Write(packet);
+                addPlayerMessage.Write((Byte)addPlayerPacket.MsgType);
+                addPlayerPacket.Write(addPlayerMessage);
 
                 Log.DebugFormat("MsgAddPlayer Compiled ({0} bytes) for player #{1} and being sent to player #{2}",
-                                packet.LengthBytes, otherPlayer.Slot, this.Slot);
+                                addPlayerMessage.LengthBytes, otherPlayer.Slot, this.Slot);
 
-                SendMessage(packet, NetDeliveryMethod.ReliableOrdered, 0);
+                SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
             }
             
             // TODO send scores and such...
 
-            // let them know we're ready to move on
-            NetOutgoingMessage stateMsg = Program.Server.CreateMessage();
-            stateMsg.Write((Byte)MessageType.MsgState);
-            SendMessage(stateMsg, NetDeliveryMethod.ReliableOrdered, 0);
+            // let them know we're ready to move on, and give him his slot
+            NetOutgoingMessage stateMessage = Program.Server.CreateMessage();
+
+            MsgStatePacket statePacket = new MsgStatePacket(Slot);
+
+            stateMessage.Write((Byte)MessageType.MsgState);
+            statePacket.Write(stateMessage);
+
+            SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
             // we're now ready to move to the spawn state
             this.playerState = PlayerState.Spawning;

@@ -47,11 +47,6 @@ namespace AngryTanks.Client
             get; protected set;
         }
 
-        public virtual bool Collided
-        {
-            get; set;
-        }
-
         #endregion
 
         public Sprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation)
@@ -90,6 +85,38 @@ namespace AngryTanks.Client
         public virtual bool Intersects(Sprite sprite, out Single overlap, out Vector2 collisionProjection)
         {
             return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap, out collisionProjection);
+        }
+
+        public virtual bool FindNearestCollision(List<Sprite> collisionObjects, out Single overlap, out Vector2 collisionProjection)
+        {
+            Single largestOverlap = 0;
+            Vector2 largestCollisionProjection = Vector2.Zero;
+
+            foreach (StaticSprite collisionObject in collisionObjects)
+            {
+                if (!Intersects(collisionObject, out overlap, out collisionProjection))
+                    continue;
+
+                if (overlap > largestOverlap)
+                {
+                    largestOverlap = overlap;
+                    largestCollisionProjection = collisionProjection;
+                }
+            }
+
+            // we found no collisions
+            if (largestOverlap == 0)
+            {
+                overlap = 0;
+                collisionProjection = Vector2.Zero;
+                return false;
+            }
+
+            // we did find a collision otherwise, so assign variables
+            overlap = largestOverlap;
+            collisionProjection = largestCollisionProjection;
+
+            return true;
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)

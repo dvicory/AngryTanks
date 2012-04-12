@@ -16,8 +16,6 @@ namespace AngryTanks.Server
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static SortedDictionary<Byte, Player> players = new SortedDictionary<Byte, Player>();
-
         #region GameKeeper Properties
 
         public static List<Player> Players
@@ -34,6 +32,8 @@ namespace AngryTanks.Server
         }
 
         #endregion
+
+        private static Dictionary<Byte, Player> players = new Dictionary<Byte, Player>();
 
         public static void HandleIncomingData(NetIncomingMessage incomingMessage)
         {
@@ -123,6 +123,32 @@ namespace AngryTanks.Server
                 player.Connection.Disconnect(reason);
         }
 
+        /// <summary>
+        /// Gets the <see cref="Player"/> associated with a certain instance of <see cref="NetConnection"/>.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns><see cref="Player"/>, if one found, otherwise null.</returns>
+        public static Player GetPlayerByConnection(NetConnection connection)
+        {
+            try
+            {
+                return players.Values.First(player => player.Connection == connection);
+            }
+            // that connection doesn't exist...
+            catch (InvalidOperationException e)
+            {
+                Log.Error(e.Message);
+                Log.Error(e.StackTrace);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to find a slot to allocate a <see cref="Player"/>.
+        /// </summary>
+        /// <param name="playerAdding"><see cref="PlayerInformation"/> about the player being added.</param>
+        /// <param name="denyReason"><see cref="String"/> to be populated with a reason if a slot can not be allocated.</param>
+        /// <returns><see cref="ProtocolInformation.DummySlot"/> if a slot can't be allocated, otherwise the slot.</returns>
         private static Byte AllocateSlot(PlayerInformation playerAdding, out String denyReason)
         {
             Player player;
@@ -158,31 +184,6 @@ namespace AngryTanks.Server
 
             denyReason = null;
             return earliestSlot;
-        }
-
-        public static Player GetPlayerBySlot(Byte Slot)
-        {
-            return players[Slot];
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Player"/> associated with a certain instance of <see cref="NetConnection"/>.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns><see cref="Player"/>, if one found, otherwise null.</returns>
-        public static Player GetPlayerByConnection(NetConnection connection)
-        {
-            try
-            {
-                return players.Values.First(player => player.Connection == connection);
-            }
-            // that connection doesn't exist...
-            catch (InvalidOperationException e)
-            {
-                Log.Error(e.Message);
-                Log.Error(e.StackTrace);
-                return null;
-            }
         }
     }
 }
