@@ -60,6 +60,8 @@ namespace AngryTanks.Client
                 velocityFactor = -1;
             if (kb.IsKeyDown(Keys.W) && kb.IsKeyDown(Keys.S))
                 velocityFactor = 0;
+            if (World.Console.PromptActive)
+                velocityFactor = 0;
 
             oldPosition = Position;
             oldVelocity = Velocity;
@@ -81,6 +83,8 @@ namespace AngryTanks.Client
             if (kb.IsKeyDown(Keys.D))
                 angularVelocityFactor = 1;
             if (kb.IsKeyDown(Keys.A) && kb.IsKeyDown(Keys.D))
+                angularVelocityFactor = 0;
+            if (World.Console.PromptActive)
                 angularVelocityFactor = 0;
 
             if (kb.IsKeyDown(Keys.A) || kb.IsKeyDown(Keys.D))

@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using Nuclex.Input;
 using log4net;
 
 using AngryTanks.Common;
@@ -21,21 +20,11 @@ using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
-    public class World : IDisposable
+    public class World : DrawableGameComponent
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        #region Public Properties
-
-        private bool disposed = false;
-
-        /// <summary>
-        /// True if Dispose() has been called
-        /// </summary>
-        public bool Disposed
-        {
-            get { return disposed; }
-        }
+        #region World Properties
 
         // world-unit to pixel conversion factor
         public static int WorldToPixel = 10;
@@ -70,18 +59,25 @@ namespace AngryTanks.Client
             get { return varDB; }
         }
 
-        #endregion
+        private Camera camera;
 
-        /// <summary>
-        /// Allows us to get a reference to various services
-        /// </summary>
-        private readonly IServiceProvider IService;
+        public Camera Camera
+        {
+            get { return camera; }
+        }
+
+        private IGameConsole console;
+
+        public IGameConsole Console
+        {
+            get { return console; }
+        }
+
+        #endregion
 
         private GraphicsDevice graphicsDevice;
         private ContentManager contentManager;
         private SpriteBatch spriteBatch;
-
-        private Camera camera;
 
         // textures
         private Texture2D backgroundTexture, boxTexture, pyramidTexture, tankTexture;
@@ -100,64 +96,50 @@ namespace AngryTanks.Client
         private LocalPlayer localPlayer;
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
-        public World(IServiceProvider iservice)
+        public World(Game game)
+            : base(game)
         {
-            this.IService = iservice;
-
-            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
-            this.graphicsDevice = graphicsDeviceService.GraphicsDevice;
-
             this.tiled = new List<StaticSprite>();
             this.stretched = new List<StaticSprite>();
 
             // initialize variable database
             // TODO need to get variables from server and stick them in this structure
             this.varDB = new VariableDatabase();
-
-            AngryTanks.ServerLink.MessageReceivedEvent += ReceiveMessage;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (disposing)
+            {
+                mapObjects.Clear();
+                tiled.Clear();
+                stretched.Clear();
+
+                localPlayer = null;
+
+                spriteBatch.Dispose();
+                contentManager.Unload();
+
+                graphicsDevice.DeviceReset -= GraphicsDeviceReset;
+                AngryTanks.ServerLink.MessageReceivedEvent -= ReceiveMessage;
+            }
+
+            base.Dispose(disposing);
         }
 
-        protected virtual void Dispose(bool disposing)
+        public override void Initialize()
         {
-            if (!disposing || Disposed)
-                return;
-
-            mapObjects.Clear();
-            tiled.Clear();
-            stretched.Clear();
-
-            localPlayer = null;
-
-            spriteBatch.Dispose();
-            contentManager.Unload();
-
-            graphicsDevice.DeviceReset -= GraphicsDeviceReset;
-            AngryTanks.ServerLink.MessageReceivedEvent -= ReceiveMessage;
-
-            disposed = true;
-        }
-
-        ~World()
-        {
-            Dispose(false);
-        }
-
-        public void Initialize()
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            // get our graphics device
+            graphicsDevice = Game.GraphicsDevice;
 
             // create our content manager
-            contentManager = new ContentManager(IService, "Content");
+            contentManager = new ContentManager(Game.Services, Game.Content.RootDirectory);
 
             // create our spritebatch
             spriteBatch = new SpriteBatch(graphicsDevice);
+
+            // get the game console
+            console = (IGameConsole)Game.Services.GetService(typeof(IGameConsole));
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
@@ -165,22 +147,18 @@ namespace AngryTanks.Client
             camera.LookAt(Vector2.Zero);
 
             graphicsDevice.DeviceReset += GraphicsDeviceReset;
+            AngryTanks.ServerLink.MessageReceivedEvent += ReceiveMessage;
+
+            base.Initialize();
         }
 
         private void GraphicsDeviceReset(object sender, EventArgs e)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
-            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
-            camera.Viewport = graphicsDeviceService.GraphicsDevice.Viewport;
+            camera.Viewport = graphicsDevice.Viewport;
         }
 
-        public void LoadContent()
+        protected override void LoadContent()
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
             // load textures
             backgroundTexture = contentManager.Load<Texture2D>("textures/others/grass");
             boxTexture = contentManager.Load<Texture2D>("textures/bz/boxwall");
@@ -202,21 +180,12 @@ namespace AngryTanks.Client
             // 2.8 width and 6 length are bzflag defaults
             // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
             localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
+
+            base.LoadContent();
         }
 
-        public void UnloadContent()
+        public override void Update(GameTime gameTime)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
-            //contentManager.Unload();
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
             HandleKeyDown(Keyboard.GetState());
 
             // update local player
@@ -231,12 +200,23 @@ namespace AngryTanks.Client
             // now finally track the tank (disregards any panning)
             // smoothstep helps smooth the camera if player gets stuck
             camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
+
+            base.Update(gameTime);
         }
 
         protected void HandleKeyDown(KeyboardState ks)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            // reset back to tank
+            if (ks.IsKeyDown(Keys.Home))
+            {
+                camera.Zoom = 1;
+                camera.Rotation = 0;
+                camera.PanPosition = Vector2.Zero;
+            }
+
+            // the above is the only thing allowed when console prompt is active
+            if (console.PromptActive)
+                return;
 
             // pan the camera
             if (ks.IsKeyDown(Keys.Up))
@@ -260,21 +240,10 @@ namespace AngryTanks.Client
                 camera.Rotation += 0.01f;
             if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
-
-            // reset back to tank
-            if (ks.IsKeyDown(Keys.Home))
-            {
-                camera.Zoom = 1;
-                camera.Rotation = 0;
-                camera.PanPosition = Vector2.Zero;
-            }
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
             // FIRST Draw pass: the background
             spriteBatch.Begin(SpriteBlendMode.None,
                               SpriteSortMode.Immediate,
@@ -342,6 +311,8 @@ namespace AngryTanks.Client
             localPlayer.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         private void ReceiveMessage(object sender, ServerLinkMessageEvent message)
@@ -353,11 +324,11 @@ namespace AngryTanks.Client
                         MsgAddPlayerPacket packet = (MsgAddPlayerPacket)message.MessageData;
 
                         if (message.ServerLinkStatus == NetServerLinkStatus.Connected)
-                            AngryTanks.Console.WriteLine(String.Format("{0} has joined the {1}",
-                                                         packet.Player.Callsign, packet.Player.Team));
+                            console.WriteLine(String.Format("{0} has joined the {1}",
+                                                  packet.Player.Callsign, packet.Player.Team));
                         else if (message.ServerLinkStatus == NetServerLinkStatus.GettingState)
-                            AngryTanks.Console.WriteLine(String.Format("{0} is on the {1}",
-                                                         packet.Player.Callsign, packet.Player.Team));
+                            console.WriteLine(String.Format("{0} is on the {1}",
+                                                  packet.Player.Callsign, packet.Player.Team));
 
                         break;
                     }
@@ -366,19 +337,19 @@ namespace AngryTanks.Client
                     {
                         MsgRemovePlayerPacket packet = (MsgRemovePlayerPacket)message.MessageData;
 
-                        AngryTanks.Console.WriteLine(String.Format("Player {0} has left the server ({1})", packet.Slot, packet.Reason));
+                        console.WriteLine(String.Format("Player {0} has left the server ({1})", packet.Slot, packet.Reason));
 
                         break;
                     }
 
                 case MessageType.MsgWorld:
-                    AngryTanks.Console.WriteLine("Loading map...");
+                    console.WriteLine("Loading map...");
 
                     MsgWorldPacket msgWorldData = (MsgWorldPacket)message.MessageData;
                     
                     LoadMap(msgWorldData.Map);
 
-                    AngryTanks.Console.WriteLine(String.Format("Map \"{0}\" loaded.", WorldName));
+                    console.WriteLine(String.Format("Map \"{0}\" loaded.", WorldName));
 
                     break;
 
@@ -389,9 +360,6 @@ namespace AngryTanks.Client
 
         public void LoadMap(StreamReader sr)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
             // construct the StaticSprites from the stream
             mapObjects = ParseMapFile(sr);
         }
@@ -408,9 +376,6 @@ namespace AngryTanks.Client
          */
         private Dictionary<String, List<StaticSprite>> ParseMapFile(StreamReader sr)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
             Dictionary<String, List<StaticSprite>> mapObjects = new Dictionary<String, List<StaticSprite>>();
             List<StaticSprite> stretched = new List<StaticSprite>();
             List<StaticSprite> tiled = new List<StaticSprite>();

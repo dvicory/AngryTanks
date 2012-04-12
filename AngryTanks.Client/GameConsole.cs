@@ -62,7 +62,86 @@ namespace AngryTanks.Client
         }
     }
 
-    public class GameConsole : DrawableGameComponent
+    public interface IGameConsole
+    {
+        #region Properties
+
+        bool Opened
+        {
+            get;
+            set;
+        }
+
+        Vector2 Position
+        {
+            get;
+            set;
+        }
+
+        Vector2 Size
+        {
+            get;
+            set;
+        }
+
+        Vector2 Margin
+        {
+            get;
+            set;
+        }
+
+        Vector2 Padding
+        {
+            get;
+            set;
+        }
+
+        Color BackgroundColor
+        {
+            get;
+            set;
+        }
+
+        ConsoleMessagePart PromptPrefix
+        {
+            get;
+            set;
+        }
+
+        bool PromptActive
+        {
+            get;
+            set;
+        }
+
+        Int16 PromptBlinkRate
+        {
+            get;
+            set;
+        }
+
+        RectangleF Bounds
+        {
+            get;
+        }
+
+        RectangleF InnerBounds
+        {
+            get;
+        }
+
+        #endregion
+
+        #region Methods
+
+        void WriteLine(String message);
+        void WriteLine(String message, Color color);
+        void WriteLine(ConsoleMessageLine consoleMessage);
+
+        #endregion
+    }
+
+    public class GameConsole : DrawableGameComponent, IGameConsole
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -104,7 +183,7 @@ namespace AngryTanks.Client
             set;
         }
 
-        public ConsoleMessagePart Prompt
+        public ConsoleMessagePart PromptPrefix
         {
             get;
             set;
@@ -165,9 +244,13 @@ namespace AngryTanks.Client
             this.BackgroundColor = backgroundColor;
 
             this.Opened = true;
-            this.Prompt = new ConsoleMessagePart("# ", Color.Yellow);
+            this.PromptPrefix = new ConsoleMessagePart("# ", Color.Yellow);
             this.PromptActive = false;
             this.PromptBlinkRate = 200; // 200 ms prompt blink rate
+
+            // register ourselves as a service
+            if (Game.Services != null)
+                Game.Services.AddService(typeof(IGameConsole), this);
 
             inputService = (IInputService)Game.Services.GetService(typeof(IInputService));
 
@@ -179,6 +262,7 @@ namespace AngryTanks.Client
         {
             if (disposing)
             {
+                // unregister event handlers
                 try
                 {
                     inputService.GetKeyboard().CharacterEntered -= CharacterEntered;
@@ -189,6 +273,15 @@ namespace AngryTanks.Client
                 {
                     Log.Error(e.Message);
                     Log.Error(e.StackTrace);
+                }
+
+                // remove service
+                if (Game.Services != null)
+                {
+                    IGameConsole gameConsoleService = (IGameConsole)Game.Services.GetService(typeof(IGameConsole));
+
+                    if (ReferenceEquals(gameConsoleService, this))
+                        Game.Services.RemoveService(typeof(IGameConsole));
                 }
             }
 
@@ -360,9 +453,9 @@ namespace AngryTanks.Client
             }
             
             if (promptBlinking && PromptActive)
-                promptLine.Parts.AddLast(new ConsoleMessagePart(Prompt.Message, Color.Black));
+                promptLine.Parts.AddLast(new ConsoleMessagePart(PromptPrefix.Message, Color.Black));
             else
-                promptLine.Parts.AddLast(Prompt);
+                promptLine.Parts.AddLast(PromptPrefix);
 
             promptLine.Parts.AddLast(new ConsoleMessagePart(currentPromptInput == null ? "" : currentPromptInput,
                                                             Color.White));
@@ -380,7 +473,7 @@ namespace AngryTanks.Client
             WriteLine(new ConsoleMessageLine(message, color));            
         }
 
-        public virtual void WriteLine(ConsoleMessageLine consoleMessage)
+        public void WriteLine(ConsoleMessageLine consoleMessage)
         {
             lines.AddFirst(consoleMessage);
         }

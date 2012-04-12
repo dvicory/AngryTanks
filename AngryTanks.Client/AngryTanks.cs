@@ -55,15 +55,26 @@ namespace AngryTanks.Client
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            // instantiate server link
+            serverLink = new ServerLink();
+
             // down with xna's input!
             Input = new InputManager(Services, Window.Handle);
             Components.Add(Input);
             Input.UpdateOrder = 100;
 
-            //Services.AddService(typeof(IInputService), new InputManager(Services, Window.Handle));
+            // instantiate game console
+            gameConsole = new GameConsole(this, new Vector2(0, 400), new Vector2(800, 200),
+                                          new Vector2(10, 10), new Vector2(10, 10), new Color(255, 255, 255, 100));
+            Components.Add(gameConsole);
+            gameConsole.UpdateOrder = 1000;
+            gameConsole.DrawOrder = 1000;
 
-            // instantiate server link
-            serverLink = new ServerLink();
+            // instantiate the world
+            world = new World(this);
+            Components.Add(world);
+            world.UpdateOrder = 100;
+            world.DrawOrder = 100;
         }
 
         /// <summary>
@@ -74,16 +85,6 @@ namespace AngryTanks.Client
         /// </summary>
         protected override void Initialize()
         {
-            // instantiate the world
-            world = new World(Services);
-            world.Initialize();
-
-            // instantiate game console
-            gameConsole = new GameConsole(this, new Vector2(0, 400), new Vector2(800, 200),
-                                          new Vector2(10, 10), new Vector2(10, 10), new Color(255, 255, 255, 100));
-            Components.Add(gameConsole);
-            gameConsole.UpdateOrder = 100;
-
             base.Initialize();
         }
 
@@ -95,12 +96,8 @@ namespace AngryTanks.Client
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            if (world != null)
-            {
-                world.LoadContent();
-                world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
-            }
+            
+            world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
 
             base.LoadContent();
         }
@@ -111,9 +108,6 @@ namespace AngryTanks.Client
         /// </summary>
         protected override void UnloadContent()
         {
-            if (world != null)
-                world.UnloadContent();
-
             base.UnloadContent();
         }
 
@@ -161,14 +155,14 @@ namespace AngryTanks.Client
             {
                 if (world != null)
                 {
-                    world.UnloadContent();
                     world.Dispose();
                     world = null;
                 }
 
-                world = new World(Services);
-                world.Initialize();
-                world.LoadContent();
+                world = new World(this);
+                Components.Add(world);
+                world.UpdateOrder = 100;
+                world.DrawOrder = 100;
 
                 Console.WriteLine("Connecting to server...");
                 serverLink.Connect("localhost", 5150);
@@ -180,23 +174,20 @@ namespace AngryTanks.Client
             {
                 if (world != null)
                 {
-                    world.UnloadContent();
                     world.Dispose();
                     world = null;
                 }
 
-                world = new World(Services);
-                world.Initialize();
-                world.LoadContent();
+                world = new World(this);
+                Components.Add(world);
+                world.UpdateOrder = 100;
+                world.DrawOrder = 100;
 
                 Console.WriteLine("Disconnecting from server.");
                 serverLink.Disconnect("player disconnected");
             }
 
             serverLink.Update();
-
-            if (world != null)
-                world.Update(gameTime);
 
             // TODO should probably have console do more advanced positioning that accounts for this...
             // do we need to change console's position and size?
@@ -221,9 +212,6 @@ namespace AngryTanks.Client
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            if (world != null)
-                world.Draw(gameTime);
 
             base.Draw(gameTime);
         }
