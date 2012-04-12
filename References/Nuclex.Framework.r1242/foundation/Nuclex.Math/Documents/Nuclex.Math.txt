@@ -1,0 +1,14 @@
+Angles always use double as their data type
+
+---------------------------------------------------------------------------------------------------
+Similar works discovered on the net
+---------------------------------------------------------------------------------------------------
+
+This author's solution to generic math in C# is very similar to mine. He has even built
+a complete framework for it (althought it looks like overkill to me).
+
+Proposed extensions to use .NET Generics for math:
+  http://www.lambda-computing.com/publications/articles/generics/
+
+Workaround for current .NET 2.0-Technology with Latent Typing
+  http://www.lambda-computing.com/projects/autocaster/

@@ -1,0 +1,2351 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nuclex.Audio</name>
+    </assembly>
+    <members>
+        <member name="T:Nuclex.Audio.Formats.Wave.ChannelMaskFlags">
+            <summary>Valid flags for the channels provided flags</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_FRONT_LEFT">
+            <summary>Channel for the front left speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_FRONT_RIGHT">
+            <summary>Channel for the front right speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_FRONT_CENTER">
+            <summary>Channel for the front center has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_LOW_FREQUENCY">
+            <summary>Channel for a low frequency speaker (subwoofer) has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_BACK_LEFT">
+            <summary>Channel for the back left speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_BACK_RIGHT">
+            <summary>Channel for the back right speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_FRONT_LEFT_OF_CENTER">
+            <summary>Channel for the front left of center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_FRONT_RIGHT_OF_CENTER">
+            <summary>Channel for the front right of center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_BACK_CENTER">
+            <summary>Channel for the back center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_SIDE_LEFT">
+            <summary>Channel for the side left speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_SIDE_RIGHT">
+            <summary>Channel for the side right speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_CENTER">
+            <summary>Channel for the top center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_FRONT_LEFT">
+            <summary>Channel for the top front left speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_FRONT_CENTER">
+            <summary>Channel for the top front center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_FRONT_RIGHT">
+            <summary>Channel for the top front right speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_BACK_LEFT">
+            <summary>Channel for the top back left speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_BACK_CENTER">
+            <summary>Channel for the top back center speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_TOP_BACK_RIGHT">
+            <summary>Channel for the top back right speaker has been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.ChannelMaskFlags.SPEAKER_RESERVED">
+            <summary>Reserved for future use</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveFormat">
+            <summary>Carries the informations stored in a wave format chunk</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.WAVEFORMATPCM">
+            <summary>FormatTag specifier for normal, uncompressed PCM audio</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.Size">
+            <summary>Size of the WaveFormat structure</summary>
+            <remarks>
+              The chunk can change size to encompass additional data that may be added
+              to the wave format by Microsoft or whoever is responsible for the wave file
+              format. The number of bytes on disk will be this size plus 8 additional
+              bytes from the chunk's header.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.Signature">
+            <summary>Signature by which this chunk can be recognized</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.FormatTag">
+            <summary>Wave format, mainly used to indicate compression scheme</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.ChannelCount">
+            <summary>Number of audio channels in the file</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.SamplesPerSecond">
+            <summary>Playback sample frames per second</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.AverageBytesPerSecond">
+            <summary>Average number of bytes per second when playing back the file</summary>
+            <remarks>
+              <para>
+                This value should include padding and alignment. It is intended for systems
+                to estimate whether they can play back the audio file without any skips or
+                pauses on their hardware.
+              </para>
+              <para>
+                Can be calculated using the formula <tt>SamplesPerSecond * BlockAlignment</tt>
+                rounded up to the nearest whole number.
+              </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormat.BlockAlignment">
+            <summary>Size of a single sample frame</summary>
+            <remarks>
+              <para>
+                A sample frame is a single sample for each channels. Audio data in a wave file
+                is stored in interleaved form, eg. the first frame contains sample 0 for all
+                channels, the next frame then contains sample 1 for all channels.
+              </para>
+              <para>
+                On platforms with a byte size of 8 bits, the block alignment can be calculated
+                using the formular <tt>ChannelCount * (BitsPerSample / 8)</tt>
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormat.Load(System.IO.BinaryReader,Nuclex.Audio.Formats.Wave.WaveFormat@)">
+            <summary>Reads the WaveFormat information structure from a binary stream</summary>
+            <param name="reader">Reader from which to read the WaveFormat structure</param>
+            <param name="waveFormat">Wave format structure to be written to the file</param>
+            <returns>The total size of the structure as indicated in the size field</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormat.Save(System.IO.BinaryWriter,Nuclex.Audio.Formats.Wave.WaveFormat@)">
+            <summary>Saves the WaveFormat information structure into a binary stream</summary>
+            <param name="writer">Writer through which to write the WaveFormat structure</param>
+            <param name="waveFormat">Wave format structure to be written to the file</param>
+            <remarks>
+              The default header has a total size of 24 bytes, 16 bytes are taken up by
+              the actual chunk and 8 additional bytes by the header that specifies the
+              chunk's signature and size.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormat.Save(System.IO.BinaryWriter,System.Int32,Nuclex.Audio.Formats.Wave.WaveFormat@)">
+            <summary>Saves the WaveFormat information structure into a binary stream</summary>
+            <param name="writer">Writer through which to write the WaveFormat structure</param>
+            <param name="chunkSize">Total size of the format info chunk</param>
+            <param name="waveFormat">Wave format structure to be written to the file</param>
+            <remarks>
+              Note that this writes chunkSize + 8 bytes. The additional 8 bytes result from
+              the chunk's header that provides the chunk signature and size you indicate.
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveFormatTest">
+            <summary>Unit Test for the WaveFormat structure</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatTest.TestLoadVersusSave">
+            <summary>Verifies that the WaveFormat load and save routines match up</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatTest.TestLoadNonWaveData">
+            <summary>
+              Verifies that the right exception is thrown if Load() is used on arbitrary data
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatTest.TestLoadStandardWaveFile">
+            <summary>
+              Verifies that the WaveFormat chunk of an actual wave file can be loaded
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveFormatEx">
+            <summary>Carries the informations stored in an extended wave format chunk</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.WAVEFORMATPCM">
+            <summary>FormatTag specifier for normal, uncompressed PCM audio</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.Size">
+            <summary>Size of the WaveFormatEx structure</summary>
+            <remarks>
+              The chunk can change size to encompass additional data that may be added
+              to the wave format by Microsoft or whoever is responsible for the wave file
+              format. The number of bytes on disk will be this size plus 8 additional
+              bytes from the chunk's header.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.Signature">
+            <summary>Signature by which this chunk can be recognized</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.WaveFormat">
+            <summary>The basic WaveFormat structure being extended</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.BitsPerSample">
+            <summary>Number of bits for a single sample</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatEx.ExtraInformationSize">
+            <summary>Number of bytes in extra informations appended to this structure</summary>
+            <remarks>
+              Also reflected in the structure size, but redundantly specific here for
+              additional programmer nuisance
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatEx.Load(System.IO.BinaryReader,Nuclex.Audio.Formats.Wave.WaveFormatEx@)">
+            <summary>Reads the WaveFormat information structure from a binary stream</summary>
+            <param name="reader">Reader from which to read the WaveFormat structure</param>
+            <param name="waveFormatEx">Wave format structure to be written to the file</param>
+            <returns>The total size of the structure as indicated in the size field</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatEx.Save(System.IO.BinaryWriter,Nuclex.Audio.Formats.Wave.WaveFormatEx@)">
+            <summary>Saves the WaveFormat information structure into a binary stream</summary>
+            <param name="writer">Writer through which to write the WaveFormat structure</param>
+            <param name="waveFormatEx">Wave format structure to be written to the file</param>
+            <remarks>
+              The default header has a total size of 26 bytes, 18 bytes are taken up by
+              the actual chunk and 8 additional bytes by the header that specifies the
+              chunk's signature and size.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatEx.Save(System.IO.BinaryWriter,System.Int32,Nuclex.Audio.Formats.Wave.WaveFormatEx@)">
+            <summary>Saves the WaveFormat information structure into a binary stream</summary>
+            <param name="writer">Writer through which to write the WaveFormat structure</param>
+            <param name="chunkSize">Total size of the format info chunk</param>
+            <param name="waveFormatEx">Wave format structure to be written to the file</param>
+            <remarks>
+              Note that this writes chunkSize + 8 bytes. The additional 8 bytes result from
+              the chunk's header that provides the chunk signature and size you indicate.
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveFormatExTest">
+            <summary>Unit Test for the WaveFormatEx structure</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatExTest.TestLoadVersusSave">
+            <summary>Verifies that the WaveFormatEx load and save routines match up</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatExTest.TestLoadNonWaveData">
+            <summary>
+              Verifies that the right exception is thrown if Load() is used on arbitrary data
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatExTest.TestLoadStandardWaveFile">
+            <summary>
+              Verifies that the WaveFormatEx chunk of an actual wave file can be loaded
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveFormatExtensible">
+            <summary>Carries the informations stored in an extensible wave format chunk</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.WAVEFORMATPCM">
+            <summary>FormatTag specifier for normal, uncompressed PCM audio</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.WAVEFORMATEXTENSIBLE">
+            <summary>FormatTag specifier for the WaveFormatExtensible chunk</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.Size">
+            <summary>Size of the WaveFormatExtensible structure</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.Signature">
+            <summary>Signature by which this chunk can be recognized</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.KSDATAFORMAT_SUBTYPE_ANALOG">
+            <summary>Sample data is stored in analog format (unknown)</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.KSDATAFORMAT_SUBTYPE_PCM">
+            <summary>Sample data is stored in uncompressed PCM format</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.KSDATAFORMAT_SUBTYPE_IEEE_FLOAT">
+            <summary>Sample data is stored in uncompressed IEEE float format</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.FormatEx">
+            <summary>Old style wave format description</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.ValidBitsPerSample">
+            <summary>Number of valid bits in each sample</summary>
+            <remarks>
+              <para>
+                The new wave format allows the number of valid bits in a sample to be less
+                than the number of bits per sample. This allows for easier handling of
+                non byte sized sample precisions because samples can be of a regular byte
+                size but the implementation doesn't have to use all of the bits.
+              </para>
+              <para>
+                Should be set to 0 (indicating it's not used) when all sample bits are
+                filled and the precision actually matches a byte size.
+              </para>
+              <para>
+                Can also contain the samples per block if the bits per sample field in the
+                wave format structure is 0.
+              </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.ChannelMask">
+            <summary>Bit flags indicating which audio channels have been provided</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.SubFormat">
+            <summary>Specifies the actual sample data format used</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.Load(System.IO.BinaryReader,Nuclex.Audio.Formats.Wave.WaveFormatExtensible@)">
+            <summary>Reads the WaveFormat information structure from a binary stream</summary>
+            <param name="reader">Reader from which to read the WaveFormat structure</param>
+            <param name="waveFormat">Wave format structure to be written to the file</param>
+            <returns>The total size of the structure as indicated in the size field</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveFormatExtensible.Save(System.IO.BinaryWriter,Nuclex.Audio.Formats.Wave.WaveFormatExtensible@)">
+            <summary>Saves the WaveFormat information structure into a binary stream</summary>
+            <param name="writer">Writer through which to write the WaveFormat structure</param>
+            <param name="waveFormat">Wave format structure to be written to the file</param>
+        </member>
+        <member name="T:Nuclex.Audio.Formats.Wave.WaveWriter">
+            <summary>Writes the data structures of windows-compatible wave files</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveWriter.FileHeaderSize">
+            <summary>Size of the wave file header ('RIFF' + filelength + 'WAVE')</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.#ctor(System.IO.Stream)">
+            <summary>Initializes a new wave writer</summary>
+            <param name="stream">Stream the wave will be written into</param>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.Dispose">
+            <summary>Immediately releases all resourced owned by the wave writer</summary>
+            <remarks>
+              The behavior of the WaveWriter matches that of the other writers in the
+              .NET framework, meaning the Stream will be closed. If you don't need a writer
+              anymore but want to leave the stream open, just let go of the writer, do
+              not dispose it.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.WriteFileHeader(System.Int32)">
+            <summary>Writes the global header of a wave file into the stream</summary>
+            <param name="fileLength">Total length of the wave file</param>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.WriteChunk(Nuclex.Audio.Formats.Wave.WaveFormat@)">
+            <summary>Write a format chunk using the old WaveFormat structure</summary>
+            <param name="waveFormat">WaveFormat structure to write into the chunk</param>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.WriteChunk(Nuclex.Audio.Formats.Wave.WaveFormatEx@)">
+            <summary>Write a format chunk using the WaveFormatEx structure</summary>
+            <param name="waveFormatEx">
+              Extended WaveFormat structure to write into the chunk
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.WriteChunk(Nuclex.Audio.Formats.Wave.WaveFormatExtensible@)">
+            <summary>Write a format chunk using the extensible WaveFormat structure</summary>
+            <param name="waveFormatExtensible">
+              Extensible WaveFormat structure to write into the chunk
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Formats.Wave.WaveWriter.WriteChunk(System.Int16[0:,0:])">
+            <summary>Write a data chunk consisting of 16 bit samples</summary>
+            <param name="samples">Samples to write into the data chunk</param>
+        </member>
+        <member name="F:Nuclex.Audio.Formats.Wave.WaveWriter.writer">
+            <summary>Writer used to write the wave file into the stream</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Cddb">
+            <summary>
+              Opens connections to a CDDB database and allows querying of CD titles
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.CalculateDiscId(System.Int32,System.Int32[])">
+            <summary>
+              Calculates the 'disc id' of a CD for submission or retrieval from a CDDB database
+            </summary>
+            <param name="discLengthSeconds">
+              Total length of the CD (from the beginning of the first track to the end of the
+              last track) in seconds
+            </param>
+            <param name="trackOffsetsSeconds">
+              Offsets of the individual tracks on the CD in seconds
+            </param>
+            <returns>The CDDB disc id of a CD with the provided characteristics</returns>
+            <remarks>
+              Disc ids are not guaranteed to be unique. In fact, it is quite likely to find
+              duplicate ids all over the place. This is due to the CDDB disc id algorithm
+              which is severely flawed and has to be accepted. See the remarks on the
+              <see cref="T:Nuclex.Audio.Metadata.CddbCategory"/> enumeration for how to get up to 11 CDs with the same
+              disc id enlisted in a CDDB database.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.SplitDiscTitle(System.String)">
+            <summary>Splits a CDDB DTITLE field into its artist and album name parts</summary>
+            <param name="discTitle">
+              String containing a CDDB DTITLE field that will be split
+            </param>
+            <returns>Two strings containing the artist and the album name</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.Connect(Nuclex.Audio.Metadata.Cddb.Credentials)">
+            <summary>Establishes a connection to a public freedb database mirror</summary>
+            <param name="credentials">Credentials by which to log in to the CDDB server</param>
+            <returns>A request that provides the CDDB connection upon completion</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.Connect(System.String,Nuclex.Audio.Metadata.Cddb.Credentials)">
+            <summary>
+              Establishes a connection to the specified CDDB compatible database server
+            </summary>
+            <param name="server">URL or IP address of the server to connect to</param>
+            <param name="credentials">Credentials by which to log in to the CDDB server</param>
+            <returns>A request that provides the CDDB connection upon completion</returns>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Cddb.Credentials">
+            <summary>Credentials with which to log into a CDDB server</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.Credentials.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>Initializes a new CDDB login credentials structure</summary>
+            <param name="user">Login name of the user</param>
+            <param name="hostName">Host name of the client</param>
+            <param name="clientName">NAme of the connecting client software</param>
+            <param name="version">Version number of the client software</param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Credentials.User">
+            <summary>Login name of user. Example: johndoe</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Credentials.HostName">
+            <summary>Host name of client. Example: abc.fubar.com</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Credentials.ClientName">
+            <summary>
+              The name of the connecting client. Example: xmcd, cda, EasyCD, et cetera.
+            </summary>
+            <remarks>
+              Do not use the name of another client which already	exists.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Credentials.Version">
+            <summary>Version number of client software. Example: v1.0PL0</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Cddb.DTitle">
+            <summary>Stores the contents of a CDDB DTITLE field</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.DTitle.#ctor(System.String,System.String)">
+            <summary>Initializes a new CDDB DTITLE structure</summary>
+            <param name="artist">Artist that released the song or the album</param>
+            <param name="title">Name of the song or of the album</param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DTitle.Artist">
+            <summary>Artist that released the song or the album</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DTitle.Title">
+            <summary>Name of the song or of the album</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Cddb.Disc">
+            <summary>Informations about a disc that has been queried for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Cddb.Disc.#ctor(System.String,System.Int32,System.String,System.String)">
+            <summary>Initializes a new disc informations structure</summary>
+            <param name="category">Category the disc is catalogued under</param>
+            <param name="discId">CDDB disc id of the disc</param>
+            <param name="artist">The artist of the disc</param>
+            <param name="title">The title of the disc</param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Disc.Category">
+            <summary>Musical category of the CD, possibly wrong</summary>
+            <remarks>
+              When CDDB came to existence, only 11 musical categories were defined with
+              a strong bias towards the creator's musical knowledge and/or taste.
+              Furthermore, CDDB servers a wary of changing these categories due to
+              crappy clients that are likely to break. Thus, today the categories are
+              mainly used to provide additional storage slots if duplicate disc ids occur.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Disc.DiscId">
+            <summary>CDDB disc id of the disc</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Disc.Artist">
+            <summary>Artist of the CD</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.Disc.Title">
+            <summary>Title of the CD</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Cddb.DatabaseEntry">
+            <summary>Stores the contents of an XMCD database file</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.TrackFrameOffsets">
+            <summary>Frame offsets of the individual tracks on the CD</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.DiscLengthSeconds">
+            <summary>Total length of the CD in seconds</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Revision">
+            <summary>Revision number of the database entry</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Submitter">
+            <summary>Application that has submitted the CDDB database entry</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.DiscIds">
+            <summary>CDDB disc ids for this disc</summary>
+            <remarks>
+              Storing multiple CDDB disc ids in a database entry has been deprecated,
+              normally you should only encounter entries with a single CDDB disc id.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Artist">
+            <summary>Name of the artist who released this album</summary>
+            <remarks>
+              If the CD is a sampler consisting of tracks from several artists, this
+              field will be set to 'Various'
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Album">
+            <summary>Name of this album</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Year">
+            <summary>Year that album was released in</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Genre">
+            <summary>Name of the genre the CD is categorized under</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Cddb.DatabaseEntry.Tracks">
+            <summary>Track titles of the individual tracks on the CD</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbTest">
+            <summary>Unit Test for the CDDB access and utility class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestCredentialsConstructor">
+            <summary>
+              Verifies that the constructor of the credentials structure works correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestDTitleConstructor">
+            <summary>
+              Verifies that the constructor of the dtitle structure works correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestDiscConstructor">
+            <summary>
+              Verifies that the constructor of the disc structure works correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestDiscIdCalculation">
+            <summary>Validates the disc id calculation algorithm is correct</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestSplitSameArtistAlbum">
+            <summary>
+              Ensures that the SplitDiscTitle() method correctly splits a disc title
+              not containing a " / " sequence, meaning the artist and album name are equal.
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbTest.TestSplitDifferentArtistAlbum">
+            <summary>
+              Ensures that the SplitDiscTitle() method correctly splits a disc title
+              at the " / " sequence which delimits the artist and the album name.
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbCategory">
+            <summary>List of the 11 fixed categories supported by official CDDB databases</summary>
+            <remarks>
+              <para>
+                Yes, this list is borked. It differentiates between Blues and Jazz, between Folk and
+                Country but coalesces rock, metal, pop, rap and more into a single genre. For
+                historical reasons and in order to not break existing (crappy) software, official
+                CDDB databases offer only these 11 fixed genres. 
+              </para>
+              <para>
+                Because the CDDB disc id calculation is equally flawed and easily leads to duplicate
+                ids, the official recommendation is to first try to submit CDDB informations of a new
+                CD with the actual genre and then, if it turns out there's already another CD with
+                the same disc id in the database, to use one of the other genres to submit it.
+              </para>
+              <para>
+                From version 5 onwards, the CDDB protocol supports any genre name as an additional
+                database field. Thus, these 11 genres might better be seen as "disc id slots" that
+                allow up to 11 CDs with the same disc id to be stored in CDDB databases.
+              </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Blues">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Classical">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Country">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Data">
+            <summary>ISO9660 and other data CDs</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Folk">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Jazz">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.NewAge">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Reggae">
+            <summary>Self explanatory</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Rock">
+            <summary>Rock - including funk, soul, rap, pop, industrial, metal, etc.</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Soundtrack">
+            <summary>Movies, shows</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbCategory.Misc">
+            <summary>Others that do not fit in the above categories</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbConnection">
+            <summary>Connection to a CDDB compatible database server</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.#ctor(Nuclex.Audio.Metadata.CddbProtocol,System.String,System.String,System.Boolean)">
+            <summary>Initializes a new CDDB server connection</summary>
+            <param name="protocol">Protocol by which the CDDB server can be reached</param>
+            <param name="hostname">Host name of the connected CDDB server</param>
+            <param name="version">Version of the CDDB software running on the server</param>
+            <param name="readOnly">Whether the server has restricted us to read access</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.Dispose">
+            <summary>Immediately releases all resources owned by the instance</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.Quit">
+            <summary>Logs out from the server and closes the connection</summary>
+            <returns>A request by which the log out process can be tracked</returns>
+            <remarks>
+              You should call this method and wait for the request to finish before
+              disposing of the connection to gracefully leave the CDDB server.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.ListCategories">
+            <summary>Lists the genre categories known to the CDDB server</summary>
+            <returns>A request that will provide the genre list upon completion</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.GetProtocolLevel">
+            <summary>Retrieves the protocol level currently used by the CDDB server</summary>
+            <returns>
+              A request that will provide the active protocol level upon completion
+            </returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.ChangeProtocolLevel(System.Int32)">
+            <summary>Changes the protocol level used by the CDDB server connection</summary>
+            <param name="newLevel">New protocol level to switch to</param>
+            <returns>
+              A request that will indicate when the protocol level has been changed
+            </returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.Query(System.Int32,System.Int32[])">
+            <summary>
+              Queries the CDDB server for informations about the specified disc
+            </summary>
+            <param name="discLengthSeconds">Total length of the CD in seconds</param>
+            <param name="trackOffsetsSeconds">
+              Track offsets, in seconds, for each track of the CD
+            </param>
+            <returns>A request that will provide the query results upon completion</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.Read(System.String,System.Int32)">
+            <summary>Reads the CDDB entry for the specified CD</summary>
+            <param name="category">Category in which the CD's CDDB entry is stored</param>
+            <param name="discId">Disc id of the CD whose CDDB entry will be read</param>
+            <returns>A request that will provide the CDDB entry upon completion</returns>
+            <remarks>
+              The CDDB specification requires you to first execute a query and only then
+              use the read command to retrieve a database file. Otherwise, the data being
+              returned is undefined.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.protocolLevelChanged(System.Int32)">
+            <summary>Called when the active protocol level has been changed</summary>
+            <param name="newLevel">New protocol level the connection is using</param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.hostname">
+            <summary>Hostname the server reported in the greeting string</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.version">
+            <summary>Version of the CDDB software supposedly running on the server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.readOnly">
+            <summary>Whether this client is in read-only mode</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.activeProtocolLevel">
+            <summary>Currently active protocol level for the connection</summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbConnection.Hostname">
+            <summary>Hostname of the server to which the connection was made</summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbConnection.Version">
+            <summary>Version of the CDDB software running on the server</summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbConnection.ReadOnly">
+            <summary>
+              Whether the client has been restricted to read access by the server
+            </summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbConnection.ProtocolLevel">
+            <summary>Currently active protocol level for the connection</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbConnection.ServerProtocolLevel">
+            <summary>
+              Stores the active and, if available, maximum supported protocol level
+              of a CDDB server
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbConnection.ServerProtocolLevel.#ctor(System.Int32,System.Nullable{System.Int32})">
+            <summary>Initializes a new CDDB server protocol level structure</summary>
+            <param name="activeProtocolLevel">Active server protocol level to store</param>
+            <param name="supportedProtocolLevel">
+              Maximum support server protocol level to store
+            </param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.ServerProtocolLevel.ActiveProtocolLevel">
+            <summary>Protocol level currently used by the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbConnection.ServerProtocolLevel.SupportedProtocolLevel">
+            <summary>Maximum protocol level the CDDB server supports</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbConnectionTest">
+            <summary>Unit Test for the CDDB connection class</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbProtocol">
+            <summary>
+              Handles communication following the CDDB protocol
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.ISO_8859_1">
+            <summary>ID of the ISO-8859-1 code page</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.#ctor(System.Net.Sockets.Socket)">
+            <summary>Initializes a new CDDB protocol handler</summary>
+            <param name="connectedSocket">
+              Socket through which the CDDB can be reached
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.Dispose">
+            <summary>Immediately releases all resources owned by the instance</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.ReceiveLine(System.Int32)">
+            <summary>Receives a single line from the CDDB server</summary>
+            <param name="timeoutMilliseconds">
+              Timeout, in milliseconds, after which to stop waiting for incoming data
+            </param>
+            <returns>The received line</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.SendLine(System.String,System.Int32)">
+            <summary>Sends a single line to the CDDB server</summary>
+            <param name="line">Line that will be sent to the CDDB server</param>
+            <param name="timeoutMilliseconds">
+              Timeout, in milliseconds, after which to stop waiting for the data to reach
+              the CDDB server
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.GetStatusCode(System.String)">
+            <summary>Extracts the status code from a server response</summary>
+            <param name="line">Server response line expected to contain a status code</param>
+            <returns>The status code as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.makeBadResponseException(System.String)">
+            <summary>Constructs a new BadResponseException</summary>
+            <param name="detailedReason">
+              Detailed reason to show in the exception message in addition to the standard
+              bad response message
+            </param>
+            <returns>The newly constructed exception</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.makeBadResponseException(System.String,System.Exception)">
+            <summary>Constructs a new BadResponseException</summary>
+            <param name="detailedReason">
+              Detailed reason to show in the exception message in addition to the standard
+              bad response message
+            </param>
+            <param name="innerException">
+              Inner exception that caused the response to be considered as malformed
+            </param>
+            <returns>The newly constructed exception</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.updateEncoding">
+            <summary>Updates the text encoding used in the protocol</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.enforceAlive">
+            <summary>Makes sure the object is still in a live, non-disposed state</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.useUtf8">
+            <summary>Whether the protocol uses UTF-8 encoding for text</summary>
+            <remarks>
+              Up to version 5 of CDDBP, ISO-8859-1 was used. This is the default encoding
+              that will be set when UseUTF8 is false. From version 6 onwards, the encoding
+              has been changed to UTF-8.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.encoding">
+            <summary>Encoding used to transform strings sent and received via CDDBP</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.syncRoot">
+            <summary>
+              Synchronization root used to ensure only one request communicates with
+              the CDDB server at a time
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.socket">
+            <summary>Socket by which we're connected to the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.lineParser">
+            <summary>
+              Parser that chops binary server responses into one string per line
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.CddbProtocol.buffer">
+            <summary>Receive buffer used to store incoming data from the socket</summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbProtocol.UseUtf8">
+            <summary>
+              Whether UTF-8 encoding is used to convert CDDB data between binary and text
+            </summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.CddbProtocol.SyncRoot">
+            <summary>
+              Synchronization root that can be used to ensure only one request communicates
+              with the CDDB server at a time
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser">
+            <summary>Parses lines from CDDB replies</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser.#ctor">
+            <summary>Initializes a new CDDB protocol line parser</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser.HandleMessageTooLarge">
+            <summary>
+              Called when the message is growing beyond the maximum message size
+            </summary>
+            <returns>
+              An exception that will be thrown to indicate the too large message
+            </returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser.HandleLoneCarriageReturn">
+            <summary>
+              Called when the message contains a carriage return without a line feed
+            </summary>
+            <remarks>
+              It is safe to throw an exception here. The exception will travel up in
+              the call stack to the caller of the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser.VerifyPotentialLine(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to scan the bytes of a potential line for invalid characters
+            </summary>
+            <param name="buffer">
+              Array containing the bytes that to can for invalid characters
+            </param>
+            <param name="start">Index in the array at which to begin reading</param>
+            <param name="count">Number of bytes from the array to scan</param>
+            <remarks>
+              <para>
+                This method is used to check for invalid characters even before a complete
+                line has been received. It will be called with incomplete lines (for example,
+                when the received data ends before a CR LF is encountered) to allow for early
+                rejection of data containing characters not allowed by a protocol.
+              </para>
+              <para>
+                It is safe to throw an exception here. The exception will travel up in
+                the call stack to the caller of the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocol.CddbLineParser.TransformToString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to transform a received series of bytes into a string
+            </summary>
+            <param name="buffer">Buffer containing the bytes to be transformed</param>
+            <param name="start">Index of the first byte to transform</param>
+            <param name="count">Number of bytes to transform into a string</param>
+            <returns>The string produced from the bytes in the specified buffer</returns>
+            <remarks>
+              This method allows you to use your own encoding for transforming the bytes
+              in a line into a string. Always called to transform an entire line in one
+              piece, excluding the CR LF characters at the line's end.
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.CddbProtocolTest">
+            <summary>Unit Test for the CDDB protocol class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocolTest.TestStatusCodeRetrieval">
+            <summary>
+              Validates that the protocol can extract the status code form a server response
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocolTest.TestThrowOnStatusCodeFromTooShortLine">
+            <summary>
+              Verifies that the status code retrieval throws an exception if the server
+              response is to short to contain a valid status code.
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.CddbProtocolTest.TestThrowOnInvalidCharactersInStatusCode">
+            <summary>
+              Verifies that the status code retrieval throws an exception if the server
+              response contains invalid characters
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException">
+            <summary>
+              Indicates that a handshake has already been performed with the server
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.CddbException">
+            <summary>Base class for exceptions indicating CDDB errors</summary>
+            <remarks>
+              Please do not use this class directly, it is only intended to serve as a base
+              class for specialized exceptions matching the CDDB error status codes.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbException.#ctor(System.Int32)">
+            <summary>Initializes the exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbException.#ctor(System.Int32,System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbException.#ctor(System.Int32,System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+              Provides the System.Runtime.Serialization.SerializationInfo instance
+              with information about the exception
+            </summary>
+            <param name="info">
+              The System.Runtime.Serialization.SerializationInfo instance that holds
+              the serialized object data about the exception being thrown
+            </param>
+            <param name="context">
+              The System.Runtime.Serialization.StreamingContext instance that contains
+              contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.CddbException.statusCode">
+            <summary>CDDB status code for the problem reported by the exception</summary>
+        </member>
+        <member name="P:Nuclex.Audio.Metadata.Exceptions.CddbException.StatusCode">
+            <summary>
+              CDDB status code that indicates the problem reported by the exception
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsExceptionTest">
+            <summary>Unit Test for the AlreadyShookHandsException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.AlreadyShookHandsExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest">
+            <summary>Unit Test for the CddbException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestSimpleConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestCddbException">
+            <summary>Test implementation of a CDDB exception for unit testing</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestCddbException.#ctor(System.Int32)">
+            <summary>Initializes the exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestCddbException.#ctor(System.Int32,System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestCddbException.#ctor(System.Int32,System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.CddbExceptionTest.TestCddbException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException">
+            <summary>
+              Indicates that the database entry being queried has been corrupted
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptExceptionTest">
+            <summary>Unit Test for the DatabaseEntryCorruptException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.DatabaseEntryCorruptExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException">
+            <summary>
+              Thrown to indicate that the requested database entry was notfound
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundExceptionTest">
+            <summary>Unit Test for the EntryNotFoundException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.EntryNotFoundExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException">
+            <summary>
+              Indicates that the handshake with the server has failed
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedExceptionTest">
+            <summary>Unit Test for the HandshakeFailedException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.HandshakeFailedExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException">
+            <summary>
+              Indicates that the server does not support the requested protocol level
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelExceptionTest">
+            <summary>Unit Test for the IllegalProtocolLevelException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.IllegalProtocolLevelExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException">
+            <summary>
+              Indicates that the server rejected a command because no handshake has been made
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.NoHandshakeExceptionTest">
+            <summary>Unit Test for the NoHandshakeException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.NoHandshakeExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException">
+            <summary>
+              Indicates that the server has denied access to the client
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedExceptionTest">
+            <summary>Unit Test for the PermissionDeniedException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.PermissionDeniedExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException">
+            <summary>
+              Indicates that the server is already using the requested protocol level
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetExceptionTest">
+            <summary>Unit Test for the ProtocolLevelAlreadySetException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ProtocolLevelAlreadySetExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.ServerErrorException">
+            <summary>
+              Indicates that an error has occured on the server
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.ServerErrorException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.ServerErrorExceptionTest">
+            <summary>Unit Test for the ServerErrorException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.ServerErrorExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException">
+            <summary>
+              Indicates that the system load of the server is currently too high
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighExceptionTest">
+            <summary>Unit Test for the SystemLoadTooHighException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.SystemLoadTooHighExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException">
+            <summary>
+              Indicates that too many users a logged in to the server right now
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException.Code">
+            <summary>Status code this exception is generated for</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Exceptions.TooManyUsersExceptionTest">
+            <summary>Unit Test for the TooManyUsersException class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Exceptions.TooManyUsersExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest">
+            <summary>Retrieves a list of the servers known musical categories</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol)">
+            <summary>Initializes a new CDDB category list request</summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.Start">
+            <summary>Starts the asynchronous execution of the request</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.OnProgressAchieved(System.Single)">
+            <summary>Triggers the AsyncProgressChanged event</summary>
+            <param name="progress">New progress to report to the event subscribers</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.execute(System.Object)">
+            <summary>Called asynchronously to execute the request</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.receiveCategoryList">
+            <summary>Receives the list of known categories from the server</summary>
+            <returns>The category list as an array of strings</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.exceptionFromGenreListStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the reply to
+              the genre list request
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.categories">
+            <summary>Categories returned by the CDDB server</summary>
+        </member>
+        <member name="E:Nuclex.Audio.Metadata.Requests.CddbCategoryListRequest.AsyncProgressChanged">
+            <summary>Triggered when the status of the process changes</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest">
+            <summary>Establishes a connection to a CDDB compatible server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.#ctor(System.String,System.Int16,Nuclex.Audio.Metadata.Cddb.Credentials)">
+            <summary>Initializes a new CDDB connection request</summary>
+            <param name="serverUrl">
+              URL of the server a connection will be established to
+            </param>
+            <param name="port">Port to which to try to establish the CDDB connection</param>
+            <param name="credentials">Credentials by which to log in to the CDDB server</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.Start">
+            <summary>Begins executing the CDDB connection request in the background</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.OnProgressAchieved(System.Single)">
+            <summary>Triggers the AsyncProgressChanged event</summary>
+            <param name="progress">New progress to report to the event subscribers</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.closeSocket">
+            <summary>Closes the socket in case an abort request has arrived</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.onConnnected(System.IAsyncResult)">
+            <summary>Called when a connection to the CDDB server has been established</summary>
+            <param name="asyncResult">Result handle of the asynchronous operation</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.performClientServerHandshake(System.Object)">
+            <summary>
+              Performs the client/server handshake upon connecting to a CDDB server
+            </summary>
+            <param name="status">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.exceptionFromGreetingStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the server greeting,
+              if the greeting indicates a problem
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.decodeServerGreeting(System.String)">
+            <summary>Decodes the greeting received from a CDDB server</summary>
+            <param name="line">Line containing the server greeting</param>
+            <returns>A structure with the individual greeting elements</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.makeBadResponseException(System.String)">
+            <summary>Constructs a new BadResponseException</summary>
+            <param name="detailedReason">
+              Detailed reason to show in the exception message in addition to the standard
+              bad response message
+            </param>
+            <returns>The newly constructed exception</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.sendHello">
+            <summary>Sends the 'hello' after the server has identified itself</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.receiveHelloReply">
+            <summary>Receives the repy to the 'hello' and validates it</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.exceptionFromHelloResponseStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code returned in the response to
+              the 'hello' message
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.serverUrl">
+            <summary>URL of the CDDB server to which we connect</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.port">
+            <summary>Port on the CDDB server to which we connect</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.credentials">
+            <summary>Credentials by which to log in to the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.socket">
+            <summary>Socket through which we're connected to the server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.protocol">
+            <summary>Protocol handler used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.connection">
+            <summary>
+              CDDB connected that's returned to the user upon successfully connecting
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="E:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.AsyncProgressChanged">
+            <summary>Triggered when the status of the process changes</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ServerGreeting">
+            <summary>Stores the informations returned by the server greeting</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ServerGreeting.#ctor(System.String,System.String,System.String)">
+            <summary>Initializes a new server greeting structure</summary>
+            <param name="hostname">Hostname of the connected server</param>
+            <param name="version">
+              Version number of the CDDB software running on the server
+            </param>
+            <param name="date">Current server timestamp</param>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ServerGreeting.Hostname">
+            <summary>Server host name. Example: xyz.fubar.com</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ServerGreeting.Version">
+            <summary>Version number of server software. Example: v1.0PL0</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbConnectionRequest.ServerGreeting.Date">
+            <summary>Current date and time.  Example: Wed Mar 13 00:41:34 1996</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest">
+            <summary>Retrieves or changes the protocol level of a CDDB connection</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol)">
+            <summary>
+              Initializes a new CDDB protocol level request for retrieval of
+              the current protocol level
+            </summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol,System.Int32,Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.ProtocolLevelNotificationDelegate)">
+            <summary>
+              Initializes a new CDDB protocol level request for changing of
+              the current protocol level
+            </summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+            <param name="newLevel">New protocol level that will be set</param>
+            <param name="callback">
+              Callback to be invoked as soon as the new protocol level is set
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.Start">
+            <summary>Starts the asynchronous execution of the request</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.OnProgressAchieved(System.Single)">
+            <summary>Triggers the AsyncProgressChanged event</summary>
+            <param name="progress">New progress to report to the event subscribers</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.execute(System.Object)">
+            <summary>Called asynchronously to execute the request</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.changeProtocolLevel">
+            <summary>Changes the CDDB server's active protocol level</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.queryProtocolLevel">
+            <summary>Queries the server for its active protocol level</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.decodeDetailedProtocolLevel(System.String)">
+            <summary>Decodes a server response containing the detailed protocol level</summary>
+            <param name="line">Status line received from the CDDB server</param>
+            <returns>The decoded server protocol level</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.decodeShortProtocolLevel(System.String)">
+            <summary>Decodes a server response containing the short protocol level</summary>
+            <param name="line">Status line received from the CDDB server</param>
+            <returns>The decoded server protocol level</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.makeBadResponseException(System.String)">
+            <summary>Constructs a new BadResponseException</summary>
+            <param name="detailedReason">
+              Detailed reason to show in the exception message in addition to the standard
+              bad response message
+            </param>
+            <returns>The newly constructed exception</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.exceptionFromProtocolStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the reply to
+              the genre list request
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.protocolLevel">
+            <summary>Protocol level the CDDB server is currently using</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.newLevel">
+            <summary>Either null for query only or new protocol level to set</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.callback">
+            <summary>Call to be invoked when the protocol level has changed</summary>
+        </member>
+        <member name="E:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.AsyncProgressChanged">
+            <summary>Triggered when the status of the process changes</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbProtocolLevelRequest.ProtocolLevelNotificationDelegate">
+            <summary>
+              Delegate used to notify the receiver of the active protocol level
+            </summary>
+            <param name="activeLevel">Active protocol level on the server</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbQueryRequest">
+            <summary>
+              Queries the CDDB server for entries matching the provided informations
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol,System.Int32,System.Int32[])">
+            <summary>Initializes a new CDDB disc query request</summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+            <param name="discLengthSeconds">
+              Total length of the CD (from the beginning of the first track to the end of the
+              last track) in seconds
+            </param>
+            <param name="trackOffsetsSeconds">
+              Offsets of the individual tracks on the CD in seconds
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.Start">
+            <summary>Starts the asynchronous execution of the request</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.OnProgressAchieved(System.Single)">
+            <summary>Triggers the AsyncProgressChanged event</summary>
+            <param name="progress">New progress to report to the event subscribers</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.execute(System.Object)">
+            <summary>Called asynchronously to execute the request</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.sendQuery">
+            <summary>Sends the query to the CDDB server</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.decodeDiscFromStatusLine(System.String)">
+            <summary>Decodes disc informations directly from the status line</summary>
+            <param name="statusLine">Status line containing disc informations</param>
+            <returns>The decoded disc informations</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.receiveDiscs">
+            <summary>Receives the disc informations being sent by the server</summary>
+            <returns>All disc information records the server has transmitted</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.decodeDisc(System.String,System.Int32)">
+            <summary>Decodes the disc informations sent by the CDDB server</summary>
+            <param name="line">Line containing the disc informations</param>
+            <param name="startIndex">
+              Characer Index at which the disc informations begin
+            </param>
+            <returns>The decoded CDDB disc informations</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.makeBadResponseException(System.String)">
+            <summary>Constructs a new BadResponseException</summary>
+            <param name="detailedReason">
+              Detailed reason to show in the exception message in addition to the standard
+              bad response message
+            </param>
+            <returns>The newly constructed exception</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.exceptionFromQueryStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the reply to a disc query
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.discLengthSeconds">
+            <summary>Total length of the CD in seconds</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.trackOffsetsSeconds">
+            <summary>Offsets of the tracks on the CD in seconds</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.results">
+            <summary>Results returned by the CDDB server</summary>
+        </member>
+        <member name="E:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.AsyncProgressChanged">
+            <summary>Triggered when the status of the process changes</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbQueryRequest.ProtocolLevelNotificationDelegate">
+            <summary>
+              Delegate used to notify the receiver of the active protocol level
+            </summary>
+            <param name="activeLevel">Active protocol level on the server</param>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbQuitRequest">
+            <summary>
+              Tells the CDDB server that the connection will be closed and closes it
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol)">
+            <summary>Initializes a new CDDB quit request</summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.Start">
+            <summary>Starts the asynchronous execution of the request</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.execute(System.Object)">
+            <summary>Called asynchronously to execute the request</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.exceptionFromQueryStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the reply to a disc query
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbQuitRequest.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.Requests.CddbReadRequest">
+            <summary>Queries the CDDB server for the XMCD file of a CD</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.#ctor(Nuclex.Audio.Metadata.CddbProtocol,System.String,System.Int32)">
+            <summary>Initializes a new CDDB database read request</summary>
+            <param name="protocol">
+              Protocol used to communication with the CDDB server
+            </param>
+            <param name="category">Category in which the CD's CDDB entry is stored</param>
+            <param name="discId">Disc id of the CD whose CDDB entry will be read</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.Start">
+            <summary>Starts the asynchronous execution of the request</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.OnProgressAchieved(System.Single)">
+            <summary>Triggers the AsyncProgressChanged event</summary>
+            <param name="progress">New progress to report to the event subscribers</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.execute(System.Object)">
+            <summary>Called asynchronously to execute the request</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.exceptionFromQueryStatus(System.Int32,System.String)">
+            <summary>
+              Generates an exception from the status code in the reply to a disc query
+            </summary>
+            <param name="statusCode">Status code provided by the server</param>
+            <param name="message">Response returned by the server</param>
+            <returns>
+              The exception for the server status code or null if the status code
+              indicates success
+            </returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.Requests.CddbReadRequest.receiveDatabaseFile">
+            <summary>Retrieves the XMCD database file for the CD</summary>
+            <returns>An array of strings containing the lines of the database file</returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.exception">
+            <summary>Exception that has occured during asynchronous processing</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.protocol">
+            <summary>Protocol used to communicate with the CDDB server</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.category">
+            <summary>Category in which the CD's CDDB entry is stored</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.discId">
+            <summary>Disc id of the CD whose CDDB entry will be read</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.Requests.CddbReadRequest.results">
+            <summary>Results returned by the CDDB server</summary>
+        </member>
+        <member name="E:Nuclex.Audio.Metadata.Requests.CddbReadRequest.AsyncProgressChanged">
+            <summary>Triggered when the status of the process changes</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.XmcdDecoder">
+            <summary>Decodes an XMCD database file into the matching structure</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.Whitespaces">
+            <summary>Whitespace characters</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.Numbers">
+            <summary>Numeric characters</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.#ctor">
+            <summary>Initializes a new XMCD database file decoder</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.ProcessLine(System.String)">
+            <summary>Processes a line from the XMCD database file</summary>
+            <param name="line">Line from the database file to process</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.ToDatabaseEntry">
+            <summary>Returns the parsed data as a XMCD database entry structure</summary>
+            <returns>The parsed XMCD database entry structure</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.parseFileId(System.String)">
+            <summary>Parses the file id of an XMCD database file</summary>
+            <param name="line">Line containing the XMCD database file id</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.parseCommentProperty(System.String)">
+            <summary>Parses a comment line possibly containing a property</summary>
+            <param name="line">Line containing a comment and possible a property</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.interpretCommentProperty(System.String,System.String)">
+            <summary>
+              Analyzes a property that appeared in the comments section and adds its
+              information to the database entry
+            </summary>
+            <param name="name">Name of the encountered property</param>
+            <param name="value">Value that has been assigned to the property</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.parseCommentTrackOffset(System.String)">
+            <summary>Parses a comment line possibly containing track offset</summary>
+            <param name="line">Line containing a comment and possible a track offset</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.parseKeyword(System.String)">
+            <summary>Parses a comment line possibly containing a property</summary>
+            <param name="line">Line containing a comment and possible a property</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.interpretKeyword(System.String,System.String)">
+            <summary>Interprets a keyword assignment appearing in an XMCD file</summary>
+            <param name="name">Name of the keyword</param>
+            <param name="value">Value assigned to the keyword</param>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoder.parseDiscIds(System.String)">
+            <summary>Parses the CDDB disc ids from a disc id list</summary>
+            <param name="discIds">List of disc ids to parse</param>
+            <returns>An array containing any parsed disc ids</returns>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.state">
+            <summary>Current state the decoder is in</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.entry">
+            <summary>Database entry structure that is being filled by the decoder</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.trackOffsets">
+            <summary>Frame offsets that were specified for the tracks in the XMCD file</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.trackTitles">
+            <summary>Track titles for all tracks listed in the XMCD file</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.haveDiscId">
+            <summary>Whether the decoder has encountered a disc id field</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.haveTitle">
+            <summary>Whether the decoder has encountered a disc title field</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.haveYear">
+            <summary>Whether the decoder has encountered a production year field</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.haveGenre">
+            <summary>Whether the decoder has encountered a genre field</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.havePlayOrder">
+            <summary>Whether the decoder has encountered a play order field</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.haveExtendedData">
+            <summary>Whether the decoder has encountered an extended data field</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.XmcdDecoder.State">
+            <summary>States the XMCD decoder can be in</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.State.ExpectingFileId">
+            <summary>Expecting the XMCD file id</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.State.ExpectingCommentProperties">
+            <summary>
+              Decoder is in the comments section and expects optional properties
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.State.ExpectingCommentTrackOffsets">
+            <summary>
+              Decoder has encountered the "Track frame offsets" comment and is
+              expecting track offsets or their termination by another property
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoder.State.ExpectingKeywords">
+            <summary>
+              Decoder has left the comments section and expects keywords
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Metadata.XmcdDecoderTest">
+            <summary>Unit Test for the XMCD decoder class</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Metadata.XmcdDecoderTest.exampleFile">
+            <summary>Example file from the XMCD specification</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Metadata.XmcdDecoderTest.TestXmcdFileParsing">
+            <summary>
+              Validates that the XMCD decoder is able to decode the example file
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRip">
+            <summary>
+              Provides audio file verfication services using the AccurateRip database
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRip.QueryDatabase(System.Int32,System.Int32[])">
+            <summary>
+              Queries the AccurateRip database for the CRCs of the tracks on the specified CD
+            </summary>
+            <param name="totalLengthSeconds">
+              Total length of the CD (from the beginning of the first track to the end of the
+              last track) in seconds
+            </param>
+            <param name="trackOffsetsSeconds">
+              Offsets of the individual tracks on the CD in seconds
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRip.QueryDatabase(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+              Queries the AccurateRip database for the CRCs of the tracks on the specified CD
+            </summary>
+            <param name="discId1">
+              Disc id of the CD calculated using AccurateRip's primary algorithm
+            </param>
+            <param name="discId2">
+              Disc id of the CD calculated using AccurateRip's secondary algorithm
+            </param>
+            <param name="cddbDiscId">
+              Disc id of the CD calculated using the CDDB algorithm
+            </param>
+            <param name="trackCount">Number of tracks on the CD</param>
+            <returns></returns>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRip.CalculateDiscId1(System.Int32[])">
+            <summary>Calculates a disc id using AccurateRip's primary id algorithm</summary>
+            <param name="trackOffsetsSeconds">
+              Offsets of the individual tracks on the CD in seconds
+            </param>
+            <returns>The disc id calculated using AccurateRip's primary id algorithm</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRip.CalculateDiscId2(System.Int32[])">
+            <summary>Calculates a disc id using AccurateRip's secondary id algorithm</summary>
+            <param name="trackOffsetsSeconds">
+              Offsets of the individual tracks on the CD in seconds
+            </param>
+            <returns>The disc id calculated using AccurateRip's secondary id algorithm</returns>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRip.TrackInfo">
+            <summary>
+              Informations about a track returned by a query to the AccurateRip database
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.TrackInfo.Crc32">
+            <summary>CRC32 checksum of the uncompressed PCM data of the track</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.TrackInfo.Confidence">
+            <summary>
+              Confidence (eg. number of people with the same checksum) that this checksum
+              indicates a proper rip of the track
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRip.CdInfo">
+            <summary>
+              Informations about a CD returned by a query to the AccurateRip database
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.CdInfo.CddbDiscId">
+            <summary>Disc ID for the CD calculated using the CDDB disc id algorithm</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.CdInfo.DiscId1">
+            <summary>
+              Disc ID for the CD calculated using the primary AccurateRip algorithm
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.CdInfo.DiscId2">
+            <summary>
+              Disc ID for the CD calculated using the secondary AccurateRip algorithm
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRip.CdInfo.TrackInfos">
+            <summary>Informations about the individual tracks on this CD</summary>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRipTest">
+            <summary>Unit Test for the AccurateRip database query and utility class</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRipTest.TestDiscId1Calculation">
+            <summary>Validates that the primary disc id calculation algorithm is correct</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRipTest.TestDiscId2Calculation">
+            <summary>
+              Validates that the secondary disc id calculation algorithm is correct
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRipParser">
+            <summary>Parses replies from an AccurateRip server</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRipParser.DecodeQueryResponse(System.IO.BinaryReader)">
+            <summary>
+              Decodes a response to a checksum query sent to the AccurateRip server
+            </summary>
+            <param name="reader">Reader through which to read the response data</param>
+            <returns>The decoded AccurateRip response</returns>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRipParser.decodeQueryResponseTracks(System.IO.BinaryReader,System.Int32)">
+            <summary>Decodes the response from the AccurateRip server</summary>
+            <param name="reader">Reader the server's response can be read from</param>
+            <param name="trackCount">Number of tracks to decode</param>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.AccurateRipParserTest">
+            <summary>Unit Test for the AccurateRip response parser</summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.AccurateRipParserTest.TestQueryResponseParsing">
+            <summary>
+              Tests whether responses to AccurateRip database queries can be parsed
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.AccurateRipParserTest.testResponse">
+            <summary>
+              A recorded response from the AccurateRip server that is used for testing
+            </summary>
+        </member>
+        <member name="T:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest">
+            <summary>
+              Provides audio file verfication services using the AccurateRip database
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Initializes a new request for handling an AccurateRip query</summary>
+            <param name="discId1">
+              Disc id of the CD calculated using AccurateRip's primary algorithm
+            </param>
+            <param name="discId2">
+              Disc id of the CD calculated using AccurateRip's secondary algorithm
+            </param>
+            <param name="cddbDiscId">
+              Disc id of the CD calculated using the CDDB algorithm
+            </param>
+            <param name="trackCount">Number of tracks on the CD</param>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.Start">
+            <summary>Starts the request</summary>
+            <remarks>
+              The request will run asynchronously. If an error occurs during preparation
+              of the request, the AsyncEnded event will be triggered in the calling thread.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.AsyncAbort">
+            <summary>Aborts the running process. Can be called from any thread.</summary>
+            <remarks>
+              The receiver should honor the abort request and stop whatever it is
+              doing as soon as possible. The method does not impose any requirement
+              on the timeliness of the reaction of the running process, but implementers
+              are advised to not ignore the abort request and urged to try and design
+              their code in such a way that it can be stopped in a reasonable time
+              (eg. within 1 second of the abort request).
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.ReraiseExceptions">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.GatherResults">
+            <summary>
+              Allows the specific request implementation to re-throw an exception if
+              the background process finished unsuccessfully
+            </summary>
+        </member>
+        <member name="M:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.accurateRipResponseReceived(System.IAsyncResult)">
+            <summary>
+              Callback invoked when a response from the AccurateRip server has been received or
+              when the web request has been aborted
+            </summary>
+            <param name="asyncResult">
+              Asynchronous result handle of the completed or aborted web request
+            </param>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.exception">
+            <summary>Exception that occured during the processing of the request</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.aborting">
+            <summary>Set to true to indicate that the request is being aborted</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.results">
+            <summary>Results returned by the query to the AccurateRip database</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.requestedDiscId1">
+            <summary>
+              Disc id of the requested CD calculated using AccurateRip's primary algorithm
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.requestedDiscId2">
+            <summary>
+              Disc id of the requested CD calculated using AccurateRip's secondary algorithm
+            </summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.requestedCddbDiscId">
+            <summary>Disc id of the requested CD calculated using the CDDB algorithm</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.requestedTrackCount">
+            <summary>Number of tracks on the requested CD</summary>
+        </member>
+        <member name="F:Nuclex.Audio.Verification.Requests.AccurateRipRetrievalRequest.request">
+            <summary>Asynchronously running web request to the AccurateRip server</summary>
+        </member>
+    </members>
+</doc>

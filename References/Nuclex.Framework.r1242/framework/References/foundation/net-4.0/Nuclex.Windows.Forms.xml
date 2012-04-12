@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nuclex.Windows.Forms</name>
+    </assembly>
+    <members>
+        <member name="T:Nuclex.Windows.Forms.AsyncProgressBar">
+            <summary>Progress bar with optimized multi-threading behavior</summary>
+            <remarks>
+              <para>
+                If a background thread is generating lots of progress updates, using synchronized
+                calls can drastically reduce performance. This progress bar optimizes that case
+                by performing the update asynchronously and keeping only the most recent update
+                when multiple updates arrive while the asynchronous update call is still running.
+              </para>
+              <para>
+                This design eliminates useless queueing of progress updates, thereby reducing
+                CPU load occuring in the UI thread and at the same time avoids blocking the
+                worker thread, increasing its performance.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.#ctor">
+            <summary>Initializes a new asynchronous progress bar</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.progressBarDisposed(System.Object,System.EventArgs)">
+            <summary>Called when the progress bar is being disposed</summary>
+            <param name="sender">Progress bar that is being disposed</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.AsyncSetValue(System.Single)">
+            <summary>Asynchronously updates the value to be shown in the progress bar</summary>
+            <param name="value">New value to set the progress bar to</param>
+            <remarks>
+              This will schedule an asynchronous update of the progress bar in the UI thread.
+              If you change the progress value again before the progress bar has completed its
+              update cycle, the original progress value will be skipped and the progress bar
+              jumps directly to the latest progress value. Updates are not queued, there is
+              at most one update waiting on the UI thread. It is also strictly guaranteed that
+              the last most progress value set will be shown and never skipped.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.updateProgress">
+            <summary>Synchronously updates the value visualized in the progress bar</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.AsyncProgressBar.newProgress">
+            <summary>New progress being assigned to the progress bar</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.AsyncProgressBar.updateProgressDelegate">
+            <summary>Delegate for the progress update method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.AsyncProgressBar.progressUpdateAsyncResult">
+            <summary>Async result for the invoked control state update method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.AsyncProgressBar.components">
+            <summary>Required designer variable.</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.Dispose(System.Boolean)">
+            <summary>Clean up any resources being used.</summary>
+            <param name="disposing">
+              true if managed resources should be disposed; otherwise, false.
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBar.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.AsyncProgressBarTest">
+            <summary>Unit Test for the asynchronously updating progress bar</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.AsyncProgressBarTest.TestProgressAssignment">
+            <summary>
+              Verifies that asynchronous progress assignment is working
+            </summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.ContainerListView">
+            <summary>ListView allowing for other controls to be embedded in its cells</summary>
+            <remarks>
+              <para>
+                There basically were two possible design choices: Provide a specialized
+                ListViewSubItem that carries a Control instead of a string or manage the
+                embedded controls seperate of the ListView's items.
+              </para>
+              <para>
+                The first option requires a complete rewrite of the ListViewItem class
+                and its related support classes, all of which are surprisingly large and
+                complex. Thus, I chose the less clean but more doable latter option.
+              </para>
+              <para>
+                This control is useful for simple item lists where you want to provide
+                a combobox, checkbox or other control to the user for a certain column.
+                It will not perform well for lists with hundreds of items since it
+                requires a control to be created per row and management of the embedded
+                controls is designed for limited usage.
+              </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ContainerListView.WM_PAINT">
+            <summary>Message sent to a control to let it paint itself</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.#ctor">
+            <summary>Initializes a new ContainerListView</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.UpdateEmbeddedControls">
+            <summary>Updates the controls embeded into the list view</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.GetSubItemBounds(System.Windows.Forms.ListViewItem,System.Int32)">
+            <summary>Calculates the boundaries of a cell in the list view</summary>
+            <param name="item">Item in the list view from which to calculate the cell</param>
+            <param name="subItem">Index der cell whose boundaries to calculate</param>
+            <returns>The boundaries of the specified list view cell</returns>
+            <exception cref="T:System.IndexOutOfRangeException">
+              When the specified sub item index is not in the range of valid sub items
+            </exception>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.WndProc(System.Windows.Forms.Message@)">
+            <summary>Responds to window messages sent by the operating system</summary>
+            <param name="message">Window message that will be processed</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.embeddedControlsClearing(System.Object,System.EventArgs)">
+            <summary>Called when the list of embedded controls has been cleared</summary>
+            <param name="sender">Collection that has been cleared of its controls</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.embeddedControlAdded(System.Object,Nuclex.Support.Collections.ItemEventArgs{Nuclex.Windows.Forms.ListViewEmbeddedControl})">
+            <summary>Called when a control gets removed from  the embedded controls list</summary>
+            <param name="sender">List from which the control has been removed</param>
+            <param name="arguments">
+              Event arguments providing a reference to the removed control
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.embeddedControlRemoved(System.Object,Nuclex.Support.Collections.ItemEventArgs{Nuclex.Windows.Forms.ListViewEmbeddedControl})">
+            <summary>Called when a control gets added to the embedded controls list</summary>
+            <param name="sender">List to which the control has been added</param>
+            <param name="arguments">
+              Event arguments providing a reference to the added control
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.embeddedControlClicked(System.Object,System.EventArgs)">
+            <summary>Called when an embedded control has been clicked on</summary>
+            <param name="sender">Embedded control that has been clicked</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.GetColumnOrder">
+            <summary>Obtains the current column order of the list</summary>
+            <returns>An array indicating the order of the list's columns</returns>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ContainerListView.columnHeaderHeight">
+            <summary>Height of the list view's column header</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ContainerListView.embeddedControlClickedDelegate">
+            <summary>Event handler for when embedded controls are clicked on</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ContainerListView.embeddedControls">
+            <summary>Controls being embedded in this ListView</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ContainerListView.components">
+            <summary>Required designer variable.</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.Dispose(System.Boolean)">
+            <summary>Clean up any resources being used.</summary>
+            <param name="disposing">
+              true if managed resources should be disposed; otherwise, false.
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListView.InitializeComponent">
+            <summary> 
+              Required method for Designer support - do not modify 
+              the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ContainerListView.EmbeddedControls">
+            <summary>Controls being embedded in the ListView</summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.ContainerListViewTest">
+            <summary>Unit Test for the control container list view</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListViewTest.TestConstructor">
+            <summary>
+              Verifies that the asynchronous progress bar's constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ContainerListViewTest.addRow(Nuclex.Windows.Forms.ContainerListView,System.String[])">
+            <summary>Adds a row to a control container list view</summary>
+            <param name="listView">List view control the row will be added to</param>
+            <param name="columns">Values that will appear in the individual columns</param>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.ListViewEmbeddedControl">
+            <summary>Stores informations about an embedded control</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ListViewEmbeddedControl.#ctor(System.Windows.Forms.Control,System.Int32,System.Int32)">
+            <summary>Initializes a new embedded control holder</summary>
+            <param name="control">Control being embedded in a list view</param>
+            <param name="row">List row at which the control will be embedded</param>
+            <param name="column">List column at which the control will be embedded</param>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ListViewEmbeddedControl.control">
+            <summary>Embedded control</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ListViewEmbeddedControl.row">
+            <summary>Row where the control is embedded</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ListViewEmbeddedControl.column">
+            <summary>Column where the control is embedded</summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ListViewEmbeddedControl.Control">
+            <summary>Control that is being embedded in the ListView</summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ListViewEmbeddedControl.Row">
+            <summary>Row the control has been embedded in</summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ListViewEmbeddedControl.Column">
+            <summary>Column the control has been embedded in</summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.ProgressReporterForm">
+             <summary>
+               Blocking progress dialog that prevents the user from accessing the application
+               window during a modal asynchronous processes.
+             </summary>
+             <example>
+               <code>
+                 class Test : Nuclex.Support.Scheduling.ThreadOperation {
+            
+                   static void Main() {
+                     Test myTest = new Test();
+                     myTest.Begin();
+                     Nuclex.Windows.Forms.ProgressReporterForm.Track(myTest);
+                     myTest.End();
+                   }
+            
+                   protected override void Execute() {
+                     for(int i = 0; i &lt; 10000000; ++i) {
+                       OnAsyncProgressUpdated((float)i / 10000000.0f);
+                     }
+                   }
+            
+                 }
+               </code>
+             </example>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.#ctor">
+            <summary>Initializes a new progress reporter</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.Track(Nuclex.Support.Tracking.Transaction)">
+            <summary>
+              Shows the progress reporter until the specified transaction has ended.
+            </summary>
+            <param name="transaction">
+              Transaction for whose duration to show the progress reporter
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.Track(System.String,Nuclex.Support.Tracking.Transaction)">
+            <summary>
+              Shows the progress reporter until the specified transaction has ended.
+            </summary>
+            <param name="windowTitle">
+              Text to be shown in the progress reporter's title bar
+            </param>
+            <param name="transaction">
+              Process for whose duration to show the progress reporter
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.OnClosing(System.ComponentModel.CancelEventArgs)">
+            <summary>Called when the user tries to close the form manually</summary>
+            <param name="arguments">
+              Contains a flag that can be used to abort the close attempt
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.track(System.String,Nuclex.Support.Tracking.Transaction)">
+            <summary>
+              Shows the progress reporter until the specified transaction has ended.
+            </summary>
+            <param name="windowTitle">
+              Text to be shown in the progress reporter's title bar
+            </param>
+            <param name="transaction">
+              Transaction for whose duration to show the progress reporter
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.asyncEnded(System.Object,System.EventArgs)">
+            <summary>Called when the transaction has ended</summary>
+            <param name="sender">Transaction that has ended</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.asyncProgressChanged(System.Object,Nuclex.Support.Tracking.ProgressReportEventArgs)">
+            <summary>Called when the tracked transaction's progress updates</summary>
+            <param name="sender">Transaction whose progress has been updated</param>
+            <param name="arguments">
+              Contains the new progress achieved by the transaction
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.controlCreationTimerTicked(System.Object,System.EventArgs)">
+            <summary>
+              One-time timer callback that ensurs the form doesn't stay open when the
+              close request arrives at an inappropriate time.
+            </summary>
+            <param name="sender">Timer that has ticked</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.cancelClicked(System.Object,System.EventArgs)">
+            <summary>
+              Aborts the background operation when the user clicks the cancel button
+            </summary>
+            <param name="sender">Button that has been clicked</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.asyncEndedDelegate">
+            <summary>Delegate for the asyncEnded() method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.asyncProgressChangedDelegate">
+            <summary>Delegate for the asyncProgressUpdated() method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.state">
+            <summary>Whether the form can be closed and should be closed</summary>
+            <remarks>
+              0: Nothing happened yet
+              1: Ready to close or close requested
+              2: Ready to close and close requested, triggers close
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.areProgressUpdatesIncoming">
+            <summary>Whether we're receiving progress updates from the transaction</summary>
+            <remarks>
+              0: No progress updates have arrived so far
+              1: We have received at least one progress update from the transaction
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.abortReceiver">
+            <summary>
+              If set, reference to an object implementing IAbortable by which the
+              ongoing background process can be aborted.
+            </summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.ProgressReporterForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ProgressReporterForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.ToolStripTrackingBar">
+            <summary>Tracking bar that can be hosted in a tool strip container</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.#ctor">
+            <summary>Initializes a new tool strip tracking bar</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.#ctor(System.String)">
+            <summary>Initializes a new tool strip tracking bar with a name</summary>
+            <param name="name">Name of the tracking bar control</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.Track(Nuclex.Support.Tracking.Transaction)">
+            <summary>Tracks the specified transaction in the tracking bar</summary>
+            <param name="transaction">Transaction to be tracked</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.Track(Nuclex.Support.Tracking.Transaction,System.Single)">
+            <summary>Tracks the specified transaction in the tracking bar</summary>
+            <param name="transaction">Transaction to be tracked</param>
+            <param name="weight">Weight of this transaction in the total progress</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.Untrack(Nuclex.Support.Tracking.Transaction)">
+            <summary>Stops tracking the specified transaction</summary>
+            <param name="transaction">Transaction to stop tracking</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.createTrackingBar">
+            <summary>Creates a new tracking bar</summary>
+            <returns>A new tracking bar</returns>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.hideControlAtRuntime">
+            <summary>Hides the control during runtime usage</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.ToolStripTrackingBar.trackingBarVisibleChanged(System.Object,System.EventArgs)">
+            <summary>
+              Toggles the visibility of the tool strip host when the tracking bar control's
+              visibility changes.
+            </summary>
+            <param name="sender">Tracking bar control whose visiblity has changed</param>
+            <param name="arguments">Not used</param>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ToolStripTrackingBar.TrackingBarControl">
+            <summary>The tracking bar control being hosted by the tool strip host</summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ToolStripTrackingBar.DefaultSize">
+            <summary>Default size of the hosted control</summary>
+        </member>
+        <member name="P:Nuclex.Windows.Forms.ToolStripTrackingBar.DefaultMargin">
+            <summary>Default margin to leave around the control in the tool strip</summary>
+        </member>
+        <member name="T:Nuclex.Windows.Forms.TrackingBar">
+            <summary>Progress bar for tracking the progress of background operations</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.#ctor">
+            <summary>Initializes a new tracking bar</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.Track(Nuclex.Support.Tracking.Transaction)">
+            <summary>Tracks the specified transaction in the tracking bar</summary>
+            <param name="transaction">Transaction to be tracked</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.Track(Nuclex.Support.Tracking.Transaction,System.Single)">
+            <summary>Tracks the specified transaction in the tracking bar</summary>
+            <param name="transaction">Transaction to be tracked</param>
+            <param name="weight">Weight of this transaction in the total progress</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.Untrack(Nuclex.Support.Tracking.Transaction)">
+            <summary>Stops tracking the specified transaction</summary>
+            <param name="transaction">Transaction to stop tracking</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.asyncProgressUpdated(System.Object,Nuclex.Support.Tracking.ProgressReportEventArgs)">
+            <summary>
+              Called when the summed progressed of the tracked transaction has changed
+            </summary>
+            <param name="sender">Transaction whose progress has changed</param>
+            <param name="arguments">Contains the progress achieved by the transaction</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.asyncIdleStateChanged(System.Object,Nuclex.Support.Tracking.IdleStateEventArgs)">
+            <summary>Called when the tracker becomes enters of leaves the idle state</summary>
+            <param name="sender">Tracker that has entered or left the idle state</param>
+            <param name="arguments">Contains the new idle state</param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.updateIdleState">
+            <summary>
+              Updates the idle state of the progress bar
+              (controls whether the progress bar is shown or invisible)
+            </summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.isIdle">
+            <summary>Whether the progress bar is in the idle state</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.tracker">
+            <summary>Tracker used to sum and update the total progress</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.updateIdleStateDelegate">
+            <summary>Delegate for the idle state update method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.asyncIdleStateChangedDelegate">
+            <summary>Delegate for the asyncIdleStateChanged() method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.asyncProgressUpdateDelegate">
+            <summary>Delegate for the asyncProgressUpdate() method</summary>
+        </member>
+        <member name="F:Nuclex.Windows.Forms.TrackingBar.components">
+            <summary>Required designer variable.</summary>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.Dispose(System.Boolean)">
+            <summary> Clean up any resources being used.</summary>
+            <param name="disposing">
+              true if managed resources should be disposed; otherwise, false.
+            </param>
+        </member>
+        <member name="M:Nuclex.Windows.Forms.TrackingBar.InitializeComponent">
+            <summary> 
+              Required method for Designer support - do not modify 
+              the contents of this method with the code editor.
+            </summary>
+        </member>
+    </members>
+</doc>

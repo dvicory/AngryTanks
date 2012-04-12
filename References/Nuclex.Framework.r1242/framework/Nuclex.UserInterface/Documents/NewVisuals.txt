@@ -1,0 +1,40 @@
+﻿Visuals are classes that render a control.
+Controls don't know anything about their visuals. Or should they?
+
+Name the thing GuiVisualizer?
+
+
+Screen
+  .Desktop
+  .Visualizer
+
+Control
+  .VisualizerChanged
+
+Visualizer
+  .CreateRenderer<ControlType>()
+
+
+
+public enum ButtonState {
+  Disabled, Normal, Pressed, Hover
+}
+
+public interface IButtonRenderer {
+  public ButtonState State { get; set; }
+  public string Text { get; set; }
+}
+
+public class FlatButtonRenderer : IButtonRenderer {
+  
+}
+
+
+
+
+This might not yield optimum performance because images have to be cached
+on textures
+
+interface IFlatControlRenderer<ControlType> {
+  void Render(ControlType control, FlatGuiPainter guiPainter);
+}

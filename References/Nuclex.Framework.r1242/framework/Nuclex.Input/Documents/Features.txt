@@ -1,0 +1,31 @@
+﻿+ No garbage produced
+
+  o During usage the library produces zero garbage
+
++ Typesafe event-based input
+
+  o Fast: Only compares states if events are subscribed
+  o Faster: Mouse and Keyboard don't compare states at all
+  o Typesafe: Uses events, no message objects passed around
+
++ Supports standard PC game pads
+  
+  o Supports any DirectInput-capable game controller
+  
++ Mouse movement with subpixel accuracy
+
+  o Put those expensive high-dpi mice to use
+
++ Optimal text input
+
+  o Honors keyboard layout and locale in Windows
+  o Supports XBox 360 chat pads
+  o Very easy to use: just subscribe to an event
+
++ Identical input devices on all platforms
+
+  o XBox 360 and Phone 7 use a dummy mouse
+  o XBox 360 and Phone 7 use a dummy keyboard
+  o Always 8 game pads on all platforms
+
++ Mocked input for easy unit testing

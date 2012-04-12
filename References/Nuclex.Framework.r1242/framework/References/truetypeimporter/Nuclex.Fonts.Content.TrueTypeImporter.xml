@@ -1,0 +1,754 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        "Nuclex.Fonts.Content.TrueTypeImporter"
+    </assembly>
+    <members>
+        <member name="F:Nuclex.Fonts.Content.ContourSet.PenPosition">
+            <summary>Current position of the drawing pen</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.ContourSet.CurrentOutlineStartIndex">
+            <summary>Starting index of the current outline in the vertex array</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.ContourSet.Outlines">
+            <summary>Contains the starting index and vertex count for each outline</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.ContourSet.Vertices">
+            <summary>Vertices created for this font</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.ContourSet.#ctor">
+            <summary>Initializes a new contour set</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.ContourSet">
+            <summary>Internal structure used to collect a glyph's contour informations</summary>
+        </member>
+        <member name="D:Nuclex.Fonts.Content.OutlineVector">
+            <summary>A vector of outline starting index / vertex count records</summary>
+        </member>
+        <member name="D:Nuclex.Fonts.Content.VertexVector">
+            <summary>A vector of FreeType vertices</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterWriter.GetRuntimeType(Microsoft.Xna.Framework.TargetPlatform)">
+            <summary>Obtains the Type of the RuntimeReader used to load the resource</summary>
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterWriter.GetRuntimeReader(Microsoft.Xna.Framework.TargetPlatform)">
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterWriter.Write(Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler.ContentWriter,Nuclex.Fonts.Content.VectorFontCharacterContent)">
+            <summary>Writes the FontContent resource into the ContentWriter</summary>
+            <param name="output">ContentWriter to serialize the resource into</param>
+            <param name="characterContent">FontContent resource to be serialized</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontCharacterWriter">
+            <summary>Serializes VectorFontContent resources</summary>
+            <remarks>
+  This class is responsible for serializing the FontContent resources into
+  the XNA framework format.
+</remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontWriter.GetRuntimeType(Microsoft.Xna.Framework.TargetPlatform)">
+            <summary>Obtains the Type of the RuntimeReader used to load the resource</summary>
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontWriter.GetRuntimeReader(Microsoft.Xna.Framework.TargetPlatform)">
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontWriter.Write(Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler.ContentWriter,Nuclex.Fonts.Content.VectorFontContent)">
+            <summary>Writes the FontContent resource into the ContentWriter</summary>
+            <param name="output">ContentWriter to serialize the resource into</param>
+            <param name="fontContent">FontContent resource to be serialized</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontWriter">
+            <summary>Serializes VectorFontContent resources</summary>
+            <remarks>
+  This class is responsible for serializing the FontContent resources into
+  the XNA framework format.
+</remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.SpriteFontWriter.GetRuntimeType(Microsoft.Xna.Framework.TargetPlatform)">
+            <summary>Obtains the Type of the RuntimeReader used to load the resource</summary>
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.SpriteFontWriter.GetRuntimeReader(Microsoft.Xna.Framework.TargetPlatform)">
+            <param name="targetPlatform">Platform for which to obtain the RuntimeReader</param>
+            <returns>The type name of the class used to read the resource at runtime</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.SpriteFontWriter.Write(Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler.ContentWriter,Nuclex.Fonts.Content.SpriteFontContent)">
+            <summary>Writes the FontContent resource into the ContentWriter</summary>
+            <param name="output">ContentWriter to serialize the resource into</param>
+            <param name="fontContent">FontContent resource to be serialized</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.SpriteFontWriter">
+            <summary>Serializes SpriteFontContent resources</summary>
+            <remarks>
+  This class is responsible for serializing the FontContent resources into
+  the XNA framework format.
+</remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontVectorizer.GetAdvancement(System.Char)">
+            <summary>
+  Returns the number of pixels required to advance to the position
+  where the next character should be rendered.
+</summary>
+            <param name="character">Character whose advancement will be returned</param>
+            <returns>The advancement from the character to the next character</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontVectorizer.Vectorize(System.Char)">
+            <summary>Builds a vector representation of the character</summary>
+            <param name="character">
+  Character for which to generate a vector representation
+</param>
+            <returns>A set of lists describing the outlines of the character</returns>
+            <remarks>
+  There can be multiple outlines in a character for two reasons. For once,
+  the character may consist of disjoint shapes, like the equals sign ('='),
+  which has two shapes with no connection inbetween them. The other case
+  are shapes with holes in them. For example, the 'O' character was
+  two outlines, one describing its exterior border and one describing
+  its interior border. 
+</remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontVectorizer.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription)">
+            <summary>Initializes a new freetype font vectorizer</summary>
+            <param name="fontDescription">Description of the font to vectorize</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeFontVectorizer">
+            <summary>Vectorizes font characters using the FreeType library</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.NuclexVectorFontDescriptionProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>Creates an XNA Vector font from the font description</summary>
+            <param name="input">Provided font description to create the Vector font from</param>
+            <param name="context">Additional informations for the content processor</param>
+            <returns>The generated XNA Vector font</returns>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.NuclexVectorFontDescriptionProcessor">
+            <summary>Processes Vector font descriptions for usage with the XNA framework</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.Type">
+            <summary>Type of primitives that the tessellator is outputting</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.IntermediateVertexIndex2">
+            <summary>Second index for an intermediate vertex</summary>
+            <remarks>
+  Stores the trailing vertex for a triangle fan and the newer trailing
+  vertex for a triangle strip. Stores the index of the second vertex
+  in a vertex list.
+</remarks>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.IntermediateVertexIndex1">
+            <summary>First index for an intermediate vertex</summary>
+            <remarks>
+  Contains the center vertex index for a triangle fan and the index of
+  the older trailing vertex for a triangle strip. Stores the index of
+  the first vertex in a triangle list.
+</remarks>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.Indices">
+            <summary>Pointers to the numbers 0, 1, 2 and so on (really!)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.Triangles">
+            <summary>The triangles generated by the tessellator</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.TessellationSet.Vertices">
+            <summary>The character's vertices</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.TessellationSet.#ctor">
+            <summary>Initializes a new tessellation set</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.TessellationSet.Dispose">
+            <summary>Destroys a tessellation set</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.TessellationSet">
+            <summary>Internal structure used to construct a tessellated character</summary>
+        </member>
+        <member name="D:Nuclex.Fonts.Content.VertexIndices">
+            <summary>Vector of pointers to vertex indices</summary>
+        </member>
+        <member name="D:Nuclex.Fonts.Content.TriangleVector">
+            <summary>Vector of triangles</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Triangle.ThirdVertexIndex">
+            <summary>Index of the triangle's third vertex</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Triangle.SecondVertexIndex">
+            <summary>Index of the triangle's second vertex</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Triangle.FirstVertexIndex">
+            <summary>Index of the triangle's first vertex</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Triangle.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>Initializes a new triangle</summary>
+            <param name="firstVertexIndex">Index of the triangle's first vertex</param>
+            <param name="secondVertexIndex">Index of the triangle's second vertex</param>
+            <param name="thirdVertexIndex">Index of the triangle's third vertex</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Triangle">
+            <summary>Stores the vertex indices for a triangle</summary>
+        </member>
+        <member name="D:Nuclex.Fonts.Content.FloatPairVector">
+            <summary>Vector of floating point value pairs</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontTessellator.Tessellate(Nuclex.Fonts.Content.VectorFontCharacterContent)">
+            <summary>Tessellates the specified character's outline</summary>
+            <param name="characterContent">Character to tessellate</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeFontTessellator">
+            <summary>Tessellates font characters so they can be filled or extruded</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.kerningTable">
+            <summary>
+  Kerning table for adjusting the positions of specific character combinations
+</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.characters">
+            <summary>Characters contained in this font</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.characterMap">
+            <summary>Maps unicode characters to their sprite indices</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.lineHeight">
+            <summary>Height of a single line of text in this font</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontContent.KerningTable">
+            <summary>
+  Kerning table for adjusting the positions of specific character combinations
+</summary>
+            <remarks>
+  Certain character combination, such as the two consecutive characters 'AV'
+  have diagonal shapes that would cause the characters to visually appear
+  is if they were further apart from each other. Kerning adjusts the distances
+  between such characters to keep the perceived character distance at the
+  same level for all character combinations.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontContent.Characters">
+            <summary>Glyphs contained in this font</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontContent.CharacterMap">
+            <summary>Maps unicode characters to their sprite indices</summary>
+            <remarks>
+  Sprite fonts only contain a user-configurable subset of the unicode character
+  set. Thus, the first sprite in the font might not correspond to the first
+  character in the unicode table and worse, their might be gaps between the
+  ranges of characters the user configured to be imported. This dictionary
+  stores the sprite index for all unicode characters that have been imported.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontContent.LineHeight">
+            <summary>Height of a line of text in this font</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontContent.#ctor">
+            <summary>Initializes a new VectorFontContent instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontContent.KerningPair.Equals(System.Object)">
+            <summary>Compares this object to another object</summary>
+            <param name="other">Object to compare to</param>
+            <returns>True if both objects are identical</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontContent.KerningPair.GetHashCode">
+            <summary>Returns a hash code for the kerning pair</summary>
+            <returns>A hash code for the kerning pair</returns>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.KerningPair.Right">
+            <summary>The right character in the kerning pair</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontContent.KerningPair.Left">
+            <summary>The left character in the kerning pair</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontContent.KerningPair.#ctor(System.Char,System.Char)">
+            <summary>Initializes a new kerning pair</summary>
+            <param name="left">Left character of the kerning pair</param>
+            <param name="right">Right character of the kerning pair</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontContent.KerningPair">
+            <summary>Pair of characters for kerning informations</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontContent">
+            <summary>Stores vectorial font data for freely scalable text</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.faces">
+            <summary>Vertex indices to be connected for drawing the character's faces</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.outlines">
+            <summary>Vertex ranges to be connected for drawing the character's outlines</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.vertices">
+            <summary>Vertices for this character</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.advancement">
+            <summary>By how much to advance the cursor after drawing this character</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontCharacterContent.Faces">
+            <summary>
+  Specifies between which vertices triangles have to be drawn to draw a
+  polygon-filled character.
+</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontCharacterContent.Outlines">
+            <summary>
+  Specifies which vertices have to be connected to draw the outlines
+  of the character.
+</summary>
+            <remarks>
+                <para>
+    A character can have more than one outline. For example, the equals sign ('=')
+    has two unconnected shapes that require two outlines to be drawn. In this
+    case, you'd find two outlines, the first one specifying the starting and ending
+    vertex for the first stroke and the second one specifying the starting and
+    ending vertex for the second stroke.
+  </para>
+                <para>
+    The vertex range specified by each outline should be handled as a single
+    line strip (draw a line from the first to the second vertex, then from the
+    second to the third, and so on). The final vertex needs to be connected
+    to the first vertex again to close the outline.
+  </para>
+            </remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontCharacterContent.Vertices">
+            <summary>Vertices for this character</summary>
+            <remarks>
+  This contains the vertices required to draw the outline of the character
+  as well as supporting vertices required to draw the character's face as
+  a series of triangles. If you're only interested in a character's outlines,
+  you can ignore any vertices with an index above the EndVertex of
+  the lastmost outline contained in the Outlines list.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.VectorFontCharacterContent.Advancement">
+            <summary>By how much to advance the cursor after drawing this character</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterContent.#ctor">
+            <summary>Initializes a new Character instance</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.Face.ThirdVertexIndex">
+            <summary>Index of the third vertex of the triangle</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.Face.SecondVertexIndex">
+            <summary>Index of the second vertex of the triangle</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.Face.FirstVertexIndex">
+            <summary>Index of the first vertex of the triangle</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterContent.Face.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>Initializes a new character face triangle</summary>
+            <param name="firstVertexIndex">Index of the triangle's first vertex</param>
+            <param name="secondVertexIndex">Index of the triangle's second vertex</param>
+            <param name="thirdVertexIndex">Index of the triangle's third vertex</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontCharacterContent.Face">
+            <summary>Stores three vertex indices forming a triangle</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.Outline.VertexCount">
+            <summary>Total number of vertices the outline consists of</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.VectorFontCharacterContent.Outline.StartVertexIndex">
+            <summary>Index of the vertex with which the outline begins</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.VectorFontCharacterContent.Outline.#ctor(System.Int32,System.Int32)">
+            <summary>Initializes a new character outline</summary>
+            <param name="startVertexIndex">Index of the vertex with which the outline starts</param>
+            <param name="vertexCount">Number of vertices in this outline</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontCharacterContent.Outline">
+            <summary>Stores the starting index and the vertex count of a character outline</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.VectorFontCharacterContent">
+            <summary>Stores informations about a glyph in a vector font</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.CygonRectanglePacker.heightSlices">
+            <summary>Stores the height silhouette of the rectangles</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.CygonRectanglePacker.integrateRectangle(System.Int32,System.Int32,System.Int32)">
+            <summary>Integrates a new rectangle into the height slice table</summary>
+            <param name="left">Position of the rectangle's left side</param>
+            <param name="width">Width of the rectangle</param>
+            <param name="bottom">Position of the rectangle's lower side</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.CygonRectanglePacker.tryFindBestPlacement(System.Int32,System.Int32,Microsoft.Xna.Framework.Point@)">
+            <summary>Finds the best position for a rectangle of the given dimensions</summary>
+            <param name="rectangleWidth">Width of the rectangle to find a position for</param>
+            <param name="rectangleHeight">Height of the rectangle to find a position for</param>
+            <param name="placement">Receives the best placement found for the rectangle</param>
+            <returns>True if a valid placement for the rectangle could be found</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.CygonRectanglePacker.TryPack(System.Int32,System.Int32,Microsoft.Xna.Framework.Point@)">
+            <summary>Tries to allocate space for a rectangle in the packing area</summary>
+            <param name="rectangleWidth">Width of the rectangle to allocate</param>
+            <param name="rectangleHeight">Height of the rectangle to allocate</param>
+            <param name="placement">Output parameter receiving the rectangle's placement</param>
+            <returns>True if space for the rectangle could be allocated</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.CygonRectanglePacker.#ctor(System.Int32,System.Int32)">
+            <summary>Initializes a new rectangle packer</summary>
+            <param name="packingAreaWidth">Maximum width of the packing area</param>
+            <param name="packingAreaHeight">Maximum height of the packing area</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.CygonRectanglePacker.SliceStartComparer.Compare(Microsoft.Xna.Framework.Point,Microsoft.Xna.Framework.Point)">
+            <summary>Compares the starting position of two height slices</summary>
+            <param name="left">Left slice start that will be compared</param>
+            <param name="right">Right slice start that will be compared</param>
+            <returns>The relation of the two slice starts ranks to each other</returns>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.CygonRectanglePacker.SliceStartComparer.Default">
+            <summary>Provides a default instance for the anchor rank comparer</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.CygonRectanglePacker.SliceStartComparer">
+            <summary>Compares the starting position of height slices</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.CygonRectanglePacker">
+            <summary>Packer using a custom algorithm by Markus 'Cygon' Ewald</summary>
+            <remarks>
+                <para>
+    Algorithm conceived by Markus Ewald (cygon at nuclex dot org), thought
+    I'm quite sure I'm not the first one to come up with it :)
+  </para>
+                <para>
+    The algorithm always places rectangles as low as possible in the packing
+    area. So, for any new rectangle that is to be added into the packing area,
+    the packer has to determine the X coordinate at which the rectangle can have
+    the lowest overall height without intersecting any other rectangles.
+  </para>
+                <para>
+    To quickly discover these locations, the packer uses a sophisticated
+    data structure that stores the upper silhouette of the packing area. When
+    a new rectangle needs to be added, only the silouette edges need to be
+    analyzed to find the position where the rectangle would achieve the lowest
+    placement possible in the packing area.
+  </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.RectanglePacker.packingAreaHeight">
+            <summary>Maximum allowed height of the packing area</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.RectanglePacker.packingAreaWidth">
+            <summary>Maximum allowed width of the packing area</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.RectanglePacker.PackingAreaHeight">
+            <summary>Maximum height the packing area is allowed to have</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.RectanglePacker.PackingAreaWidth">
+            <summary>Maximum width the packing area is allowed to have</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.RectanglePacker.TryPack(System.Int32,System.Int32,Microsoft.Xna.Framework.Point@)">
+            <summary>Tries to allocate space for a rectangle in the packing area</summary>
+            <param name="rectangleWidth">Width of the rectangle to allocate</param>
+            <param name="rectangleHeight">Height of the rectangle to allocate</param>
+            <param name="placement">Output parameter receiving the rectangle's placement</param>
+            <returns>True if space for the rectangle could be allocated</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.RectanglePacker.Pack(System.Int32,System.Int32)">
+            <summary>Allocates space for a rectangle in the packing area</summary>
+            <param name="rectangleWidth">Width of the rectangle to allocate</param>
+            <param name="rectangleHeight">Height of the rectangle to allocate</param>
+            <returns>The location at which the rectangle has been placed</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.RectanglePacker.#ctor(System.Int32,System.Int32)">
+            <summary>Initializes a new rectangle packer</summary>
+            <param name="packingAreaWidth">Width of the packing area</param>
+            <param name="packingAreaHeight">Height of the packing area</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.RectanglePacker">
+            <summary>Base class for rectangle packing algorithms</summary>
+            <remarks>
+                <para>
+    By uniting all rectangle packers under this common base class, you can
+    easily switch between different algorithms to find the most efficient or
+    performant one for a given job.
+  </para>
+                <para>
+    An almost exhaustive list of packing algorithms can be found here:
+    http://www.csc.liv.ac.uk/~epa/surveyhtml.html
+  </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor.determineOptimalTextureSize(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Nuclex.Fonts.Content.FreeTypeFontRasterizer!System.Runtime.CompilerServices.IsImplicitlyDereferenced)">
+            <summary>Determines the optimal texture size for the font</summary>
+            <param name="input">
+  Font description containined the list of characters to import
+</param>
+            <param name="rasterizer">Rasterizer that has been set up for the font</param>
+            <return>The smallest texture size sufficient to contain all characters</return>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>Creates an XNA sprite font from the font description</summary>
+            <param name="input">Provided font description to create the sprite font from</param>
+            <param name="context">Additional informations for the content processor</param>
+            <returns>The generated XNA sprite font</returns>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor">
+            <summary>Processes sprite font descriptions for usage with the XNA framework</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.defaultCharacter">
+            <summary>Default character for unknown glyphs</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.kerning">
+            <summary>Kerning information for tightening letters with common diagonals</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.spacing">
+            <summary>Number of pixels between two consecutive characters</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.lineSpacing">
+            <summary>Number of pixels from one line to the next</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.characterMap">
+            <summary>Maps unicode characters to their sprite indices</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.cropping">
+            <summary>Offset and character advancement informations</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.glyphs">
+            <summary>Position of the glyph sprites on the font texture</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.SpriteFontContent.texture">
+            <summary>Texture content element holding the glyph sprites</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.DefaultCharacter">
+            <summary>Default character for unknown glyphs</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.Kerning">
+            <summary>Kerning information for tightening letters with common diagonals</summary>
+            <remarks>
+  XNA misuses the term 'kerning' to refer to plain ABC spacing of characters
+  (a = empty space before a character, b = width of the black parts of a character
+  and c = empty space that follows a character). Actual kerning would require
+  a table that told us to move 'V's following 'A's closer because they wont overlap.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.Spacing">
+            <summary>Number of pixels between two consecutive characters</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.LineSpacing">
+            <summary>Number of pixels from one line to the next</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.CharacterMap">
+            <summary>Maps unicode characters to their sprite indices</summary>
+            <remarks>
+  Sprite fonts only contain a user-configurable subset of the unicode character
+  set. Thus, the first sprite in the font might not correspond to the first
+  character in the unicode table and worse, their might be gaps between the
+  ranges of characters the user configured to be imported. This dictionary
+  stores the sprite index for all unicode characters that have been imported.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.Cropping">
+            <summary>Offset and character advancement informations</summary>
+            <remarks>
+  The term 'cropping' is actually misleading here. What XNA stores in these
+  rectangles are two entirely different things that have nothing to do with
+  cropping:
+  (1) The upper left corner of the rectangle contains a character's offset from
+      the pen position. A dot, for example, might only use a 2x2 pixel texture
+      that is moved to the text's baseline by means of the offset.
+  (2) The width and height contain the advancement, the amount of pixels the pen
+      is moved forward when the character has been rendered. At the time of this
+      writing, the XNA framework ignores the height value completely.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.Glyphs">
+            <summary>Position of the glyph sprites on the font texture</summary>
+            <remarks>
+  This list contains the integer texture coordinates of the glyph sprites on the
+  font texture. These can not be computed on-the-fly because, in order to save
+  memory and increase efficiency, glyph sprites are arranged on the font texture
+  in arbitrary locations to use the least space possible.
+</remarks>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.SpriteFontContent.Texture">
+            <summary>Texture content element holding the glyph sprites</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.SpriteFontContent.#ctor">
+            <summary>Initializes a new SpriteFontContent instance</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.SpriteFontContent">
+            <summary>Sprite font content class compatible to its XNA pendant</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.OutOfSpaceException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.OutOfSpaceException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.OutOfSpaceException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.OutOfSpaceException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.OutOfSpaceException">
+            <summary>Insufficient space left in packing area to contain a given object</summary>
+            <remarks>
+  An exception being sent to you from deep space. Erm, no, wait, it's an exception
+  that occurs when a packing algorithm runs out of space and is unable to fit
+  the object you tried to pack into the remaining packing area.
+</remarks>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessorTest.testLoadFont(System.String)">
+            <summary>Tests whether the specified font name can be found and loaded</summary>
+            <param name="fontname">Name of the font to test for loadability</param>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessorTest.TestWindowsFontDiscovery">
+            <summary>
+  Ensures that the font processor is able to discover windows built-in fonts
+  by their name.
+</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeFontProcessorTest">
+            <summary>Unit test for the FreeType font processor class</summary>
+        </member>
+        <member name="T:clix.Encoding">
+Encoding types for strings
+</member>
+        <member name="F:E_UTF16">
+UTF-16 encoding
+This is the suggested to be used for marshaling and the native encoding of .NET strings.
+        It is similar to UTF-8 but uses a minimum of two bytes per character, making the number
+        of bytes required for a given string better predictable. Be aware, however, that UTF-16
+        can still use more than two bytes for a character, so std::wstring::length() might not
+        reflect the actual length of the string.
+
+</member>
+        <member name="F:E_UTF8">
+UTF-8 encoding
+This is the encoding commonly used for multilingual C++ strings. All ASCII characters
+        (0-127) will be represented as single bytes. Be aware that UTF-8 uses more than one byte
+        for extended characters, so std::string::length() might not reflect the actual length
+        of the string in characters if it contains any non-ASCII characters.
+
+</member>
+        <member name="F:E_ANSI">
+ANSI encoding
+This is the default encoding you've most likely been using all around in C++. ANSI means
+        8 Bit encoding with character codes depending on the system's selected codepage.
+
+</member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontRasterizer.GetAdvancement(System.Char)">
+            <summary>
+  Returns the number of pixels required to advance to the position
+  where the next character should be rendered.
+</summary>
+            <param name="character">Character whose advancement will be returned</param>
+            <returns>The advancement from the character to the next character</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontRasterizer.GetOffset(System.Char)">
+            <summary>
+  Returns the positioning of a character's bitmap relative to the font's baseline
+</summary>
+            <param name="character">Character whose positioning will be returned</param>
+            <returns>The positioning of the character relative to its baseline</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontRasterizer.Rasterize(System.Char)">
+            <summary>Rasterizes the specified character</summary>
+            <param name="character">Character that will be rasterized</param>
+            <returns>A bitmap containing the rasterized character</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontRasterizer.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription)">
+            <summary>Initializes a new freetype font rasterizer</summary>
+            <param name="fontDescription">Description of the font to rasterize</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeFontRasterizer">
+            <summary>Rasterizes font characters using the FreeType library</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.FreeTypeFontProcessor.loadedGlyph">
+            <summary>The glyph currently loaded by FreeType</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.FreeTypeFontProcessor.freeTypeFace">
+            <summary>FreeType face representing the rasterizer's font</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.FreeTypeFontProcessor.freeTypeManager">
+            <summary>
+  FreeType manager that controls the FreeType library instance lifetime
+</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.LoadCharacter(System.Char)">
+            <summary>Loads and renders the specified character in FreeType</summary>
+            <param name="character">Character to load and render</param>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.FreeTypeFontProcessor.LineHeight">
+            <summary>Height of a line of text with this font and size</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.MeasureCharacter(System.Char)">
+            <summary>Measures the dimensions of a character</summary>
+            <param name="character">Character whose dimensions will be returned</param>
+            <returns>The dimensions of the specified character</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.GetKerning(System.Char,System.Char)">
+            <summary>Retrieves kerning information between the two characters</summary>
+            <param name="leftCharacter">Left character of the kerning pair</param>
+            <param name="rightCharacter">Right character of the kerning pair</param>
+            <returns>The distance adjustment for the right character</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.Finalize">
+            <summary>Finalizer for when the instance is garbage collected</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.Dispose">
+            <summary>Immediately releases any resources owned by the font</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeFontProcessor.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription)">
+            <summary>Initializes a new freetype font rasterizer</summary>
+            <param name="fontDescription">Description of the font to rasterize</param>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeFontProcessor">
+            <summary>Rasterizes font characters using the FreeType library</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.FreeTypeManager.freeTypeLibrary">
+            <summary>Global FreeType library instance</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.FreeTypeManager.freeTypeUsers">
+            <summary>Number of active users for the current FreeType library instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.shutdownFreeType">
+            <summary>Constructs and initializes a new FreeType library instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.initializeFreeType">
+            <summary>Constructs and initializes a new FreeType library instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.getFontsDirectory">
+            <summary>Retrieves the directory where windows stores its truetype fonts</summary>
+            <returns>The directory window stores its fonts in</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.OpenWindowsFont(System.String,Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescriptionStyle)">
+            <summary>Opens a font by name from the installed windows fonts</summary>
+            <param name="faceName">Name of the font to open (eg. "Arial")</param>
+            <param name="style">Font style to use</param>
+            <return>The FreeType face structure for the requested font</return>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.OpenFont(System.String,Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescriptionStyle)">
+            <summary>Opens a font from a path or by name from the windows fonts</summary>
+            <param name="pathOrFaceName">
+  Path of the file to read (eg. "Fonts/Arial.ttf") or name of the windows font
+  to be opened (eg. "Arial")
+</param>
+            <param name="style">Font style to use</param>
+            <return>The FreeType face structure for the requested font</return>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.getLibraryInstance">
+            <summary>Returns a pointer to the FreeType library instance</summary>
+            <returns>The FreeType library instance</returns>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.Dispose">
+            <summary>
+  Destroys the FreeType library instance if this was the last user.
+</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.FreeTypeManager.#ctor">
+            <summary>
+  Ensures a FreeType library instance is available for as long as the user exists
+</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.FreeTypeManager">
+            <summary>Controls the lifetime of a FreeType library instance</summary>
+        </member>
+    </members>
+</doc>

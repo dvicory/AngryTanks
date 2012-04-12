@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{DCB169D9-417F-4FF1-848A-B00CF7C88B31}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Support</RootNamespace>
+    <AssemblyName>Nuclex.Support</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>228353e9-b10a-4191-b7a5-f7c152bfb818</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;NO_CLONING;NO_SERIALIZATION;NO_XMLSCHEMA;NO_SYSTEMEVENTS;NO_EXITCONTEXT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Debug\Nuclex.Support.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;NO_CLONING;NO_SERIALIZATION;NO_XMLSCHEMA;NO_SYSTEMEVENTS;NO_EXITCONTEXT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Release\Nuclex.Support.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\AffineThreadPool.Test.cs">
+      <DependentUpon>AffineThreadPool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Deque.cs" />
+    <Compile Include="Source\Collections\Deque.Insertion.cs">
+      <DependentUpon>Deque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Deque.Interfaces.cs">
+      <DependentUpon>Deque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Deque.Removal.cs">
+      <DependentUpon>Deque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Deque.Search.cs">
+      <DependentUpon>Deque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Deque.Test.cs">
+      <DependentUpon>Deque.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\IObservableCollection.cs" />
+    <Compile Include="Source\Collections\IRecyclable.cs" />
+    <Compile Include="Source\Collections\ItemEventArgs.cs" />
+    <Compile Include="Source\Collections\ItemEventArgs.Test.cs">
+      <DependentUpon>ItemEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ObservableCollection.cs" />
+    <Compile Include="Source\Collections\ObservableCollection.Test.cs">
+      <DependentUpon>ObservableCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ObservableDictionary.cs" />
+    <Compile Include="Source\Collections\ObservableDictionary.Test.cs">
+      <DependentUpon>ObservableDictionary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\PairPriorityQueue.cs" />
+    <Compile Include="Source\Collections\PairPriorityQueue.Test.cs">
+      <DependentUpon>PairPriorityQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Parentable.cs" />
+    <Compile Include="Source\Collections\Parentable.Test.cs">
+      <DependentUpon>Parentable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ParentingCollection.cs" />
+    <Compile Include="Source\Collections\ParentingCollection.Test.cs">
+      <DependentUpon>ParentingCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\Pool.cs" />
+    <Compile Include="Source\Collections\Pool.Test.cs">
+      <DependentUpon>Pool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\PriorityItemPair.cs" />
+    <Compile Include="Source\Collections\PriorityItemPair.Test.cs">
+      <DependentUpon>PriorityItemPair.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\PriorityQueue.cs" />
+    <Compile Include="Source\Collections\PriorityQueue.Test.cs">
+      <DependentUpon>PriorityQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ReadOnlyCollection.cs" />
+    <Compile Include="Source\Collections\ReadOnlyCollection.Test.cs">
+      <DependentUpon>ReadOnlyCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ReadOnlyDictionary.cs" />
+    <Compile Include="Source\Collections\ReadOnlyDictionary.Test.cs">
+      <DependentUpon>ReadOnlyDictionary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ReadOnlyList.cs" />
+    <Compile Include="Source\Collections\ReadOnlyList.Test.cs">
+      <DependentUpon>ReadOnlyList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\ReverseComparer.cs" />
+    <Compile Include="Source\Collections\ReverseComparer.Test.cs">
+      <DependentUpon>ReverseComparer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\AffineThreadPool.cs" />
+    <Compile Include="Source\EnumHelper.cs" />
+    <Compile Include="Source\EnumHelper.Test.cs">
+      <DependentUpon>EnumHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\PrototypeFactory.cs" />
+    <Compile Include="Source\Plugins\PrototypeFactory.Test.cs">
+      <DependentUpon>PrototypeFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\GenericTimeSource.Test.cs">
+      <DependentUpon>GenericTimeSource.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\ISchedulerService.cs" />
+    <Compile Include="Source\Scheduling\ITimeSource.cs" />
+    <Compile Include="Source\Scheduling\Scheduler.cs" />
+    <Compile Include="Source\Scheduling\GenericTimeSource.cs" />
+    <Compile Include="Source\Scheduling\Scheduler.Test.cs">
+      <DependentUpon>Scheduler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\Scheduler.TimeSource.cs">
+      <DependentUpon>Scheduler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\WindowsTimeSource.cs" />
+    <Compile Include="Source\Scheduling\WindowsTimeSource.Test.cs">
+      <DependentUpon>WindowsTimeSource.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Semaphore.cs" />
+    <Compile Include="Source\Semaphore.Test.cs">
+      <DependentUpon>Semaphore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\AppDomainTypeLister.cs" />
+    <Compile Include="Source\Services\AppDomainTypeLister.Test.cs">
+      <DependentUpon>AppDomainTypeLister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\MultiAssemblyTypeLister.cs" />
+    <Compile Include="Source\Services\ExplicitTypeLister.Test.cs">
+      <DependentUpon>ExplicitTypeLister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\Instancing.cs" />
+    <Compile Include="Source\Services\ITypeLister.cs" />
+    <Compile Include="Source\Services\MultiAssemblyTypeLister.Test.cs">
+      <DependentUpon>MultiAssemblyTypeLister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\ProgressTracking\IProgressPublishingService.cs" />
+    <Compile Include="Source\Services\ProgressTracking\IProgressCollectingService.cs" />
+    <Compile Include="Source\Services\ProgressTracking\ITrackedProcess.cs" />
+    <Compile Include="Source\Services\ProgressTracking\ProgressTrackingComponent.cs" />
+    <Compile Include="Source\Services\RepositoryTypeLister.cs" />
+    <Compile Include="Source\Services\RepositoryTypeLister.Test.cs">
+      <DependentUpon>RepositoryTypeLister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\ServiceManager.Analyzer.cs">
+      <DependentUpon>ServiceManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\ServiceManager.cs" />
+    <Compile Include="Source\Services\ServiceManager.For.cs">
+      <DependentUpon>ServiceManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IO\PartialStream.cs" />
+    <Compile Include="Source\IO\PartialStream.Test.cs">
+      <DependentUpon>PartialStream.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IO\RingMemoryStream.cs" />
+    <Compile Include="Source\IO\RingMemoryStream.Test.cs">
+      <DependentUpon>RingMemoryStream.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\TransformingReadOnlyCollection.cs" />
+    <Compile Include="Source\Collections\TransformingReadOnlyCollection.Interfaces.cs">
+      <DependentUpon>TransformingReadOnlyCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\TransformingReadOnlyCollection.Test.cs">
+      <DependentUpon>TransformingReadOnlyCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\WeakCollection.cs" />
+    <Compile Include="Source\Collections\WeakCollection.Interfaces.cs">
+      <DependentUpon>WeakCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Collections\WeakCollection.Test.cs">
+      <DependentUpon>WeakCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\FloatHelper.cs" />
+    <Compile Include="Source\FloatHelper.Test.cs">
+      <DependentUpon>FloatHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IntegerHelper.cs" />
+    <Compile Include="Source\IntegerHelper.Test.cs">
+      <DependentUpon>IntegerHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Licensing\LicenseKey.cs" />
+    <Compile Include="Source\Licensing\LicenseKey.Test.cs">
+      <DependentUpon>LicenseKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Parsing\CommandLine.Argument.cs">
+      <DependentUpon>CommandLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Parsing\CommandLine.Formatter.cs">
+      <DependentUpon>CommandLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Parsing\CommandLine.Test.cs">
+      <DependentUpon>CommandLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Parsing\CommandLine.cs" />
+    <Compile Include="Source\Parsing\CommandLine.Parser.cs">
+      <DependentUpon>CommandLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\PathHelper.cs" />
+    <Compile Include="Source\PathHelper.Test.cs">
+      <DependentUpon>PathHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\AssemblyLoadEventArgs.cs" />
+    <Compile Include="Source\Plugins\AssemblyLoadEventArgs.Test.cs">
+      <DependentUpon>AssemblyLoadEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\IAbstractFactory.cs" />
+    <Compile Include="Source\Plugins\Employer.Test.cs">
+      <DependentUpon>Employer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\FactoryEmployer.Test.cs">
+      <DependentUpon>FactoryEmployer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\IAssemblyLoader.cs" />
+    <Compile Include="Source\Plugins\InstanceEmployer.Test.cs">
+      <DependentUpon>InstanceEmployer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\NoPluginAttribute.cs" />
+    <Compile Include="Source\Plugins\Employer.cs" />
+    <Compile Include="Source\Plugins\FactoryEmployer.cs" />
+    <Compile Include="Source\Plugins\InstanceEmployer.cs" />
+    <Compile Include="Source\Plugins\NoPluginAttribute.Test.cs">
+      <DependentUpon>NoPluginAttribute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\PluginHelper.cs" />
+    <Compile Include="Source\Plugins\PluginHelper.Test.cs">
+      <DependentUpon>PluginHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\PluginHost.cs" />
+    <Compile Include="Source\Plugins\PluginHost.Test.cs">
+      <DependentUpon>PluginHost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Plugins\PluginRepository.cs" />
+    <Compile Include="Source\Plugins\PluginRepository.Test.cs">
+      <DependentUpon>PluginRepository.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\AbortedException.cs" />
+    <Compile Include="Source\Scheduling\AbortedException.Test.cs">
+      <DependentUpon>AbortedException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\IAbortable.cs" />
+    <Compile Include="Source\Scheduling\Operation.cs" />
+    <Compile Include="Source\Scheduling\Operation.Test.cs">
+      <DependentUpon>Operation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\OperationQueue.cs" />
+    <Compile Include="Source\Scheduling\OperationQueue.Test.cs">
+      <DependentUpon>OperationQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\ThreadCallbackOperation.cs" />
+    <Compile Include="Source\Scheduling\ThreadCallbackOperation.Test.cs">
+      <DependentUpon>ThreadCallbackOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Scheduling\ThreadOperation.cs" />
+    <Compile Include="Source\Scheduling\ThreadOperation.Test.cs">
+      <DependentUpon>ThreadOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\ServiceManager.Test.cs">
+      <DependentUpon>ServiceManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Services\ExplicitTypeLister.cs" />
+    <Compile Include="Source\Shared.cs" />
+    <Compile Include="Source\Shared.Test.cs">
+      <DependentUpon>Shared.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IO\ChainStream.cs" />
+    <Compile Include="Source\IO\ChainStream.Test.cs">
+      <DependentUpon>ChainStream.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\StringBuilderHelper.cs" />
+    <Compile Include="Source\StringBuilderHelper.Test.cs">
+      <DependentUpon>StringBuilderHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\StringHelper.cs" />
+    <Compile Include="Source\StringHelper.Test.cs">
+      <DependentUpon>StringHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\StringSegment.cs" />
+    <Compile Include="Source\StringSegment.Test.cs">
+      <DependentUpon>StringSegment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\IdleStateEventArgs.cs" />
+    <Compile Include="Source\Tracking\IdleStateEventArgs.Test.cs">
+      <DependentUpon>IdleStateEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\Internal\ObservedWeightedTransaction.cs" />
+    <Compile Include="Source\Tracking\Internal\ObservedWeightedTransaction.Test.cs">
+      <DependentUpon>ObservedWeightedTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\Internal\WeightedTransactionWrapperCollection.cs" />
+    <Compile Include="Source\Tracking\Internal\WeightedTransactionWrapperCollection.Test.cs">
+      <DependentUpon>WeightedTransactionWrapperCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\IProgressReporter.cs" />
+    <Compile Include="Source\Tracking\IStatusReporter.cs" />
+    <Compile Include="Source\Tracking\ProgressReportEventArgs.cs" />
+    <Compile Include="Source\Tracking\ProgressReportEventArgs.Test.cs">
+      <DependentUpon>ProgressReportEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\ProgressTracker.cs" />
+    <Compile Include="Source\Tracking\ProgressTracker.Test.cs">
+      <DependentUpon>ProgressTracker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\Request.cs" />
+    <Compile Include="Source\Tracking\Request.Test.cs">
+      <DependentUpon>Request.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\StatusReportEventArgs.Test.cs">
+      <DependentUpon>StatusReportEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\Transaction.Test.cs">
+      <DependentUpon>Transaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\TransactionGroup.cs" />
+    <Compile Include="Source\Tracking\TransactionGroup.Test.cs">
+      <DependentUpon>TransactionGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Tracking\StatusReportEventArgs.cs" />
+    <Compile Include="Source\Tracking\Transaction.cs" />
+    <Compile Include="Source\Tracking\WeightedTransaction.cs" />
+    <Compile Include="Source\Tracking\WeightedTransaction.Test.cs">
+      <DependentUpon>WeightedTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\WeakReference.cs" />
+    <Compile Include="Source\WeakReference.Test.cs">
+      <DependentUpon>WeakReference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\XmlHelper.cs" />
+    <Compile Include="Source\XmlHelper.Test.cs">
+      <DependentUpon>XmlHelper.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\CommandLine.txt" />
+    <Content Include="Documents\Nuclex.Support.txt" />
+    <Content Include="Documents\Request Framework.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

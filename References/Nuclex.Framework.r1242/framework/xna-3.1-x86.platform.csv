@@ -1,0 +1,18 @@
+# Build Platform Definition
+#
+# This file describes which projects (and which individual project platforms)
+# to build when executing the main build script.
+#
+# The Syntax is
+#   DirectoryName,ProjectPlatform,ProjectName,OutputDirectory
+#
+Nuclex.Testing.Xna,x86,Nuclex.Testing.Xna (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Geometry,x86,Nuclex.Geometry (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Fonts.Content.TrueTypeImporter,Win32,Nuclex.Fonts.Content.TrueTypeImporter (xna-3.1-x86).vcproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Fonts,x86,Nuclex.Fonts (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Graphics,x86,Nuclex.Graphics (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Game.ContentCompressor,AnyCPU,Nuclex.Game.ContentCompressor (net-2.0).csproj,bin/net-2.0/%build.configuration%
+Nuclex.Game,x86,Nuclex.Game (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Graphics.SpecialEffects,x86,Nuclex.Graphics.SpecialEffects (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.Input,x86,Nuclex.Input (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%
+Nuclex.UserInterface,x86,Nuclex.UserInterface (xna-3.1-x86).csproj,bin/xna-3.1-x86/%build.configuration%

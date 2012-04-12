@@ -61,18 +61,19 @@ namespace AngryTanks.Client
             if (kb.IsKeyDown(Keys.W) && kb.IsKeyDown(Keys.S))
                 velocityFactor = 0;
 
+            oldPosition = Position;
+            oldVelocity = Velocity;
+            oldAngularVelocity = AngularVelocity;
+            oldRotation = Rotation;
+
             if (kb.IsKeyDown(Keys.W) || kb.IsKeyDown(Keys.S))
             {
-                oldVelocity = newVelocity;
-                oldPosition = newPosition;
-
                 newVelocity.X = velocityFactor * maxVelocity * (Single)Math.Cos(Rotation - Math.PI / 2);
                 newVelocity.Y = velocityFactor * maxVelocity * (Single)Math.Sin(Rotation - Math.PI / 2);
-
-                Velocity = (oldVelocity + newVelocity) * 0.5f;
-
-                newPosition += Velocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
-                Position = newPosition;
+            }
+            else
+            {
+                newVelocity = Vector2.Zero;
             }
 
             if (kb.IsKeyDown(Keys.A))
@@ -84,33 +85,34 @@ namespace AngryTanks.Client
 
             if (kb.IsKeyDown(Keys.A) || kb.IsKeyDown(Keys.D))
             {
-                oldAngularVelocity = newAngularVelocity;
-                oldRotation = newRotation;
-
                 newAngularVelocity = angularVelocityFactor * maxAngularVelocity;
-
-                AngularVelocity = MathHelper.WrapAngle((Single)(newAngularVelocity + oldAngularVelocity) * 0.5f);
-
-                newRotation += AngularVelocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
-                Rotation = newRotation;
             }
-            
+            else
+            {
+                newAngularVelocity = 0;
+            }
+
+            // update based on newly found out velocities/positions
+            Velocity = (oldVelocity + newVelocity) * 0.5f;
+            newPosition += Velocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+
+            AngularVelocity = MathHelper.WrapAngle((Single)(newAngularVelocity + oldAngularVelocity) * 0.5f);
+            newRotation += AngularVelocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
+
             // check for any collisions at our new location
             Single overlap;
             Vector2 collisionProjection;
 
             if (FindCollisions(collisionObjects, out overlap, out collisionProjection))
             {
-                // reset our position
+                // move our position back to old position
                 newPosition += overlap * collisionProjection;
                 oldPosition = newPosition;
-                Position = newPosition;
             }
 
-            if (kb.IsKeyDown(Keys.P))
-            {
-                Log.DebugFormat("tank is at: {0}, rotation: {1}", Position, Rotation);
-            }
+            // finally confirm our position
+            Position = newPosition;
+            Rotation = newRotation;
 
             base.Update(gameTime);
         }
@@ -140,7 +142,7 @@ namespace AngryTanks.Client
                 return false;
             }
 
-            // we did find a collision otherwise
+            // we did find a collision otherwise, so assign variables
             overlap = largestOverlap;
             collisionProjection = largestCollisionProjection;
 

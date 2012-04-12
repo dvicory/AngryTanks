@@ -1,0 +1,20 @@
+  // Effects:
+  //   - Trails (billboard lines following objects)
+  //   - Particles (quickly decaying point textures)
+  //   - Clouds (volumetric nebulae)
+  //   - Flares (lens flares known from photographing against the sun)
+  //   - Fluid (metaballs)
+  //   - Decals (projective texturing?)
+  //   - Clothing (soft folding tissue)
+  // Terrain:
+  //   - ROAM 2.0 (arbitrary landscape rendering; TINs)
+  //   - Vegetation (small scale plants on the ground)
+  //   - Forests (large scale plants with impostors)
+  //   - Water (liquid surface)
+  //   - Lightning (electrical current attracted the reference points)
+
+  // Blood:
+  // Particles hit surface, transform to Metaballs 
+  // Metaballs glide down surface, transform to decals
+
+

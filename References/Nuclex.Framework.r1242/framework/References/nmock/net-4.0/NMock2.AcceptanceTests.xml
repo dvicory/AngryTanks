@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NMock2.AcceptanceTests</name>
+    </assembly>
+    <members>
+        <member name="M:NMock2.AcceptanceTests.AcceptanceTestBase.SkipVerificationForThisTest">
+            <summary>
+            Prevents Mockery.VerifyAllExpectationsHaveBeenMet() being called after the current test.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.AcceptanceTestBase.SkipVerificationForThisFixture">
+            <summary>
+            Prevents Mockery.VerifyAllExpectationsHaveBeenMet() being called after every test in the current fixture.
+            </summary>
+        </member>
+        <member name="P:NMock2.AcceptanceTests.AcceptanceTestBase.Mocks">
+            <summary>
+            A default Mockery instance created for each test.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.GenericMethodTypeParamAcceptanceTest">
+            <summary>
+            Acceptance tests for generic method type parameters.
+            <see cref="T:NMock2.AcceptanceTests.GenericMethodParameterAcceptanceTest"/> for acceptance tests
+            about generic method parameters.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.SetupFixture.SetMockObjectFactoryToDefault">
+            <summary>
+            Changes the default IMockObjectFactory for all subsequently created
+            Mockery instances. On occasion, this method may need to be called directly
+            from a test fixture if testing the ability to swap factory implementations.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.CastleOnlyAttribute">
+            <summary>
+            Tests in this category are only applicable when using the
+            CastleMockObjectFactory
+            </summary>
+        </member>
+        <member name="T:NMock2.MockStyleStubTest`1">
+            <summary>
+            Generic base class to allow same tests for interfaces and classes and
+            <see cref="F:NMock2.MockStyle.Stub"/> and <see cref="F:NMock2.MockStyle.Stub"/>.
+            </summary>
+            <typeparam name="TMock">The type of the mock.</typeparam>
+        </member>
+        <member name="F:NMock2.MockStyleStubTest`1.mockery">
+            <summary>
+            Mock factory.
+            </summary>
+        </member>
+        <member name="F:NMock2.MockStyleStubTest`1.dependencyProvider">
+            <summary>
+            interface used in tests.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.SetUp">
+            <summary>
+            Sets up the tests.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsReturnMocksForInterfaces">
+            <summary>
+            Stubs return newly created mocks with <see cref="F:NMock2.MockStyle.Stub"/> as results to method/properties that return interfaces.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsReturnMocksForClasses">
+            <summary>
+            Stubs return mocks with <see cref="F:NMock2.MockStyle.Stub"/> as results to method/properties that return classes.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsReturnDefaultValuesForValueTypes">
+            <summary>
+            Stubs return default values for value types.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsReturnStringEmptyForStrings">
+            <summary>
+            Stubs return an empty string for string return values.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsSwallowCallsToVoidMethods">
+            <summary>
+            Stubs swallow calls to void methods.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.ResolveType">
+            <summary>
+            The value returned by a stub can be overruled depending on the requested type.
+            Missing.Value is used to not override the default behavior.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.ResolveMockStyleWhenMockStyleIsDefinedForType">
+            <summary>
+            The <see cref="T:NMock2.MockStyle"/> used for a returned mock can be overruled depending on the type of the
+            return value and the stub that is called.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.ResolveMockStyleWhenMockStyleIsDefinedForStub">
+            <summary>
+            The <see cref="T:NMock2.MockStyle"/> used for a returned mock can be overruled depending on the type of the
+            return value and the stub that is called.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubReturnsEmptyObjectForEnumerables">
+            <summary>
+            Stubs returns empty objects for enumerables (lists, dictionaries, ...)
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.StubsRespectOverloadedMethods">
+            <summary>
+            Makes sure that method overloads are correctly identified
+            when stub behaviour is applied.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.Naming">
+            <summary>
+            The name of auto stubs reflect the path they were accessed/created.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.SameValueIsReturned">
+            <summary>
+            Calls on the same property/method return the same value.
+            </summary>
+        </member>
+        <member name="M:NMock2.MockStyleStubTest`1.SetAndGetProperty">
+            <summary>
+            Stubs remember the values set on properties and the value can be accessed with the getter.
+            </summary>
+        </member>
+        <member name="P:NMock2.MockStyleStubTest`1.DependencyProvider">
+            <summary>
+            Gets the dependency provider that is tested.
+            </summary>
+            <value>The dependency provider.</value>
+        </member>
+        <member name="T:NMock2.InterfaceMockStyleRecursiveStubTest">
+            <summary>
+            Tests the <see cref="F:NMock2.MockStyle.Stub"/> option for interfaces.
+            </summary>
+        </member>
+        <member name="T:NMock2.ClassMockStyleRecursiveStubTest">
+            <summary>
+            Tests the <see cref="F:NMock2.MockStyle.Stub"/> option for classes.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.RemoveEventInEventHandler">
+            <summary>
+            Reproduces the defect that occurs when an event is deregistered in an event handler of this event.
+            Exception: <c>System.InvalidOperationException: Collection was modified; enumeration operation may not execute.</c>
+            Solution: copy event handler collection before invocation.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.RemoveEventInEventHandler.DeregisterEventInEventHandler">
+            <summary>
+            An event can be deregistered in its event handler.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.RemoveEventInEventHandler.HandleAnnouncerEvent(System.Object,System.EventArgs)">
+            <summary>
+            Handles the announcer event and deregisters the event.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.RemoveEventInEventHandler.IAnnouncer">
+            <summary>
+            Dummy interface with an event.
+            </summary>
+        </member>
+        <member name="E:NMock2.AcceptanceTests.RemoveEventInEventHandler.IAnnouncer.Event">
+            <summary>
+            Dummy event.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.FireInheritedEvent_2609020">
+            <summary>
+            Reproduction of the defect 2609020 - Firing an event of an inherited interface
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.FireInheritedEvent_2609020.FireInheritedEvent">
+            <summary>
+            The inherited event can be fired.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.FireInheritedEvent_2609020.IBase">
+            <summary>
+            Interface providing an event.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.FireInheritedEvent_2609020.IDerived">
+            <summary>
+            The interface we create a mock for. Inherits from <see cref="T:NMock2.AcceptanceTests.FireInheritedEvent_2609020.IBase"/>.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering">
+            <summary>
+            Tests the defect that a call on a stub cannot be performed in an empty ordered expectation block.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.SetUp">
+            <summary>
+            Set up tests
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.StubDeclaredExplicitly">
+            <summary>
+            This test is to check behavior with default mocks.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.StubMockStyle">
+            <summary>
+            This test reproduces the defect.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.IDependency">
+            <summary>
+            An interface for testing.
+            </summary>
+        </member>
+        <member name="P:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.IDependency.AnotherDependency">
+            <summary>
+            Gets another dependency.
+            </summary>
+            <value>Another dependency.</value>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.IAnotherDependency">
+            <summary>
+            Another interface for testing.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.InterceptCallOnMockInEmptyOrderedExpectationOrdering.IAnotherDependency.DoSomething">
+            <summary>
+            Does something.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.ArgumentMatchingAcceptanceTest.GenericMatcher">
+            <summary>
+            Generic matcher can be used either with <c>new GenericMatcher</c> or with <c>Is.Match</c>.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.ThreadSynchronizationAcceptanceTest.SynchronizeThreads">
+            <summary>
+            You can use the <see cref="T:NMock2.Signal"/> class to signal event handles when the action on an expectation is executed.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.ExceptionsAreNotSwallowedTest">
+            <summary>
+            Tests checking that tested code can not swallow NMock2 exceptions.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.ExceptionsAreNotSwallowedTest.UnexpectedInvocationExceptionsAreRethrownInVerify">
+            <summary>
+            <see cref="T:NMock2.Internal.ExpectationException"/>s are rethrown in <see cref="M:NMock2.Mockery.VerifyAllExpectationsHaveBeenMet"/>.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.ExceptionsAreNotSwallowedTest.UnexpectedInvocationExceptionIsClearedAfterBeingThrownInVerify">
+            <summary>
+            Exceptions are rethrown only once.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.ExceptionsAreNotSwallowedTest.FirstSwallowedUnexpectedInvocationExceptionIsRethrownInVerify">
+            <summary>
+            The first swallowed exception is thrown.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest">
+            <summary>
+            Fixture that provides tests for a stub that enumerates a few data items.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest.Setup">
+            <summary>
+            Initializes the fixture before each testwill run.
+            </summary>
+            <remarks>
+            This method creates a stub thatimplements the <see cref="M:System.Collections.IEnumerable.GetEnumerator"/> method.
+            The <see cref="T:System.Collections.IEnumerator"/> the stubreturns should really enumerate a few strings in an array.
+            </remarks>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest.ShouldEnumerateDataOnce">
+            <summary>
+            Verifies that the string successfully enumerated once.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest.ShouldEnumerateDataTwice">
+            <summary>
+            Verifies that the string successfully enumerated twice.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest.ShouldEnumerateData">
+            <summary>
+            Verifies that the each of the enumerated strings match the corresponding original string
+            and number of the enumerated strings equal to length of the string array.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:NMock2.AcceptanceTests.MockIEnumerableAcceptanceTest.IMyEnumerable" -->
+        <member name="T:NMock2.AcceptanceTests.GenericMethodParameterAcceptanceTest">
+            <summary>
+            Tests for generic method parameters and return values.
+            <see cref="T:NMock2.AcceptanceTests.GenericMethodTypeParamAcceptanceTest"/> for acceptance tests about
+            generic type parameters.
+            </summary>
+            <remarks>
+            Created on user request for Generic return types.
+            Request was fed by Adrian Krummenacher on 18-JAN-2008.
+            </remarks>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.UsingBlockAcceptanceTest.ReturnValueForgottenWithVerify">
+            <summary>
+            That is a test with the expected behaviour. An InvalidOperationException will be
+            thrown, if the developer forgot to set the return value for a Value Type.
+            </summary>
+        </member>
+        <member name="M:NMock2.AcceptanceTests.UsingBlockAcceptanceTest.ReturnValueForgottenWithUsingBlock">
+            <summary>
+            That is a test where the InvalidOperationException will be hidden by the ExpectationException
+            which is thrown at the Dispose() while executing the using's end block.
+            </summary>
+        </member>
+        <member name="T:NMock2.AcceptanceTests.ClassAttribute">
+            <summary>
+            Tests in this category perform mocking of classes.
+            </summary>
+        </member>
+    </members>
+</doc>

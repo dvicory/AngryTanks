@@ -29,6 +29,14 @@ namespace AngryTanks.Server
             get { return playerState; }
         }
 
+        public PlayerInformation PlayerInfo
+        {
+            get
+            {
+                return new PlayerInformation(Slot, Callsign, Tag, Team);
+            }
+        }
+
         #endregion
 
         public Player(Byte slot, NetConnection connection, PlayerInformation playerInfo)

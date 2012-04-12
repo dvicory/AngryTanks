@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="PartCover"
+>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+      Locates PartCover and initializes the partcover.path property
+  -->
+  <target
+    name="locate-partcover"
+    unless="${property::exists('partcover.path')}"
+  >
+
+    <!--
+      Try to locate PartCover in its default path on x86 systems
+    -->
+    <if test="${not property::exists('partcover.path')}">
+      <if test="${environment::variable-exists('ProgramFiles')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramFiles')}"
+          property="temp"
+        >
+          <property name="temp.name" value="${string::to-lower(path::get-file-name(temp))}" />
+
+          <if test="${string::starts-with(temp.name, 'partcover')}">
+            <if test="${file::exists(path::combine(temp, 'PartCover.exe'))}">
+              <property name="partcover.path" value="temp" />
+            </if>
+          </if>
+
+          <if test="${string::starts-with(temp.name, 'gubka bob') or string::starts-with(temp.name, 'partcover')}">
+            <foreach item="Folder" in="${temp}" property="temp.sub">
+              <property
+                name="temp.subname"
+                value="${string::to-lower(path::get-file-name(temp.sub))}"
+              />
+              <if test="${string::starts-with(temp.subname, 'partcover')}">
+                <if test="${file::exists(path::combine(temp.sub, 'PartCover.exe'))}">
+                  <property name="partcover.path" value="${temp.sub}" />
+                </if>
+              </if>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+    </if>
+
+    <!--
+      Try to locate PartCover in its default path on x64 systems
+    -->
+    <if test="${not property::exists('partcover.path')}">
+      <if test="${environment::variable-exists('ProgramW6432')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramW6432')}"
+          property="temp"
+        >
+          <property name="temp.name" value="${string::to-lower(path::get-file-name(temp))}" />
+
+          <if test="${string::starts-with(temp.name, 'partcover')}">
+            <if test="${file::exists(path::combine(temp, 'PartCover.exe'))}">
+              <property name="partcover.path" value="temp" />
+            </if>
+          </if>
+
+          <if test="${string::starts-with(temp.name, 'gubka bob') or string::starts-with(temp.name, 'partcover')}">
+            <foreach item="Folder" in="${temp}" property="temp.sub">
+              <property
+                name="temp.subname"
+                value="${string::to-lower(path::get-file-name(temp.sub))}"
+              />
+              <if test="${string::starts-with(temp.subname, 'partcover')}">
+                <if test="${file::exists(path::combine(temp.sub, 'PartCover.exe'))}">
+                  <property name="partcover.path" value="${temp.sub}" />
+                </if>
+              </if>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+    </if>
+    
+    <!--
+      Display what we've found out
+    -->
+    <if test="${property::exists('partcover.path')}">
+      <echo message="PartCover located in ${partcover.path}" />
+    </if>
+    <if test="${not property::exists('partcover.path')}">
+      <echo message="PartCover not found. Use -D:partcover.path=... to set path" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-partcover" depends="locate-partcover">
+
+    <if test="${not property::exists('partcover.path')}">
+      <fail message="PartCover is required for this build" />
+    </if>
+    <property name="temp" value="${path::combine(partcover.path, 'partcover.exe')}" />
+    <if test="${not file::exists(temp)}">
+      <fail message="PartCover is required for this build" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs unit tests in a single assembly
+
+    Inputs:
+      partcover.assemblies  Assemblies for which code coverage will be measured
+      partcover.namespaces  Namespaces to include in coverage results
+      partcover.targetdir   Target directory for the generated coverage report
+  -->
+  <target name="partcover" depends="require-partcover require-nunit-x86">
+
+    <property
+      name="temp.assemblies"
+      value="${string::replace(partcover.assemblies, '\', '\\')}"
+    />
+    <property
+      name="temp.assemblies"
+      value="${string::replace(temp.assemblies, '&quot;', '\&quot;')}"
+    />
+    <property
+      name="temp.partcoverxmlpath"
+      value="${path::combine(partcover.targetdir, 'coverage.partcover.xml')}"
+    />
+    <property
+      name="temp.ncoverxmlpath"
+      value="${path::combine(partcover.targetdir, 'coverage.ncover.xml')}"
+    />
+
+    <!--
+      If we're being run by TeamCity, use their NUnit launcher
+    -->
+    <if test="${property::exists('teamcity.dotnet.nunitlauncher') and not property::exists('partcover.noteamcity')}">
+      <property name="temp" value="--target &quot;${teamcity.dotnet.nunitlauncher}&quot;" />
+
+      <if test="${framework::get-target-framework() == 'net-4.0'}">
+        <property
+          name="temp" value="${temp} --target-args &quot;v4.0 x86 NUnit-2.5.5 ${temp.assemblies}&quot;"
+        />
+      </if>
+      <if test="${not (framework::get-target-framework() == 'net-4.0')}">
+        <property
+          name="temp" value="${temp} --target-args &quot;v2.0 x86 NUnit-2.5.5 ${temp.assemblies}&quot;"
+        />
+      </if>
+    </if>
+    
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher') or property::exists('partcover.noteamcity')}">
+      <property 
+        name="temp"
+        value="--target &quot;${path::combine(nunit.path, 'nunit-console-x86.exe')}&quot;"
+      />
+      <property
+        name="temp"
+        value="${temp} --target-args &quot;/nologo /nodots /noshadow ${temp.assemblies}&quot;"
+      />
+    </if>
+
+    <property
+      name="temp"
+      value="${temp} --output &quot;${temp.partcoverxmlpath}&quot;"
+    />
+    <property
+      name="temp"
+      value="${temp} ${partcover.namespaces}"
+    />
+
+    <echo message="===================================================================" />
+    <echo message="Running unit tests with test coverage for all assemblies" />
+    <echo message="===================================================================" />
+    <exec
+      program="PartCover.exe"
+      basedir="${partcover.path}"
+      managed="true"
+      commandline="${temp}"
+    />
+    
+    <echo message="===================================================================" />
+    <echo message="Converting PartCover report to NCover format" />
+    <echo message="===================================================================" />
+    <property name="temp" value="References/scripts/xslt/partcover-to-ncover.xslt" />
+    <exec
+      program="XslTransform.exe"
+      basedir="References/scripts/xslt"
+      managed="true"
+      commandline="&quot;${temp.partcoverxmlpath}&quot; &quot;${temp}&quot; &quot;${temp.ncoverxmlpath}&quot;"
+    />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>

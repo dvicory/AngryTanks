@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{695F8E5E-8907-4042-9B87-17C4DCEE9F48}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Game</RootNamespace>
+    <AssemblyName>Nuclex.Game</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>5221aa44-5d55-470e-bccf-489641f430dd</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;NO_SERIALIZATION;NO_EXITCONTEXT;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Debug\Nuclex.Game.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;NO_SERIALIZATION;NO_EXITCONTEXT;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Release\Nuclex.Game.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LzmaSharp">
+      <HintPath>..\References\lzma\xna-4.0-xbox360\LzmaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nuclex.Support">
+      <HintPath>..\References\foundation\xna-4.0-xbox360\Nuclex.Support.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\UnitTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Test.cs">
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Component.cs" />
+    <Compile Include="Source\Component.Test.cs">
+      <DependentUpon>Component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\SharedGameContentManager.cs" />
+    <Compile Include="Source\Content\SharedGameContentManager.Test.cs">
+      <DependentUpon>SharedGameContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\LzmaContentManager.Test.cs">
+      <DependentUpon>LzmaContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\MemoryContentManager.Test.cs">
+      <DependentUpon>MemoryContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\LzmaContentManager.cs" />
+    <Compile Include="Source\DrawableComponent.cs" />
+    <Compile Include="Source\Content\MemoryContentManager.cs" />
+    <Compile Include="Source\Content\ISharedContentService.cs" />
+    <Compile Include="Source\Content\SharedContentManager.cs" />
+    <Compile Include="Source\Content\SharedContentManager.Test.cs">
+      <DependentUpon>SharedContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\DrawableComponent.Test.cs">
+      <DependentUpon>DrawableComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\GraphicsDeviceDrawableComponent.cs" />
+    <Compile Include="Source\GraphicsDeviceDrawableComponent.Test.cs">
+      <DependentUpon>GraphicsDeviceDrawableComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\ArevaloRectanglePacker.cs" />
+    <Compile Include="Source\Packing\ArevaloRectanglePacker.Test.cs">
+      <DependentUpon>ArevaloRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\CygonRectanglePacker.cs" />
+    <Compile Include="Source\Packing\CygonRectanglePacker.Test.cs">
+      <DependentUpon>CygonRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\OutOfSpaceException.cs" />
+    <Compile Include="Source\Packing\OutOfSpaceException.Test.cs">
+      <DependentUpon>OutOfSpaceException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\RectanglePacker.cs" />
+    <Compile Include="Source\Packing\RectanglePacker.Test.cs">
+      <DependentUpon>RectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\SimpleRectanglePacker.cs" />
+    <Compile Include="Source\Packing\SimpleRectanglePacker.Test.cs">
+      <DependentUpon>SimpleRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Serialization\BinarySerializer.cs" />
+    <Compile Include="Source\Serialization\BinarySerializer.Test.cs">
+      <DependentUpon>BinarySerializer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Serialization\IBinarySerializable.cs" />
+    <Compile Include="Source\Space\BoundingRectangle.cs" />
+    <Compile Include="Source\Space\BoundingRectangle.Test.cs">
+      <DependentUpon>BoundingRectangle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\HilbertRectangleTree.cs" />
+    <Compile Include="Source\Space\IBoundingRectangleProvider.cs" />
+    <Compile Include="Source\Space\PolyDimensionalTree.cs" />
+    <Compile Include="Source\Space\PoolFactory.cs" />
+    <Compile Include="Source\Space\PoolFactory.Test.cs">
+      <DependentUpon>PoolFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\PriorityRectangleTree.cs" />
+    <Compile Include="Source\Space\PriorityRectangleTree.Node.cs">
+      <DependentUpon>PriorityRectangleTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.cs" />
+    <Compile Include="Source\Space\QuadTree.Insertion.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Query.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Removal.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Test.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\RectangleTree.cs" />
+    <Compile Include="Source\Space\RectangleTree.Node.cs">
+      <DependentUpon>RectangleTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\RTreeVariants.cs" />
+    <Compile Include="Source\Space\SpatialIndex2.cs" />
+    <Compile Include="Source\Space\SpatialIndex2.Test.cs">
+      <DependentUpon>SpatialIndex2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\GameState.cs" />
+    <Compile Include="Source\States\GameState.Test.cs">
+      <DependentUpon>GameState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\GameStateManager.cs" />
+    <Compile Include="Source\States\GameStateManager.Test.cs">
+      <DependentUpon>GameStateManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\IGameStateService.cs" />
+    <Compile Include="Source\States\ILoadableGameState.cs" />
+    <Compile Include="Source\States\LoadingScreenState.cs" />
+    <Compile Include="Source\States\LoadingScreenState.Test.cs">
+      <DependentUpon>LoadingScreenState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\LoadProgressEventArgs.cs" />
+    <Compile Include="Source\States\LoadProgressEventArgs.Test.cs">
+      <DependentUpon>LoadProgressEventArgs.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UnitTestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitTestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\R-Trees\Hilbert R-Tree.html" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\ajax.js" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Ambox_style.png" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\centralnotice.js" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\commonPrint.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Figure1_left.gif" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Figure1_right.gif" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Figure2_Hilbert.gif" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Figure3_data_rects.gif" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\Figure4_file_structure.gif" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\index.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\index_002.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\index_003.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\index_004.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\index_005.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\main.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\main_002.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\mwsuggest.js" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\poweredby_mediawiki_88x31.png" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\shared.css" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\wikibits.js" />
+    <Content Include="Documents\R-Trees\Hilbert R-Tree_files\wikimedia-button.png" />
+    <Content Include="Documents\R-Trees\R-Tree Splitting Methods.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documents\R-Trees\Hilbert R-Tree.pdf" />
+    <None Include="Documents\R-Trees\Hilbert R-Tree_files\index.php" />
+    <None Include="Documents\R-Trees\Hilbert R-Tree_files\index_002.php" />
+    <None Include="Documents\R-Trees\PR-Tree-1.1-cs.7z" />
+    <None Include="Documents\R-Trees\PR-Tree-1.1-java.7z" />
+    <None Include="Documents\R-Trees\Priority R-Trees.pdf" />
+    <None Include="Documents\R-Trees\R-Trees.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Graphics\Nuclex.Graphics %28xna-4.0-xbox360%29.csproj">
+      <Project>{3F303920-221F-467E-BAFC-F38E57AA8F7B}</Project>
+      <Name>Nuclex.Graphics %28xna-4.0-xbox360%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="EmbeddedContent\Nuclex.Game.EmbeddedContent.contentproj">
+      <Project>{3C9927AC-9E66-4A18-97FE-B44538C567B4}</Project>
+      <Name>Nuclex.Game.EmbeddedContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

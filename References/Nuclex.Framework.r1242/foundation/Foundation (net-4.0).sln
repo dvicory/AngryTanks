@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Support (net-4.0)", "Nuclex.Support\Nuclex.Support (net-4.0).csproj", "{00567408-4F44-4C00-866E-B04A99E482F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Networking (net-4.0)", "Nuclex.Networking\Nuclex.Networking (net-4.0).csproj", "{BDB73C04-42CC-4A5E-9893-547FD9BF6335}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Audio (net-4.0)", "Nuclex.Audio\Nuclex.Audio (net-4.0).csproj", "{636816B9-8DD0-47FE-922E-B62B5FE241D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Windows.Forms (net-4.0)", "Nuclex.Windows.Forms\Nuclex.Windows.Forms (net-4.0).csproj", "{B2BFA3EC-3B7B-4EE0-8395-8426B5C7A8B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Math (net-4.0)", "Nuclex.Math\Nuclex.Math (net-4.0).csproj", "{C4B77FA4-E436-4A7A-969E-81B1164D7611}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00567408-4F44-4C00-866E-B04A99E482F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00567408-4F44-4C00-866E-B04A99E482F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00567408-4F44-4C00-866E-B04A99E482F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00567408-4F44-4C00-866E-B04A99E482F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDB73C04-42CC-4A5E-9893-547FD9BF6335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDB73C04-42CC-4A5E-9893-547FD9BF6335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDB73C04-42CC-4A5E-9893-547FD9BF6335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDB73C04-42CC-4A5E-9893-547FD9BF6335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{636816B9-8DD0-47FE-922E-B62B5FE241D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{636816B9-8DD0-47FE-922E-B62B5FE241D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{636816B9-8DD0-47FE-922E-B62B5FE241D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{636816B9-8DD0-47FE-922E-B62B5FE241D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2BFA3EC-3B7B-4EE0-8395-8426B5C7A8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2BFA3EC-3B7B-4EE0-8395-8426B5C7A8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2BFA3EC-3B7B-4EE0-8395-8426B5C7A8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2BFA3EC-3B7B-4EE0-8395-8426B5C7A8B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B77FA4-E436-4A7A-969E-81B1164D7611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B77FA4-E436-4A7A-969E-81B1164D7611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B77FA4-E436-4A7A-969E-81B1164D7611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B77FA4-E436-4A7A-969E-81B1164D7611}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

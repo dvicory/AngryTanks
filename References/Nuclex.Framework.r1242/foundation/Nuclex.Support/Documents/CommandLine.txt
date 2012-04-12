@@ -1,0 +1,13 @@
+﻿    /*
+    struct CommandLine {
+      [Option]
+      bool? Option;
+      [Option]
+      int? Width;
+      [Option]
+      TypeCode Code;
+      [Values]
+      string[] Values;
+    }
+*/
+

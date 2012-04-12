@@ -1,0 +1,1797 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nuclex.Networking</name>
+    </assembly>
+    <members>
+        <member name="T:Nuclex.Networking.Exceptions.BadResponseException">
+            <summary>
+              Thrown when the response received from the peer was malformed
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Exceptions.BadResponseExceptionTest">
+            <summary>Unit Test for the BadResponseException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Exceptions.BadResponseExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Errors">
+            <summary>Helper class for generating exceptions relevant to the HTTP server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Errors.BadRequest">
+            <summary>
+              Generates an exception used to report that a request ist malformed
+            </summary>
+            <returns>The new exception</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Errors.BadRequest(System.String)">
+            <summary>
+              Generates an exception used to report that a request ist malformed
+            </summary>
+            <param name="reason">Reason the server considers the request malformed</param>
+            <returns>The new exception</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Errors.RequestEntityTooLarge(System.Int32)">
+            <summary>
+              Generates an exception used to report that a complete request is too large
+            </summary>
+            <param name="maximumSize">Maximum request size the server will accept</param>
+            <returns>The new exception</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Errors.RequestUriTooLong(System.Int32)">
+            <summary>
+              Generates an exception used to report that a request URI is too large
+            </summary>
+            <param name="maximumLength">Maximum URI length the server will accept</param>
+            <returns>The new exception</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Errors.UnsupportedProtocolVersion">
+            <summary>
+              Generates an exception used to report that the server does not supported
+              the version of the protocol used
+            </summary>
+            <returns>The new exception</returns>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.BadRequestException">
+            <summary>
+              Indicates that the client has issued a malformed or otherwise improper request
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.HttpException">
+            <summary>Base class for exceptions indicating HTTP errors</summary>
+            <remarks>
+              Please do not use this class directly, it is only intended to server as a base
+              class for specialized exceptions matching the HTTP error status codes.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpException.#ctor(Nuclex.Networking.Http.StatusCode)">
+            <summary>Initializes the exception</summary>
+            <param name="statusCode">HTTP status code to provide with the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpException.#ctor(Nuclex.Networking.Http.StatusCode,System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="statusCode">HTTP status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpException.#ctor(Nuclex.Networking.Http.StatusCode,System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="statusCode">HTTP status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+              Provides the System.Runtime.Serialization.SerializationInfo instance
+              with information about the exception
+            </summary>
+            <param name="info">
+              The System.Runtime.Serialization.SerializationInfo instance that holds
+              the serialized object data about the exception being thrown
+            </param>
+            <param name="context">
+              The System.Runtime.Serialization.StreamingContext instance that contains
+              contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Exceptions.HttpException.statusCode">
+            <summary>HTTP status code for the problem reported by the exception</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Exceptions.HttpException.StatusCode">
+            <summary>
+              HTTP status code that indicates the problem reported by the exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.BadRequestExceptionTest">
+            <summary>Unit Test for the BadRequestException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.BadRequestExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.ClientConnection">
+            <summary>Handles a connection from an HTTP client</summary>
+        </member>
+        <member name="T:Nuclex.Networking.SocketReceiver">
+            <summary>Asynchronously receives data from a socket</summary>
+            <remarks>
+              This class simplifies the implementation of servers that need to receive
+              unsolicited data from sockets asynchronously. It uses a lock-free
+              receiving loop to ensure maximum performance for the receiver.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.#ctor(System.Net.Sockets.Socket)">
+            <summary>Initializes a new connection from a HTTP client</summary>
+            <param name="socket">Socket of the connected client</param>
+            <remarks>
+              This object takes ownership of the socket and will close it upon being
+              disposed. This cannot be avoided because the only way to stop a waiting
+              receive request in the .NET framework is to close the receiving socket.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.#ctor(System.Net.Sockets.Socket,System.Int32)">
+            <summary>Initializes a new connection from a HTTP client</summary>
+            <param name="socket">Socket of the connected client</param>
+            <param name="bufferSize">Size of the receive buffer</param>
+            <remarks>
+              This object takes ownership of the socket and will close it upon being
+              disposed. This cannot be avoided because the only way to stop a waiting
+              receive request in the .NET framework is to close the receiving socket.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.Start">
+            <summary>Begins receiving data from the socket</summary>
+            <remarks>
+              Normally, this method is to be called in the constructor of the deriving class
+              to begin the asynchronous receive loop after you initialized any additional
+              fields you are using in the OnDataReceived() callback.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.Dispose">
+            <summary>Immediately stops the receive loop and releases all resources</summary>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.Shutdown">
+            <summary>Shuts down the connection graciously</summary>
+            <remarks>
+              Using this method is preferrable to simply disposing the SocketReceiver
+              because it gives the other side a chance to be notified when the connection
+              goes down and cleanly stops the transmission of data.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.OnDataReceived(System.Byte[],System.Int32)">
+            <summary>Called whenever data is received on the socket</summary>
+            <param name="buffer">Buffer containing the received data</param>
+            <param name="receivedByteCount">Number of bytes that have been received</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.OnConnectionDropped">
+            <summary>Called when the connection has been dropped by the peer</summary>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.startReceiving(System.Object)">
+            <summary>Begins receiving data from the socket in the background</summary>
+            <param name="state">Not used</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.dataReceived(System.IAsyncResult)">
+            <summary>Called when data has been received on the socket</summary>
+            <param name="asyncResult">Handle of the asynchronous request</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketReceiver.safelyEndReceivingLoop">
+            <summary>Ends the receiving loop in a safe manner</summary>
+            <remarks>
+              Called when the asynchronous receiving loop is terminated unexpectedly. This
+              happens when the other side closes the connection or a socket error occurs.
+              On the remote chance that someone is running the Dispose() method just now,
+              we have to guarantee that Dispose() won't sit there, forever waiting for its
+              shutdownCompleteEvent() to become set.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.dataReceivedDelegate">
+            <summary>Delegate for the DataReceived callback method</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.socket">
+            <summary>Socket of the connected client</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.buffer">
+            <summary>Buffer into which received data is written by the socket</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.wasStarted">
+            <summary>Whether the Start() method has been called</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.shutdownRequested">
+            <summary>True if the receive loop should stop</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketReceiver.shutdownCompleteEvent">
+            <summary>Used by Dispose() to wait for the receive loop to end</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ClientConnection.DefaultBufferSize">
+            <summary>Default size for the incoming data buffer</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.#ctor(Nuclex.Networking.Http.HttpServer,System.Net.Sockets.Socket)">
+            <summary>Initializes a new connection from a HTTP client</summary>
+            <param name="server">Server the client is connected to</param>
+            <param name="socket">Socket of the connected client</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.#ctor(Nuclex.Networking.Http.HttpServer,System.Net.Sockets.Socket,System.Int32)">
+            <summary>Initializes a new connection from a HTTP client</summary>
+            <param name="server">Server the client is connected to</param>
+            <param name="socket">Socket of the connected client</param>
+            <param name="bufferSize">Size of the receive buffer</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.Drop">
+            <summary>Drops the client from the server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.OnPeerDisconnected">
+            <summary>Called when the connection has been dropped by the peer</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.OnDataReceived(System.Byte[],System.Int32)">
+            <summary>Called whenever data is received on the socket</summary>
+            <param name="buffer">Buffer containing the received data</param>
+            <param name="receivedByteCount">Number of bytes that have been received</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.ProcessRequest(Nuclex.Networking.Http.Request)">
+            <summary>Processes the provided request and generates a server response</summary>
+            <param name="request">Request to be processed by the server</param>
+            <returns>The response to the server request</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ClientConnection.parseRequest(System.Byte[],System.Int32)">
+            <summary>Parses incoming data into an HTTP request</summary>
+            <param name="buffer">Buffer containing the received data</param>
+            <param name="receivedByteCount">Number of bytes in the receive buffer</param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ClientConnection.server">
+            <summary>Server to which the client is connected</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ClientConnection.parser">
+            <summary>HTTP request parser we use for interpreting client requests</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ClientConnection.socket">
+            <summary>Socket the client is connected by</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.HttpExceptionTest">
+            <summary>Unit Test for the HttpException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestHttpException">
+            <summary>Test implementation of a HTTP exception for unit testing</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestHttpException.#ctor(Nuclex.Networking.Http.StatusCode)">
+            <summary>Initializes the exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestHttpException.#ctor(Nuclex.Networking.Http.StatusCode,System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestHttpException.#ctor(Nuclex.Networking.Http.StatusCode,System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="statusCode">CDDB status code to provide with the exception</param>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.HttpExceptionTest.TestHttpException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeException">
+            <summary>
+              Thrown when the complete request entity is too large for the server to handle
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeExceptionTest">
+            <summary>Unit Test for the RequestEntityTooLargeException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestEntityTooLargeExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.RequestUriTooLongException">
+            <summary>
+              Thrown when the URI requested by the client is too long for the server to handle
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.RequestUriTooLongExceptionTest">
+            <summary>Unit Test for the RequestUriTooLongException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.RequestUriTooLongExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.VersionNotSupportedException">
+            <summary>
+              Indicates that the HTTP version used by the client is not supported by the server
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedException.#ctor">
+            <summary>Initializes the exception</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedException.#ctor(System.String)">
+            <summary>Initializes the exception with an error message</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedException.#ctor(System.String,System.Exception)">
+            <summary>Initializes the exception as a followup exception</summary>
+            <param name="message">Error message describing the cause of the exception</param>
+            <param name="inner">Preceding exception that has caused this exception</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes the exception from its serialized state</summary>
+            <param name="info">Contains the serialized fields of the exception</param>
+            <param name="context">Additional environmental informations</param>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Exceptions.VersionNotSupportedExceptionTest">
+            <summary>Unit Test for the VersionNotSupportedException class</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedExceptionTest.TestDefaultConstructor">
+            <summary>
+              Verifies that the exception's default constructor is working
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedExceptionTest.TestInnerException">
+            <summary>
+              Checks whether the exception correctly stores its inner exception
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Exceptions.VersionNotSupportedExceptionTest.TestSerialization">
+            <summary>
+              Test whether the exception can be serialized
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Request">
+            <summary>Stores the informations about an HTTP request</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Request.#ctor(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>Initializes a new HTTP request container</summary>
+            <param name="method">Request method being used by the client</param>
+            <param name="uri">URI being accessed by the client</param>
+            <param name="version">Version of the HTTP protocol being used</param>
+            <param name="headers">Headers with additional options from the client</param>
+            <remarks>
+              Takes ownership of the headers collection. This collection should not be
+              used or modified by the original owner after the constructor has completed.
+              If you need to keep the dictionary, pass a cloned dictionary to
+              this constructor instead.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.method">
+            <summary>HTTP request method used by the client</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.uri">
+            <summary>URI of the resource accessed by the client</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.version">
+            <summary>Version of the HTTP protocol used</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.headers">
+            <summary>
+              Headers providing additional informations about the client's preferences
+            </summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Request.Method">
+            <summary>Method of the request</summary>
+            <remarks>
+              Requests can use several "methods" to obtain data from the server. The
+              methods defined by HTTP/1.1 are "OPTIONS", "GET", "HEAD", "POST", "PUT",
+              "DELETE", "TRACE" and "CONNECT"
+            </remarks>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Request.Uri">
+            <summary>URI of the resource the client tries to access</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Request.Version">
+            <summary>Version number of the HTTP protocol used by the client</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Request.Headers">
+            <summary>Headers provided with the HTTP request by the client</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Request.UriOption">
+            <summary></summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.UriOption.Asterisk">
+            <summary>Request is targeted at the server as a whole</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.UriOption.AbsoluteUri">
+            <summary>Request contains absolute URI (including the host)</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.UriOption.AbsolutePath">
+            <summary>Request only contains the resource path</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Request.UriOption.Authority">
+            <summary>Request only specifies the host</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.RequestBuilder">
+            <summary>Collects data to build an HTTP request container</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestBuilder.#ctor">
+            <summary>Initializes a new HTTP request builder</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestBuilder.Reset">
+            <summary>Resets the request builder to its initial state</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestBuilder.AddHeader(System.String)">
+            <summary>Adds a header field for inclusion in the built HTTP request</summary>
+            <param name="fieldName">
+              Name of the header field to include in the built HTTP request
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestBuilder.AddHeader(System.String,System.String)">
+            <summary>
+              Adds a header field and its value for inclusion in the built HTTP request
+            </summary>
+            <param name="fieldName">
+              Name of the header field to include in the built HTTP request
+            </param>
+            <param name="append">
+              Field value to set or append to the existing field value for that field
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestBuilder.BuildRequest">
+            <summary>Builds an HTTP request from the current data available</summary>
+            <returns>The newly built HTTP request</returns>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestBuilder.Method">
+            <summary>HTTP request method</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestBuilder.Uri">
+            <summary>URI being requested</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestBuilder.Version">
+            <summary>Version of the HTTP protocol being used</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestBuilder.headers">
+            <summary>
+              Records the header fields that will be assigned to the built HTTP request
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.RequestBuilder.FieldValue">
+            <summary>Wraps a HTTP header field value</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestBuilder.FieldValue.Contents">
+            <summary>Combined contents of the HTTP header field value</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.HttpLineParser">
+            <summary>Parses lines in HTTP/1.1 request headers</summary>
+            <remarks>
+              <para>
+                In order to keep the parsing process clean and readable, the HTTP request parsing
+                has been split into two parts. This is the low level part, a simple line parser
+                that efficiently extracts individual lines from an HTTP request while honoring
+                the guidelines from the RFC describing the HTTP protocol. The parser is designed
+                to be used when implementing more complex parsers and has a specialized interface
+                intended for the parser writers.
+              </para>
+              <para>
+                The correct usage is to feed it a chunk of data (with arbitrary length) using the
+                <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> method and then let it chop the chunk
+                down into lines by calling the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method
+                repeatedly until it returns null (meaning it requires more data to continue) or
+                throws an exception.
+              </para>
+              <para>
+                You should not try to continue parsing once the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/>
+                method has thrown an exception. Providing the parser with new data is also only
+                allowed when it has explicitely asked for more data by returning null from the
+                <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method. Calling
+                <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> any earlier will result in
+                the unprocessed data in the receive buffer to not be seen by the parser.
+              </para>
+              <para>
+                This is so because the parser works directly on your buffer. In order to achieve
+                maximum efficiency, it will not copy the into a local buffer unless required to
+                when it has to bridge lines that are split between two chunks provided by the
+                <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> method.
+              </para>
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Networking.LineParser">
+            <summary>Parses lines from binary data</summary>
+            <remarks>
+              <para>
+                To use this parser, derive a class from it to set up your own filtering rules
+                for invalid characters and text encoding format.
+              </para>
+              <para>
+                Next, create an instance of your new parser and feed it a chunk of data (with
+                arbitrary length, either containing the complete message or only a fraction of
+                it) using the <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> method. Then let it chop the chunk
+                down into lines by calling the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method repeatedly until
+                it returns null (meaning it requires more data to continue) or throws
+                an exception.
+              </para>
+              <para>
+                If you're implementing a combined text/binary protocol like HTTP you can also,
+                at any time, call <see cref="M:Nuclex.Networking.LineParser.GetRemainingData"/> to obtain any data that has
+                not been parsed yet to obtain the beginning of binary data the followed the
+                textual header of a request.
+              </para>
+              <para>
+                You can reuse the same parser for multiple requests by calling its
+                <see cref="M:Nuclex.Networking.LineParser.Reset"/> method, which will restore it to the state it was in when
+                it had just been created.
+              </para>
+              <para>
+                Your will find several references to "the RFC" in the comments within the code.
+                This is because this parser, while generic in purpose, relies on the RFC for
+                the HTTP protocol (RFC-2616) for any decisions on how to proceed. One this class'
+                design goals is to be usable as the fundament for a HTTP protocol parser.
+              </para>
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.CR">
+            <summary>ASCII code for the carriage return character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.LF">
+            <summary>ASCII code for the line feed character</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.#ctor">
+            <summary>Initializes a new line parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.#ctor(System.Int32)">
+            <summary>Initializes a new line parser</summary>
+            <param name="maximumMessageSize">
+              Maximum size the entire message is allowed to have in bytes
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)">
+            <summary>Assigns a new chunk of received data for parsing</summary>
+            <param name="bytes">Array containing the bytes that will be parsed</param>
+            <param name="start">Index in the array at which to begin parsing</param>
+            <param name="count">Number of bytes to parse</param>
+            <remarks>
+              This method has to be called before the ParseHeaderLine() method can be used.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.GetRemainingData">
+            <summary>
+              Returns the remaining (still unparsed) data in the received buffer
+            </summary>
+            <returns>The remaining data from the receive buffer</returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.Reset">
+            <summary>Resets the parser to its initial state</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.ParseLine">
+            <summary>Attempts to parse a complete line from the received data</summary>
+            <returns>The complete line or null if more data is required</returns>
+            <remarks>
+              Before calling this method, you have to assign the data to be parsed using
+              the <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> method. The idea is to call
+              <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> once and then keep calling this method until
+              it returns null (meaning it ran out of data), at which point you can call
+              <see cref="M:Nuclex.Networking.LineParser.SetReceivedData(System.Byte[],System.Int32,System.Int32)"/> and continue parsing lines or call
+              <see cref="M:Nuclex.Networking.LineParser.GetRemainingData"/> instead to retrieve the still unparsed
+              bytes following the most recently parsed line.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.HandleMessageTooLarge">
+            <summary>
+              Called when the message is growing beyond the maximum message size
+            </summary>
+            <returns>
+              An exception that will be thrown to indicate the too large message
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.HandleLoneCarriageReturn">
+            <summary>
+              Called when the message contains a carriage return without a line feed
+            </summary>
+            <remarks>
+              It is safe to throw an exception here. The exception will travel up in
+              the call stack to the caller of the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.VerifyPotentialLine(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to scan the bytes of a potential line for invalid characters
+            </summary>
+            <param name="buffer">
+              Array containing the bytes that to can for invalid characters
+            </param>
+            <param name="start">Index in the array at which to begin reading</param>
+            <param name="count">Number of bytes from the array to scan</param>
+            <remarks>
+              <para>
+                This method is used to check for invalid characters even before a complete
+                line has been received. It will be called with incomplete lines (for example,
+                when the received data ends before a CR LF is encountered) to allow for early
+                rejection of data containing characters not allowed by a protocol.
+              </para>
+              <para>
+                It is safe to throw an exception here. The exception will travel up in
+                the call stack to the caller of the <see cref="M:Nuclex.Networking.LineParser.ParseLine"/> method.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.TransformToString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to transform a received series of bytes into a string
+            </summary>
+            <param name="buffer">Buffer containing the bytes to be transformed</param>
+            <param name="start">Index of the first byte to transform</param>
+            <param name="count">Number of bytes to transform into a string</param>
+            <returns>The string produced from the bytes in the specified buffer</returns>
+            <remarks>
+              This method allows you to use your own encoding for transforming the bytes
+              in a line into a string. Always called to transform an entire line in one
+              piece, excluding the CR LF characters at the line's end.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.internalScanForLineEnding">
+            <summary>Internal method that scans the received data for a header line</summary>
+            <returns>
+              The header line if enough data for at least one complete line was available,
+              null if more data is required
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.internalParsePotentialLine(System.Int32)">
+            <summary>Parses a potential request line for final LF character</summary>
+            <param name="crIndex">Index of the CR character in the received data</param>
+            <returns>
+              A string containing the parsed line or null if more data is required
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.internalTakeOverReceiveBuffer">
+            <summary>Takes over the current receive buffer into the store buffer</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParser.ensureAdditionalStoreCapacity(System.Int32)">
+            <summary>
+              Makes sure that the line buffer has enough capacity to fit the specified
+              amount of additional characters in it
+            </summary>
+            <param name="additionalSize">Number of required additional characters</param>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.maximumMessageSize">
+            <summary>Maximum size the request header is allowed to reach</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.receivedBytes">
+            <summary>Buffer containing the received bytes while they're processed</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.receivedByteIndex">
+            <summary>Current index in the received bytes the parser is working at</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.receivedByteCount">
+            <summary>Number of received bytes left to process</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.storedBytes">
+            <summary>
+              Stores received data if it needs to be remembered between two parse runs
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.storedByteCount">
+            <summary>Number of bytes in the temporary store buffer</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.storedBytesEndWithCR">
+            <summary>Whether the final byte in the temporary store buffer is a CR</summary>
+        </member>
+        <member name="F:Nuclex.Networking.LineParser.accumulatedRequestSize">
+            <summary>Total size of the request</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParser.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParser.HT">
+            <summary>ASCII code for the horizontal tab character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParser.DEL">
+            <summary>ASCII code for the delete character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParser.ISO_8859_1">
+            <summary>ID of the ISO-8859-1 code page</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.#ctor">
+            <summary>Initializes a new HTTP/1.1 request parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.#ctor(System.Int32)">
+            <summary>Initializes a new HTTP/1.1 request parser</summary>
+            <param name="maximumRequestHeaderSize">
+              Maximum size the request header is allowed to have
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.HandleMessageTooLarge">
+            <summary>
+              Called when the message is growing beyond the maximum message size
+            </summary>
+            <returns>
+              An exception that will be thrown to indicate the too large message
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.HandleLoneCarriageReturn">
+            <summary>
+              Called when the message contains a carriage return without a line feed
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.VerifyPotentialLine(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to scan the bytes of a potential line for invalid characters
+            </summary>
+            <param name="buffer">
+              Array containing the bytes that to can for invalid characters
+            </param>
+            <param name="start">Index in the array at which to begin reading</param>
+            <param name="count">Number of bytes from the array to scan</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParser.TransformToString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to transform a received series of bytes into a string
+            </summary>
+            <param name="buffer">Buffer containing the bytes to be transformed</param>
+            <param name="start">Index of the first byte to transform</param>
+            <param name="count">Number of bytes to transform into a string</param>
+            <returns>The string produced from the bytes in the specified buffer</returns>
+            <remarks>
+              This method allows you to use your own encoding for transforming the bytes
+              in a line into a string. Always called to transform an entire line in one
+              piece, excluding the CR LF characters at the line's end.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParser.maximumRequestHeaderSize">
+            <summary>Maximum size the request header is allowed to have</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.HttpLineParserTest">
+            <summary>Unit tests for the HTTP request parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestBufferOverflowSingleRun">
+            <summary>
+              Tests whether a buffer overflow in a single adds is handled correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestBufferOverflowMultipleRuns">
+            <summary>
+              Tests whether a buffer overflow built over multiple adds is handled correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestInvalidCharactersInRequest">
+            <summary>
+              Tests whether a line containing invalid characters is rejected
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestSplitLineEndRecognition">
+            <summary>
+              Tests whether a line end is recognized when it is split into two adds
+            </summary>
+            <remarks>
+              If the line end is not correctly recognized, a BadRequestException will result
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestExampleRequestWithStartIndex">
+            <summary>Make sure the parser correctly handles the array start index</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestExampleRequest">
+            <summary>Tests whether the parser can handle a normal HTTP request</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.createWhiteSpaceArray(System.Int32)">
+            <summary>Creates a byte array of whitespace characters</summary>
+            <param name="length">Number of whitespace characters to put in the array</param>
+            <returns>The array of whitespace characters</returns>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpLineParserTest.exampleRequest">
+            <summary>An example HTTP/1.1 request</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.HttpLineParserTest.TestParser">
+            <summary>Dummy parser for testing the HTTP request line parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestParser.#ctor(System.Int32)">
+            <summary>Initializes a new test parser</summary>
+            <param name="maximumHeaderSize">
+              Maximum size the HTTP request header is allowed to have
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpLineParserTest.TestParser.AddBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>Adds bytes to be parsed</summary>
+            <param name="bytes">Array containing the bytes to be parsed</param>
+            <param name="start">Index at which to begin reading the array</param>
+            <param name="count">Number of bytes to take from the array</param>
+            <returns>True if more data is required</returns>
+        </member>
+        <member name="T:Nuclex.Networking.Http.RequestParser">
+            <summary>Parses HTTP/1.1 requests</summary>
+            <remarks>
+              <para>
+                This is a high-performance and low-garbage HTTP request parser that can be
+                fed with incoming data incrementally. The parser is designed to be bullet-proof
+                and will not run into an undefined state no matter what data it is given. It
+                will not look at a single byte more than the maximum allowed request header
+                size you specify, thereby also making it resilient to memory load attacks.
+              </para>
+              <para>
+                Parsing takes place directly on the data you provide the parser with, avoiding
+                expensive memory copies and string conversion/splitting operations. This makes
+                it ideal for usage in systems with limited memory or a cheaper implementation
+                of the .NET garbage collection and ensures good scalability on other systems.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.#ctor(System.Int32)">
+            <summary>Initializes a new HTTP request parser</summary>
+            <param name="maximumRequestHeaderSize">
+              Maximum length the HTTP request header is allowed to have
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.Reset">
+            <summary>Resets the parser to the initial state for a new request</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.ProcessBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>Instructs the parser to process the provided bytes</summary>
+            <param name="buffer">Buffer containing the bytes that will be parsed</param>
+            <param name="start">Index in the buffer at which to start reading</param>
+            <param name="count">Number of bytes that will be parsed</param>
+            <return>
+              The parsed HTTP request if a complete request could be constructed from the
+              provided bytes, null if more data is required
+            </return>
+            <remarks>
+              <para>
+                When a request is returned, there may be leftover data in the buffer that was
+                following the request. This data can either be another request sent by the
+                client or uploaded data for an HTTP POST request.
+              </para>
+              <para>
+                You should always extract the leftover data as soon as a request is returned
+                using the <see cref="M:Nuclex.Networking.Http.RequestParser.GetRemainingData"/> method and buffer it until you know
+                (from the request header) what is to be done with it.If the request doesn't
+                involve any uploaded data, you can feed it back to the request parser after
+                calling the <see cref="M:Nuclex.Networking.Http.RequestParser.Reset"/> method once (or creating a new parser).
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.GetRemainingData">
+            <summary>The remaining bytes the parser has not yet processed</summary>
+            <remarks>
+              After a request is complete, normally, all bytes in the receive buffer should
+              have been processed. If the request was a HTTP POST request, however, the client
+              might begin sending the data immediately after the request header. In this case,
+              you will have to take back the remaining, unparsed bytes from the parser
+              after the complete request has been parsed.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.parseRequestLine(System.String)">
+            <summary>Parses the request line sent from the client</summary>
+            <param name="requestLine">String containing the received request line</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.parseHeaderLine(System.String)">
+            <summary>Parses a request header line sent from the client</summary>
+            <param name="headerLine">String containing the received header line</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.RequestParser.parseHeaderFieldValue(System.String,System.Int32)">
+            <summary>Parses the field value of an HTTP header field</summary>
+            <param name="headerLine">Line containing the field value</param>
+            <param name="valueIndex">Index at which the field value begins</param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.httpWhitespaces">
+            <summary>Characters considered as whitespace in the HTTP protocol</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.requestBuilder">
+            <summary>Collects data and constructs HTTP/1.1 request containers</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.state">
+            <summary>Current state the parser is in</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.currentFieldName">
+            <summary>Field name of the last request header we parsed</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.RequestParser.ParserState">
+            <summary>States the request parser can be in</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.ParserState.AwaitingRequestLineOrCrLf">
+            <summary>Waiting for the request line or a CR-LF to be sent</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.ParserState.AwaitingRequestLine">
+            <summary>Waiting for the request line to be sent</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.ParserState.AwaitingRequestHeaderOrEnd">
+            <summary>Waiting for additional headers to be sent</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.RequestParser.ParserState.AwaitingRequestData">
+            <summary></summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.Response">
+            <summary>Carries a response the HTTP server can send to a client</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Response.#ctor">
+            <summary>Initializes a new HTTP server response</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Response.#ctor(Nuclex.Networking.Http.StatusCode,System.String)">
+            <summary>Initializes a new HTTP server response</summary>
+            <param name="statusCode">
+              Status code that will be reported back to the client
+            </param>
+            <param name="statusMessage">
+              Status message to deliver together with the status code
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Response.#ctor(Nuclex.Networking.Http.StatusCode)">
+            <summary>Initializes a new HTTP server response</summary>
+            <param name="statusCode">
+              Status code that will be reported back to the client
+            </param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Response.StatusCode">
+            <summary>Status code of the client's request</summary>
+            <remarks>
+              HTTP status codes are designed to be extensible - clients are required to
+              understand status codes based on their numeric range (eg. clients will assume
+              any status code in the 200-299 range means success). If you want to return
+              a custom status code, simply cast any integer to the <see cref="F:Nuclex.Networking.Http.Response.StatusCode"/>
+              enumeration.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Response.Version">
+            <summary>HTTP protocol version used by the server</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Response.StatusMessage">
+            <summary>Message returned to the client together with the status code</summary>
+            <remarks>
+              <para>
+                This message is generally not intepreted by a client itself but can be
+                shown to the user if the request failed or has an otherwise unexpected
+                outcome. You should provide a short but meaningful response telling what
+                went wrong and why in case of an error.
+              </para>
+              <para>
+                You can leave this string set to null to have the HTTP server return the
+                default status message for known status codes. For custom status codes,
+                this will result in the status message being omitted (same as setting it
+                to String.Empty).
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.Http.Response.AttachStream(System.IO.Stream)">
+            <summary>
+              Attaches a stream to the response that will be send back to the client</summary>
+            <param name="stream">Stream the data will be read from</param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Response.headers">
+            <summary>Headers being returned to the client</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.Response.attachedStream">
+            <summary>The stream attached to the server response</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Response.Headers">
+            <summary>Headers provided to the client by the server</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.Response.AttachedStream">
+            <summary>Stream that has been attached to the response</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.ResponseFormatter">
+            <summary>
+              Formats an HTTP server response container into a format the client understands
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.ISO_8859_1">
+            <summary>ID of the ISO-8859-1 code page</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.CR">
+            <summary>ASCII code for the carriage return character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.LF">
+            <summary>ASCII code for the line feed character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.SP">
+            <summary>ASCII code for the space character</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.DC">
+            <summary>ASCII code for the double colon character</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.ResponseFormatter.Format(Nuclex.Networking.Http.Response)">
+            <summary>
+              Convert the provided response into the HTTP response transport format
+            </summary>
+            <param name="response">Response that will be converted</param>
+            <returns>
+              An array of bytes containing the response in the HTTP response format
+            </returns>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.iso88591Encoding">
+            <summary>Encoding for the ISO-8859-1 codepage</summary>
+            <remarks>
+              
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.ResponseFormatter.usCulture">
+            <summary>CultureInfo of the en-us culture</summary>
+            <remarks>
+              Mainly used to convert numbers to text without relying in that the system's
+              current culture transforms into a format the client can understand.
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Networking.Http.StatusCode">
+            <summary>Status codes that can be returned by an HTTP server</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S100_Continue">
+            <summary>The client should continue with its request</summary>
+            <remarks>
+              This interim response is used to inform the client that the initial part
+              of the request has been received and has not yet been rejected by the
+              server.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S101_SwitchingProtocols">
+            <summary>
+              The server understands and is willing to comply with the client's request,
+              via the Upgrade message header field (section 14.42), for a change in
+              the application protocol being used on this connection.
+            </summary>
+            <remarks>
+              The server will switch protocols to those defined by the response's
+              Upgrade header field immediately after the empty line which terminates
+              the 101 response.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S200_OK">
+            <summary>The request has succeeded</summary>
+            <remarks>
+              The information returned with the response is dependent on the method used
+              in the request.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S201_Created">
+            <summary>
+              The request has been fulfilled and resulted in a new resource being created
+            </summary>
+            <remarks>
+               The newly created resource can be referenced by the URI(s) returned in
+               the entity of the response, with the most specific URI for the resource
+               given by a Location header field
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S202_Accepted">
+            <summary>
+              The request has been accepted for processing, but the processing has not
+              been completed
+            </summary>
+            <remarks>
+              The request might or might not eventually be acted upon, as it might be
+              disallowed when processing actually takes place.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S203_Non_Authoritative_Information">
+            <summary>
+              The returned metainformation in the entity-header is not the definitive set
+              as available from the origin server, but is gathered from a local or a
+              third-party copy.
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S204_No_Content">
+            <summary>
+              The server has fulfilled the request but does not need to return an entity-body,
+              and might want to return updated metainformation
+            </summary>
+            <remarks>
+              The response may include new or updated metainformation in the form of
+              entity-headers, which if present SHOULD be associated with the requested variant.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S205_Reset_Content">
+            <summary>
+              The server has fulfilled the request and the user agent should reset the document
+              view which caused the request to be sent
+            </summary>
+            <remarks>
+              This response is primarily intended to allow input for actions to take place via
+              user input, followed by a clearing of the form in which the input is given so
+              that the user can easily initiate another input action.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S206_Partial_Content">
+            <summary>The server has fulfilled the partial GET request for the resource</summary>
+            <remarks>
+              The request must have included a Range header field (section 14.35) indicating
+              the desired range, and may have included an If-Range header field (section 14.27)
+              to make the request conditional.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S300_Multiple_Choices">
+            <summary>
+              The requested resource corresponds to any one of a set of representations, each
+              with its own specific location, and agent-driven negotiation information
+              (section 12) is being provided so that the user (or user agent) can select
+              a preferred representation and redirect its request to that location
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S301_Moved_Permanently">
+            <summary>
+              The requested resource has been assigned a new permanent URI and any future
+              references to this resource should use one of the returned URIs
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S302_Found">
+            <summary>The requested resource resides temporarily under a different URI</summary>
+            <remarks>
+              Since the redirection might be altered on occasion, the client should
+              continue to use the Request-URI for future requests.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S303_See_Other">
+            <summary>
+              The response to the request can be found under a different URI and should be
+              retrieved using a GET method on that resource
+            </summary>
+            <remarks>
+              This method exists primarily to allow the output of a POST-activated script
+              to redirect the user agent to a selected resource.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S304_Not_Modified">
+            <summary>
+              If the client has performed a conditional GET request and access is allowed,
+              but the document has not been modified, the server should respond with this
+              status code
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S305_Use_Proxy">
+            <summary>
+              The requested resource MUST be accessed through the proxy given by
+              the Location field
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S307_Temporary_Redirect">
+            <summary>
+              The requested resource resides temporarily under a different URI. Since
+              the redirection may be altered on occasion, the client should continue to
+              use the Request-URI for future requests
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S400_Bad_Request">
+            <summary>
+              The request could not be understood by the server due to malformed syntax
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S401_Unauthorized">
+            <summary>The request requires user authentication</summary>
+            <remarks>
+              The response MUST include a WWW-Authenticate header field (section 14.47)
+              containing a challenge applicable to the requested resource.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S402_Payment_Required">
+            <summary>This code is reserved for future use</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S403_Forbidden">
+            <summary>The server understood the request, but is refusing to fulfill it</summary>
+            <remarks>
+              Authorization will not help and the request SHOULD NOT be repeated.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S404_Not_Found">
+            <summary>The server has not found anything matching the Request-URI</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S405_Method_Not_Allowed">
+            <summary>
+              The method specified in the Request-Line is not allowed for the resource
+              identified by the Request-URI
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S406_Not_Acceptable">
+            <summary>
+              The resource identified by the request is only capable of generating response
+              entities which have content characteristics not acceptable according to
+              the accept headers sent in the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S407_Proxy_Authentication_Required">
+            <summary>
+              This code is similar to 401 (Unauthorized), but indicates that the client must
+              first authenticate itself with the proxy
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S408_Request_Timeout">
+            <summary>
+              The client did not produce a request within the time that the server was
+              prepared to wait
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S409_Conflict">
+            <summary>
+              The request could not be completed due to a conflict with the current state
+              of the resource
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S410_Gone">
+            <summary>
+              The requested resource is no longer available at the server and no forwarding
+              address is known
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S411_Length_Required">
+            <summary>
+              The server refuses to accept the request without a defined Content-Length
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S412_Precondition_Field">
+            <summary>
+              The precondition given in one or more of the request-header fields evaluated
+              to false when it was tested on the server
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S413_Request_Entity_Too_Large">
+            <summary>
+              The server is refusing to process a request because the request entity is
+              larger than the server is willing or able to process
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S414_Request_Uri_Too_Long">
+            <summary>
+              The server is refusing to service the request because the Request-URI is
+              longer than the server is willing to interpret
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S415_Unsupported_Media_Type">
+            <summary>
+              The server is refusing to service the request because the entity of
+              the request is in a format not supported by the requested resource for
+              the requested method
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S416_Request_Range_Not_Satisfiable">
+            <summary>
+              A server should return a response with this status code if a request included
+              a Range request-header field (section 14.35), and none of the range-specifier
+              values in this field overlap the current extent of the selected resource, and
+              the request did not include an If-Range request-header field
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S417_Expectation_Failed">
+            <summary>
+              The expectation given in an Expect request-header field (see section 14.20)
+              could not be met by this server, or, if the server is a proxy, the server has
+              unambiguous evidence that the request could not be met by the next-hop server
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S500_Internal_Server_Error">
+            <summary>
+              The server encountered an unexpected condition which prevented it from
+              fulfilling the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S501_Not_Implemented">
+            <summary>
+              The server does not support the functionality required to fulfill the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S502_Bad_Gateway">
+            <summary>
+              The server, while acting as a gateway or proxy, received an invalid response
+              from the upstream server it accessed in attempting to fulfill the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S503_Service_Unavailable">
+            <summary>
+              The server is currently unable to handle the request due to a temporary
+              overloading or maintenance of the server
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S504_Gateway_Timeout">
+            <summary>
+              The server, while acting as a gateway or proxy, did not receive a timely response
+              from the upstream server specified by the URI (e.g. HTTP, FTP, LDAP) or some
+              other auxiliary server (e.g. DNS) it needed to access in attempting to complete
+              the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCode.S505_Http_Version_Not_Supported">
+            <summary>
+              The server does not support, or refuses to support, the HTTP protocol version
+              that was used in the request message
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.HttpServer">
+            <summary>Simple HTTP server that answers requests by clients</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.#ctor">
+            <summary>Initializes a new HTTP server on port 80</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.#ctor(System.Int16)">
+            <summary>Initializes a new HTTP server</summary>
+            <param name="port">
+              TCP port the server should liston on for incoming connections
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.Start">
+            <summary>Starts the http server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.Stop">
+            <summary>Stops the http server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.DropAllClients">
+            <summary>Drops all clients currently connected to the server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.Dispose">
+            <summary>Immediately releases all resources used by the instance</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.AcceptClientConnection(System.Net.Sockets.Socket)">
+            <summary>Called to accepts incoming client connections</summary>
+            <param name="connectedSocket">Socket of the connected client</param>
+            <returns>
+              A new client connection responsible for managing requests by the
+              connected client.
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.NotifyClientDisconnected(Nuclex.Networking.Http.ClientConnection)">
+            <summary>Notifies the server that a client has disconnected</summary>
+            <param name="client">Client that has disconnected</param>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.runIdleConnectionCleanupLoop">
+            <summary>Cleans up idle connections after they have timed out</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.clientConnected(System.Object,Nuclex.Networking.SocketEventArgs)">
+            <summary>Called when a client connects to the http server</summary>
+            <param name="sender">The socket listener reporting the new connection</param>
+            <param name="arguments">Contains the socket of the connecting client</param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.OneSecondTimeSpan">
+            <summary>Timespan with a length of 1 second</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.listener">
+            <summary>Listener used to accept incoming connections</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.port">
+            <summary>Port the http server is listening on</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.clientConnectedDelegate">
+            <summary>Delegate for the clientConnectd() method</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.clientCleanupQueue">
+            <summary>clients sorted by time of their last transmission</summary>
+            <remarks>
+              This queue will also retain entries for connections that have been closed due
+              to means other than a timeout. In this case, the additional indirection provided
+              by the ConnectionEntry will allow the queue item's connection to be set to
+              null and thus, be silently discarded when its lifetime expires.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.idleConnectionDropTime">
+            <summary>Time until an idle connection will be dropped by the server</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.stopIdleConnectionCleanupThread">
+            <summary>Set to true to stop the idle connection cleanup thread</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.idleConnectionCleanupThread">
+            <summary>Thread used to clean up idle connections from the server</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.idleConnectionCleanupThreadWakeupEvent">
+            <summary>Wakeup event for the idle connection cleanup thread</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.connectedClients">
+            <summary>Dictionary containing the clients currently connected to the server</summary>
+        </member>
+        <member name="P:Nuclex.Networking.Http.HttpServer.IdleConnectionDropTime">
+            <summary>Time after which the server will drop inactive connections</summary>
+            <remarks>
+              This is mainly a safeguard against faulty clients. If a client doesn't close
+              his connection after a reasonable idle time (internet standards suggest
+              15-30 seconds), the server will take action. Connectivity breakdowns in
+              clients can also result in connections dying without proper termination and
+              would result in the server slowly building up more and more connections.
+            </remarks>
+        </member>
+        <member name="T:Nuclex.Networking.Http.HttpServer.ConnectionEntry">
+            <summary>Encapsulates an HTTP client connection managed by the server</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.HttpServer.ConnectionEntry.#ctor(Nuclex.Networking.Http.ClientConnection)">
+            <summary>Initializes a new connection entry</summary>
+            <param name="connection">Connected HTTP client to store in the entry</param>
+        </member>
+        <member name="F:Nuclex.Networking.Http.HttpServer.ConnectionEntry.Connection">
+            <summary>Connected HTTP client managed by this entry</summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.StatusCodeClass">
+            <summary>Classes of status codes that can be returned by an HTTP server</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.Unknown">
+            <summary>Unknown status code class</summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.C1xx_Informational">
+            <summary>
+              This class of status code indicates a provisional response, consisting only of
+              the Status-Line and optional headers, and is terminated by an empty line
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.C2xx_Successful">
+            <summary>
+              This class of status code indicates that the client's request was successfully
+              received, understood, and accepted
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.C3xx_Redirection">
+            <summary>
+              This class of status code indicates that further action needs to be taken
+              by the user agent in order to fulfill the request
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.C4xx_Client_Error">
+            <summary>
+              The 4xx class of status code is intended for cases in which the client seems
+              to have erred
+            </summary>
+        </member>
+        <member name="F:Nuclex.Networking.Http.StatusCodeClass.C5xx_Server_Error">
+            <summary>
+              Response status codes beginning with the digit "5" indicate cases in which
+              the server is aware that it has erred or is incapable of performing
+              the request
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.Http.StatusCodeHelper">
+            <summary>Helper methods for working with HTTP status codes</summary>
+        </member>
+        <member name="M:Nuclex.Networking.Http.StatusCodeHelper.GetClass(Nuclex.Networking.Http.StatusCode)">
+            <summary>Returns the class of the provided status code</summary>
+            <param name="statusCode">Status code of which to return the class</param>
+            <returns>Class of the provided status code</returns>
+        </member>
+        <member name="M:Nuclex.Networking.Http.StatusCodeHelper.GetDefaultDescription(Nuclex.Networking.Http.StatusCode)">
+            <summary>Returns the default description associated with a status code</summary>
+            <param name="statusCode">
+              Status code of which to obtain the default description
+            </param>
+            <returns>The default description for the provided status code</returns>
+        </member>
+        <member name="T:Nuclex.Networking.LineParserTest">
+            <summary>Unit tests for the line parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestDefaultConstructor">
+            <summary>Verifies that the default constructor of the line parser works</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestSingleLineParsing">
+            <summary>
+              Tests whether the line parser works on a single line
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestIncompleteLineParsing">
+            <summary>
+              Tests whether the line parser can cope with an incomplete line
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestRemainingDataRetrieval">
+            <summary>
+              Tests whether the GetRemainingData() method returns the still unparsed data
+              correctly
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestReset">
+            <summary>
+              Verifies that the Reset() fully resets the parser 
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestLoneCarriageReturnInSplitStream">
+            <summary>
+              Tests whether a lone carriage return at the end of a split buffer is
+              detected correctly.
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestSlightlyTooLargeMessage">
+            <summary>
+              Tests parsing of a message that is just by one byte larger than the maximum
+              allowed message size
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestSlightlyTooLargeSplitMessage">
+            <summary>
+              Tests parsing of a message that is just by one byte larger than the maximum
+              allowed message size, split into multiple lines
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestFarTooLargeSplitMessage">
+            <summary>
+              Tests parsing of a message that is way too large to fit in the receive buffer
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestBarelyFittingMessage">
+            <summary>
+              Tests parsing of a message that barely fits in the receive buffer
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestLoneCarriageReturn">
+            <summary>
+              Tests parsing of a message that contains a lone carriage return character
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestSplitLine">
+            <summary>
+              Tests parsing of a line split into multiple messages
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestLargeMessage">
+            <summary>
+              Tests parsing of a message that requires the store buffer to be enlarged
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.arraySegmentContentsAreEqual(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte})">
+            <summary>Compares two array segments based on their contents</summary>
+            <param name="firstSegment">First array segment that will be compared</param>
+            <param name="secondSegment">Second array segment that will be compared</param>
+            <returns>
+              True if the contents in both array segments are identical, otherwise false
+            </returns>
+        </member>
+        <member name="T:Nuclex.Networking.LineParserTest.TestParser">
+            <summary>Dummy parser for testing the line parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.#ctor">
+            <summary>Initializes a new test parser</summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.#ctor(System.Int32)">
+            <summary>Initializes a new test parser</summary>
+            <param name="maximumMessageSize">
+              Maximum size the message is allowed to have
+            </param>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.ProcessBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>Adds bytes to be parsed</summary>
+            <param name="bytes">Array containing the bytes to be parsed</param>
+            <param name="start">Index at which to begin reading the array</param>
+            <param name="count">Number of bytes to take from the array</param>
+            <returns>True if more data is required</returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.HandleMessageTooLarge">
+            <summary>
+              Called when the message is growing beyond the maximum message size
+            </summary>
+            <returns>
+              An exception that will be thrown to indicate the too large message
+            </returns>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.HandleLoneCarriageReturn">
+            <summary>
+              Called when the message contains a carriage return without a line feed
+            </summary>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.VerifyPotentialLine(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to scan the bytes of a potential line for invalid characters
+            </summary>
+            <param name="buffer">
+              Array containing the bytes that to can for invalid characters
+            </param>
+            <param name="start">Index in the array at which to begin reading</param>
+            <param name="count">Number of bytes from the array to scan</param>
+        </member>
+        <member name="M:Nuclex.Networking.LineParserTest.TestParser.TransformToString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+              Called to transform a received series of bytes into a string
+            </summary>
+            <param name="buffer">Buffer containing the bytes to be transformed</param>
+            <param name="start">Index of the first byte to transform</param>
+            <param name="count">Number of bytes to transform into a string</param>
+            <returns>The string produced from the bytes in the specified buffer</returns>
+            <remarks>
+              This method allows you to use your own encoding for transforming the bytes
+              in a line into a string. Always called to transform an entire line in one
+              piece, excluding the CR LF characters at the line's end.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Networking.LineParserTest.TestParser.parsedLineCount">
+            <summary>Number of lines that line parser has parsed</summary>
+        </member>
+        <member name="P:Nuclex.Networking.LineParserTest.TestParser.ParsedLineCount">
+            <summary>Number of lines the parser has parsed so far</summary>
+        </member>
+        <member name="T:Nuclex.Networking.SocketEventArgs">
+            <summary>Event argument container carrying a socket</summary>
+        </member>
+        <member name="M:Nuclex.Networking.SocketEventArgs.#ctor(System.Net.Sockets.Socket)">
+            <summary>Initializes a new socket event argument container</summary>
+            <param name="socket">Socket to be provided to the event subscribers</param>
+        </member>
+        <member name="F:Nuclex.Networking.SocketEventArgs.socket">
+            <summary>Socket the event provides</summary>
+        </member>
+        <member name="P:Nuclex.Networking.SocketEventArgs.Socket">
+            <summary>The socket provided by the event</summary>
+        </member>
+        <member name="T:Nuclex.Networking.SocketEventArgsTest">
+            <summary>Unit Test for the socket event argument container</summary>
+        </member>
+        <member name="M:Nuclex.Networking.SocketEventArgsTest.TestArgumentPassing">
+            <summary>
+              Tests whether an argument can be stored in the argument container
+            </summary>
+        </member>
+        <member name="T:Nuclex.Networking.SocketListener">
+            <summary>Listens for incoming TCP/IP connections on a specific port</summary>
+            <remarks>
+              <para>
+                This listener can handle moderate loads. It doesn't use the new support for
+                IO completion ports in .NET 2.0 SP1 for the listening socket, but the
+                user is free to use them for the actual transmissions on accepted connections.
+              </para>
+              <para>
+                Using the .NET asynchronous pattern, this listener will be able to accept
+                incoming connections until the thread pool reaches full capacity (which will
+                take quite a beating), at which point the listening socket's queue of pending
+                connections (backlog) will start to load up, meaning that unless another
+                method of limiting the number of allowed client connections is implemented,
+                a maximum of ThreadPool.GetMaxThreads() + Socket Backlog Size connections
+                can be made before the listener will begin rejecting incoming connections.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.#ctor(System.Int16)">
+            <summary>Initializes a new incoming TCP/IP connection listener</summary>
+            <param name="port">Port to listen on</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.Dispose">
+            <summary>Shuts down the TCP/IP connection listener</summary>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.StartListening">
+            <summary>Begins listening for incoming TCP/IP connections</summary>
+            <remarks>
+              This method is provided so you have the chance to subscribe to the
+              <see cref="E:Nuclex.Networking.SocketListener.ClientConnected"/> event before incoming connection attempts
+              start being accepted by the listener.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.OnClientConnected(System.Net.Sockets.Socket)">
+            <summary>
+              Fires the ClientConnected event when a client connects to the listener
+            </summary>
+            <param name="connectedClient">Socket of the client that has connected</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.internalStartListening">
+            <summary>Internal listening start method for use in the accept callback</summary>
+            <remarks>
+              This method is called once to initiate listening when the user calls
+              <see cref="M:Nuclex.Networking.SocketListener.StartListening"/> and then by the connection callback to resume
+              listening after an incoming connection is accepted.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.acceptIncomingConnection(System.IAsyncResult)">
+            <summary>
+              Callback that will be invoked by the socket when a client connects
+            </summary>
+            <param name="asyncResult">Handle of the asynchronous call</param>
+        </member>
+        <member name="M:Nuclex.Networking.SocketListener.setupSocket(System.Int16)">
+            <summary>
+              Constructs the socket we're using to listen for incoming connections
+            </summary>
+            <param name="port">Port the socket is to listen on</param>
+        </member>
+        <member name="F:Nuclex.Networking.SocketListener.listeningSocket">
+            <summary>Socket we're using to listen for incoming connection attempts</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketListener.acceptIncomingConnectionDelegate">
+            <summary>Delegate for the acceptIncomingConnection() method</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketListener.shutdownState">
+            <summary>Whether the socket receiver is currently shutting down</summary>
+        </member>
+        <member name="F:Nuclex.Networking.SocketListener.listeningState">
+            <summary>Whether the socket receiver is currently listening</summary>
+        </member>
+        <member name="E:Nuclex.Networking.SocketListener.ClientConnected">
+            <summary>Triggered whenever a client connects</summary>
+        </member>
+    </members>
+</doc>

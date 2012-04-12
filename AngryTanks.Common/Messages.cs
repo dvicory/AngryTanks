@@ -28,15 +28,7 @@ namespace AngryTanks.Common
                 this.Team = team;
             }
 
-            public void Write(NetOutgoingMessage packet)
-            {
-                packet.Write(Slot);
-                packet.Write((Byte)Team);
-                packet.Write(Callsign);
-                packet.Write(Tag);
-            }
-
-            static public PlayerInformation Read(NetIncomingMessage packet)
+            public static PlayerInformation Read(NetIncomingMessage packet)
             {
                 Byte slot = packet.ReadByte();
                 TeamType team = (TeamType)packet.ReadByte();
@@ -44,6 +36,14 @@ namespace AngryTanks.Common
                 String tag = packet.ReadString();
 
                 return new PlayerInformation(slot, callsign, tag, team);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(Slot);
+                packet.Write((Byte)Team);
+                packet.Write(Callsign);
+                packet.Write(Tag);
             }
         }
 
@@ -147,13 +147,13 @@ namespace AngryTanks.Common
                 get { return MessageType.MsgWorld; }
             }
 
-            public readonly UInt16 MapLength;
+            public readonly UInt16 Length;
             public readonly StreamReader Map;
 
             public MsgWorldPacket(UInt16 mapLength, StreamReader map)
             {
-                this.MapLength = mapLength;
-                this.Map       = map;
+                this.Length = mapLength;
+                this.Map = map;
             }
 
             public static MsgWorldPacket Read(NetIncomingMessage packet)
@@ -253,83 +253,5 @@ namespace AngryTanks.Common
                 base.Write(packet);
             }
         }
-
-        /*
-        public abstract class MsgBaseData
-        {
-            public abstract MessageType MsgType
-            {
-                get;
-            }
-        }
-
-        public class MsgEnterData : MsgBaseData
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgEnter; }
-            }
-
-            public readonly PlayerInformation Player;
-        }
-
-        public class MsgAddPlayerData : MsgBaseData
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgAddPlayer; }
-            }
-
-            public readonly PlayerInformation Player;
-
-            public MsgAddPlayerData(PlayerInformation player)
-            {
-                this.Player = player;
-            }
-        }
-
-        public class MsgRemovePlayerData : MsgBaseData
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgRemovePlayer; }
-            }
-
-            public readonly Byte Slot;
-            public readonly String Reason;
-
-            public MsgRemovePlayerData(Byte slot, String reason)
-            {
-                this.Slot   = slot;
-                this.Reason = reason;
-            }
-        }
-
-        public class MsgWorldData : MsgBaseData
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgWorld; }
-            }
-
-            public readonly StreamReader Map;
-
-            public MsgWorldData(StreamReader map)
-            {
-                this.Map = map;
-            }
-        }
-
-        public class MsgPlayerUpdateData : MsgBaseData
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgPlayerUpdate; }
-            }
-
-            public readonly Byte Slot;
-            public readonly Vector2 Position, Velocity;
-        }
-        */
     }
 }

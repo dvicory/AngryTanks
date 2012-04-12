@@ -1,0 +1,1966 @@
+﻿<!DOCTYPE
+  html
+  PUBLIC
+  "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <title>WAVE file format</title>
+</head>
+
+<body>
+
+<H1>Table of Contents</H1>
+<UL>
+  <LI><A href="#overview">Overview</A></LI>
+  <LI><A href="#dataformats">Data Formats</A></LI>
+  <LI><A href="#filestructure">File Structure</A></LI>
+
+  <UL>
+    <LI><A href="#wavefileheader">Wave File Header</A></LI>
+    <LI><A href="#wavefilechunks">Wave File Chunks</A></LI>
+
+    <UL>
+      <LI><A href="#fmt">Format Chunk - "fmt "</A></LI>
+      <LI><A href="#data">Data Chunk - "data"</A></LI>
+      <LI><A href="#fact">Fact Chunk - "fact"</A></LI>
+      <LI><A href="#cue">Cue Chunk - "cue "</A></LI>
+      <LI><A href="#plst">Playlist Chunk - "plst"</A></LI>
+      <LI><A href="#list">Associated Data List Chunk - "list"</A></LI>
+      <LI><A href="#labl">Label Chunk - "labl"</A></LI>
+      <LI><A href="#ltxt">Labeled Text Chunk - "ltxt"</A></LI>
+      <LI><A href="#note">Note Chunk - "note"</A></LI>
+      <LI><A href="#smpl">Sample Chunk - "smpl"</A></LI>
+      <LI><A href="#inst">Instrument Chunk - "inst"</A></LI>
+    </UL>
+
+  </UL>
+  <LI><A href="#formatvariations">Format Variations</A></LI>
+</UL>
+  
+<A name="overview" />
+<H1>Overview</H1>
+
+<P>
+  The Wave file format is Windows' native file format for storing digital audio data. It has
+  become one of the most widely supported digital audio file formats on the PC due to the
+  popularity of Windows and the huge number of programs written for the platform. Almost every
+  modern program that can open and/or save digital audio supports this file format, making it
+  both extremely useful and a virtual requirement for software developers to understand.
+  The following specification gives a detailed description of the structure and inner workings
+  of this format.
+</P>
+
+<A name="dataformats" />
+<H1>Data Formats</H1>
+
+<P>
+  Since the Wave file format is native to Windows and therefore Intel processors, all data values
+  are stored in <A href="pglossary.html#littleendian">Little-Endian</A> (least significant byte
+  first) order. 
+</P>
+
+<P>
+  <I>Strings</I><BR />
+  Wave files may contain strings of text for specifying cue point labels, notes, etc. Strings
+  are stored in a format where the first byte specifies the number of following ASCII text
+  bytes in the string. The following bytes are of course the ASCII character bytes that make
+  up the text string. Pascal programmers will notice that this is the same format used for
+  Pascal strings.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000">
+      <TBODY>
+        <TR bgColor="#c0c0c0">
+          <TD>7</TD>
+          <TD>'e'</TD>
+          <TD>'x'</TD>
+          <TD>'a'</TD>
+          <TD>'m'</TD>
+          <TD>'p'</TD>
+          <TD>'l'</TD>
+          <TD>'e'</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    <SMALL>Wave String Format Example</SMALL>
+  </CENTER>
+</P>
+
+<A name="filestructure" />
+<H1>File Structure</H1>
+
+<P>
+  <TABLE cellSpacing="1" cellPadding="12" align="right" bgColor="#000000">
+    <TBODY>
+      <TR>
+        <TD bgColor="#dddddd">
+          <CENTER><B>Basic Wave File Layout</B></CENTER>
+          <P>
+            <CENTER>
+              <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+                <TBODY>
+                  <TR>
+                    <TD bgColor="#bbbbbb">
+                      Chunk ID "RIFF"<BR />
+                      Chunk Data Size<BR />
+                    </TD>
+                  </TR>
+                  <TR>
+                    <TD bgColor="#cccccc">
+                      <TABLE>
+                        <TBODY>
+                          <TR>
+                            <TD>
+                              RIFF Type ID "WAVE"<BR />
+                            </TD>
+                          </TR>
+                          <TR>
+                            <TD>
+                              <TABLE
+                                cellSpacing="1"
+                                cellPadding="4"
+                                width="100%"
+                                bgColor="#000000"
+                                border="0"
+                              >
+                                <TBODY>
+                                  <TR bgColor="#b0b0b0">
+                                    <TD>
+                                      Chunk ID "fmt "<BR />
+                                      Chunk Data Size<BR />
+                                    </TD>
+                                  </TR>
+                                  <TR>
+                                    <TD bgColor="#cccccc">
+                                      Sample Format Info<BR />
+                                    </TD>
+                                  </TR>
+                                </TBODY>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                          <TR>
+                            <TD>
+                              <TABLE
+                                cellSpacing="1"
+                                cellPadding="4"
+                                width="100%"
+                                bgColor="#000000"
+                                border="0"
+                              >
+                                <TBODY>
+                                  <TR bgColor="#b0b0b0">
+                                    <TD>
+                                      Chunk ID "data"<BR />
+                                      Chunk Data Size<BR />
+                                    </TD>
+                                  </TR>
+                                  <TR>
+                                    <TD bgColor="#cccccc">
+                                      Digital Audio Samples<BR />
+                                    </TD>
+                                  </TR>
+                                </TBODY>
+                              </TABLE>
+                            </TD>
+                          </TR>
+                        </TBODY>
+                      </TABLE>
+                    </TD>
+                  </TR>
+                </TBODY>
+              </TABLE>
+
+              <P>
+                <TABLE cellSpacing="0" cellPadding="2" border="0">
+                  <TBODY>
+                    <TR>
+                      <TD>
+                        <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+                          <TBODY>
+                            <TR>
+                              <TD bgColor="#bbbbbb">&nbsp;</TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD>
+                        Chunk Header<BR />
+                      </TD>
+                    </TR>
+                    <TR>
+                      <TD>
+                        <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+                          <TBODY>
+                            <TR>
+                              <TD bgColor="#cccccc">&nbsp;</TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD>
+                        Chunk Data Bytes<BR />
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+              </P>
+            </CENTER>
+          </P>
+        </TD>
+      </TR>
+    </TBODY>
+  </TABLE>
+</P>
+
+<P>
+  Wave files use the standard <A href="pglossary.html#riff">RIFF</A> structure which groups
+  the files contents (sample format, digital audio samples, etc.) into separate chunks, each
+  containing it's own header and data bytes. The chunk header specifies the type and size of
+  the chunk data bytes. This organization method allows programs that do not use or recognize
+  particular types of chunks to easily skip over them and continue processing following known
+  chunks. Certain types of chunks may contain sub-chunks. For example, in the diagram to
+  the right, you can see that the "fmt " and "data" chunks are actually sub-chunks of
+  the "RIFF" chunk. 
+</P>
+
+<P>
+  One tricky thing about RIFF file chunks is that they must be word aligned. This means that
+  their total size must be a multiple of 2 bytes (ie. 2, 4, 6, 8, and so on). If a chunk
+  contains an odd number of data bytes, causing it not to be word aligned, an extra padding
+  byte with a value of zero must follow the last data byte. This extra padding byte is not
+  counted in the chunk size, therefor a program must always word align a chunk headers size
+  value in order to calculate the offset of the following chunk.
+</P>
+
+<A name="wavefileheader" />
+<H1>Wave File Header - RIFF Type Chunk</H1>
+
+<P>
+  Wave file headers follow the standard RIFF file format structure. The first 8 bytes in
+  the file is a standard RIFF chunk header which has a chunk ID of "RIFF" and a chunk size
+  equal to the file size minus the 8 bytes used by the header. The first 4 data bytes in
+  the "RIFF" chunk determines the type of resource found in the RIFF chunk. Wave files always
+  use "WAVE". After the RIFF type comes all of the Wave file chunks that define
+  the audio waveform. 
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD>
+            <B>Offset</B>
+          </TD>
+          <TD>
+            <B>Size</B>
+          </TD>
+          <TD>
+            <B>Description</B>
+          </TD>
+          <TD>
+            <B>Value</B>
+          </TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"RIFF" (0x52494646)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>(file size) - 8</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>RIFF Type</TD>
+          <TD>"WAVE" (0x57415645)</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD colSpan="3">
+            <CENTER>Wave chunks</CENTER>
+          </TD>
+        </TR>
+        <TR>
+          <TD colSpan="4">
+            <CENTER><SMALL>RIFF Type Chunk Values</SMALL></CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+  </CENTER>
+</P>
+
+<A name="wavefilechunks" />
+<H1>Wave File Chunks</H1>
+
+<P>
+  There are quite a few types of chunks defined for Wave files. Many Wave files contain only
+  two of them, specifically the Format Chunk and the Data Chunk. These are the two chunks
+  needed to describe the format of the digital audio samples and the samples themselves.
+  Although it is not required by the official Wave file specification, it is good practice
+  to place the Format Chunk before the Data Chunk. Many programs expect the chunks to be
+  stored in this order and it is more sensible when streaming digital audio from a slow,
+  linear source such as the Internet. If the format were to come after the data, all of
+  the data and then the format would have to be streamed before playback could start correctly.
+</P>
+
+<P>
+  All RIFF Chunks and therefore Wave Chunks are stored in the following format. Notice that
+  even the above mentioned RIFF Type Chunk conforms to this format.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD colSpan="2">Chunk Data Bytes</TD>
+        </TR>
+        <TR>
+          <TD colSpan="3">
+            <CENTER><SMALL>RIFF Chunk Format</SMALL></CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+  </CENTER>
+</P>
+
+<P>
+  The rest of this document goes through the different types of Wave chunks, describing
+  the format of their data bytes and what they mean. You can use the table of contents at
+  the beginning of this document to help find the chunk type you are interested in.
+</P>
+
+<A name="fmt" />
+<H1>Format Chunk - "fmt "</H1>
+
+<P>
+  The format chunk contains information about how the waveform data is stored and should be
+  played back including the type of compression used, number of channels, sample rate,
+  bits per sample and other attributes.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD>
+            <B>Offset</B>
+          </TD>
+          <TD>
+            <B>Size</B>
+          </TD>
+          <TD>
+            <B>Description</B>
+          </TD>
+          <TD>
+            <B>Value</B>
+          </TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"fmt " (0x666D7420)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>16 + extra format bytes</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>2</TD>
+          <TD>Compression code</TD>
+          <TD>1 - 65,535</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0a</TD>
+          <TD>2</TD>
+          <TD>Number of channels</TD>
+          <TD>1 - 65,535</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD>4</TD>
+          <TD>Sample rate</TD>
+          <TD>1 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD>4</TD>
+          <TD>Average bytes per second</TD>
+          <TD>1 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x14</TD>
+          <TD>2</TD>
+          <TD>Block align</TD>
+          <TD>1 - 65,535</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x16</TD>
+          <TD>2</TD>
+          <TD>Significant bits per sample</TD>
+          <TD>2 - 65,535</TD>
+        </TR>
+        <TR></TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x18</TD>
+          <TD>2</TD>
+          <TD>Extra format bytes</TD>
+          <TD>0 - 65,535</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x1a</TD>
+          <TD colSpan="3">
+            <CENTER>Extra format bytes *</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    Wave Format Chunk Values, * read following text for details
+  </CENTER>
+</P>
+
+<P>
+  <I>Chunk ID and Data Size</I><BR />
+  The chunk ID is always "fmt " (0x666D7420) and the size is the size of the standard wave
+  format data (16 bytes) plus the size of any extra format bytes needed for the specific
+  Wave format, if it does not contain uncompressed PCM data. Note the chunk ID string ends
+  with the space character (0x20).
+</P>
+
+<P>
+  <I>Compression Code</I><BR />
+  The first word of format data specifies the type of compression used on the Wave data
+  included in the Wave chunk found in this "RIFF" chunk. The following is a list of the common
+  compression codes used today. 
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+      <TBODY>
+        <TR bgColor="#dddddd">
+          <TD><B>Code</B></TD>
+          <TD><B>Description</B></TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>0 (0x0000)</TD>
+          <TD>Unknown</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>1 (0x0001)</TD>
+          <TD>PCM/uncompressed</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>2 (0x0002)</TD>
+          <TD>Microsoft ADPCM</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>6 (0x0006)</TD>
+          <TD>ITU G.711 a-law</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>7 (0x0007)</TD>
+          <TD>ITU G.711 Âµ-law</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>17 (0x0011)</TD>
+          <TD>IMA ADPCM</TD>
+        </TR>
+        <!-- <tr bgcolor="dddddd"><td>19 (0x0013)</td><td>ADPCM (Sierra)</td></tr> -->
+        <TR bgColor="#dddddd">
+          <TD>20 (0x0016)</TD>
+          <TD>ITU G.723 ADPCM (Yamaha)</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>49 (0x0031)</TD>
+          <TD>GSM 6.10</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>64 (0x0040)</TD>
+          <TD>ITU G.721 ADPCM</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>80 (0x0050)</TD>
+          <TD>MPEG</TD>
+        </TR>
+        <!-- <tr bgcolor="dddddd"><td>257 (0x0101)</td><td>IBM Âµ-law</td></tr> -->
+        <!-- <tr bgcolor="dddddd"><td>258 (0x0102)</td><td>IBM a-law</td></tr> -->
+        <!-- <tr bgcolor="dddddd"><td>259 (0x0103)</td><td>IBM AVC Adaptive Differential PCM</td></tr> -->
+        <TR bgColor="#dddddd">
+          <TD>65,536 (0xFFFF)</TD>
+          <TD>Experimental</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    <SMALL>Common Wave Compression Codes</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Number of Channels</I><BR />
+  The number of channels specifies how many separate audio signals that are encoded in
+  the wave data chunk. A value of 1 means a mono signal, a value of 2 means a stereo
+  signal, etc.
+</P>
+
+<P>
+  <I>Sample Rate</I><BR />
+  The number of sample slices per second. This value is unaffected by the number of channels.
+</P>
+
+<P>
+  <I>Average Bytes Per Second</I><BR />
+  This value indicates how many bytes of wave data must be streamed to a D/A converter per
+  second in order to play the wave file. This information is useful when determining if data
+  can be streamed from the source fast enough to keep up with playback. This value can be
+  easily calculated with the formula:
+</P>
+
+<P>
+  <CODE>AvgBytesPerSec = SampleRate * BlockAlign</CODE>
+</P>
+
+<P>
+  <I>Block Align</I><BR />
+  The number of bytes per sample slice. This value is not affected by the number of channels
+  and can be calculated with the formula:
+</P>
+
+<P>
+  <CODE>BlockAlign = SignificantBitsPerSample / 8 * NumChannels</CODE>
+</P>
+
+<P>
+  <I>Significant Bits Per Sample</I><BR />
+  This value specifies the number of bits used to define each sample. This value is usually
+  8, 16, 24 or 32. If the number of bits is not byte aligned (a multiple of 8) then the number
+  of bytes used per sample is rounded up to the nearest byte size and the unused bytes are set
+  to 0 and ignored.
+</P>
+
+<P>
+  <I>Extra Format Bytes</I><BR />
+  This value specifies how many additional format bytes follow. It does not exist if
+  the compression code is 0 (uncompressed PCM file) but may exist and have any value for other
+  compression types depending on what compression information is need to decode the wave data.
+  If this value is not word aligned (a multiple of 2), padding should be added to the end of
+  this data to word align it, but the value should remain non-aligned.
+</P>
+
+<A name="data" />
+<H1>Data Chunk - "data"</H1>
+
+<P>
+  The Wave Data Chunk contains the digital audio sample data which can be decoded using
+  the format and compression method specified in the Wave Format Chunk. If the Compression Code
+  is 1 (uncompressed PCM), then the Wave Data contains raw sample values. This document explains
+  how an uncompressed PCM data is stored, but will not get into the many supported
+  compression formats.
+</P>
+
+<P>
+  Wave files usually contain only one data chunk, but they may contain more than one if they
+  are contained within a <A href="#wavl">Wave List Chunk</A> ("wavl").
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Length</B></TD>
+          <TD><B>Type</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>char[4]</TD>
+          <TD>chunk ID</TD>
+          <TD>"data" (0x64617461)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>dword</TD>
+          <TD>chunk size</TD>
+          <TD>depends on sample length and compression</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD colSpan="4">
+            <CENTER>sample data</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Data Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  Multi-channel digital audio samples are stored as interlaced wave data which simply means
+  that the audio samples of a multi-channel (such as stereo and surround) wave file are stored
+  by cycling through the audio samples for each channel before advancing to the next sample
+  time. This is done so that the audio files can be played or streamed before the entire file
+  can be read. This is handy when playing a large file from disk (that may not completely fit
+  into memory) or streaming a file over the Internet. The values in the diagram below would be
+  stored in a Wave file in the order they are listed in the Value column (top to bottom).
+</P>
+
+  <P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Time</B></TD>
+          <TD><B>Channel</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD vAlign="top" rowSpan="2">0</TD>
+          <TD>1 (left)</TD>
+          <TD>0x0053</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>2 (right)</TD>
+          <TD>0x0024</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD vAlign="top" rowSpan="2">1</TD>
+          <TD>1 (left)</TD>
+          <TD>0x0057</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>2 (right)</TD>
+          <TD>0x0029</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD vAlign="top" rowSpan="2">2</TD>
+          <TD>1 (left)</TD>
+          <TD>0x0063</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>2 (right)</TD>
+          <TD>0x003C</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    <SMALL>Interlaced Stereo Wave Samples</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  One point about sample data that may cause some confusion is that when samples are
+  represented with 8-bits, they are specified as unsigned values. All other sample bit-sizes
+  are specified as signed values. For example a 16-bit sample can range from -32,768 to
+  +32,767 with a mid-point (silence) at 0.
+</P>
+
+<P>
+  As mentioned earlier, all RIFF chunks (including WAVE "data" chunks) must be word aligned.
+  If the sample data uses an odd number of bytes, a padding byte with a value of zero must be
+  placed at the end of the sample data. The "data" chunk header's size should not include
+  this byte.
+</P>
+
+<A name="fact" />
+<H1>Fact Chunk - "fact"</H1>
+
+<P>
+  A fact chunk stores compression code dependant information about the contents of the Wave file.
+  It is required by all compressed WAVE formats and if the waveform data is contained inside a
+  "wavl" LIST chunk, but is not required for the uncompressed PCM WAVE format files
+  (compression code 1) that contain the waveform data inside a "data" chunk.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"fact" (0x66616374)</TD>
+        </TR>
+        <TR bgColor=#b0b0b0>
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on format</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD colSpan="3">
+            <CENTER>Format Dependant Data</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Fact Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Format Dependant Data</I><BR />
+  There is currently only one field defined for the format dependant data. It is a single
+  4-byte value that specifies the number of samples in the waveform data chunk. This value
+  can be used with the Samples Per Second value specified in the format chunk to calculate
+  the waveforms length in seconds.
+</P>
+<P>
+  As new WAVE formats are introduced, the fact chunk will be expanded, appending fields after
+  the defined number of samples field. Applications can use the fact chunk size to determine
+  which fields are present in the chunk.
+</P>
+
+<A name="wavl" />
+<H1>Wave List Chunk - "wavl"</H1>
+
+<P>
+  A wave list chunk is used to specify several alternating "slnt" and "data" chunks. These
+  chunks can help reduce a Wave file's size while specifying audible segments of samples when
+  a stream of digital audio contains several periods of silence. 
+</P>
+
+<P>
+  This type of chunk is considered to be an abuse of the Wave file format by many
+  programmers (including myself) and it's support is not recommended. Also many programs will
+  not recognize this type of chunk, simply ignoring it. This form of compression
+  unnecessarily complicates the structure of a Wave file and could be better implemented in
+  other ways, including the use of several existing compression formats.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"slnt" (0x736C6E74)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on size of data and slnt chunks</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD colSpan=3>List of Alternating "slnt" and "data" Chunks</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Wave List Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<A name="slnt" />
+<H1>Silent Chunk - "slnt"</H1>
+
+<P>
+  A silent chunk is used to specify a segment of silence that will last some duration of
+  samples. It is always contained within a wave list chunk. While this chunk represents
+  silence, it does not necessarily define a zero volume or baseline sample. It actually holds
+  the last sample value present in the preceding data chunk in the wave list chunk. If there is
+  no preceding data chunk in the wave list chunk, a baseline value should be used (127 for 8-bit
+  data, 0 for 16-bit or higher data). This may seem trivial, but if not followed, may cause
+  undesired clicks and pops in the audio signal. 
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"slnt" (0x736C6E74)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>4</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Number of Silent Samples</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Silent Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Number of Silent Samples</I><BR />
+  This value specifies the number of silent samples that appear in the waveform at this point in
+  the wave list chunk.
+</P>
+
+<A name="cue" />
+<H1>Cue Chunk - "cue "</H1>
+
+<P>
+  A cue chunk specifies one or more sample offsets which are often used to mark noteworthy
+  sections of audio. For example, the beginning and end of a verse in a song may have cue points
+  to make them easier to find. The cue chunk is optional and if included, a single cue chunk
+  should specify all cue points for the "WAVE" chunk. No more than one cue chunk is allowed in
+  a "WAVE" chunk. 
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"cue " (0x63756520)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on Num Cue Points</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Num Cue Points</TD>
+          <TD>number of cue points in list</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD colSpan="3">
+            <CENTER>List of Cue Points</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+  
+    <SMALL>Cue Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Chunk ID and Data Size</I><BR />
+  The chunk ID for a cue chunk is always "cue " (0x666D7420). Note that the chunk ID string ends
+  with the space character (0x20). The chunk data size is equal to the size of the Num Cue
+  Points value (4) plus the number of following cue points multiplied by the size of each cue
+  point's data (24). The following formula can be used to calculate a Cue Chunk's data size:
+</P>
+
+<P>
+  <CODE>ChunkDataSize = 4 + (NumCuePoints * 24)</CODE>
+</P>
+
+<P>
+  <I>Num Cue Points</I><BR />
+  This value specifies the number of following cue points in this chunk. 
+</P>
+
+<P>
+  <I>List of Cue Points</I><BR />
+  A list of cue points is simply a set of consecutive cue point descriptions that follow
+  the format described below.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>ID</TD>
+          <TD>unique identification value</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Position</TD>
+          <TD>play order position</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Data Chunk ID</TD>
+          <TD>RIFF ID of corresponding data chunk</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD>4</TD>
+          <TD>Chunk Start</TD>
+          <TD>Byte Offset of Data Chunk *</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD>4</TD>
+          <TD>Block Start</TD>
+          <TD>Byte Offset to sample of First Channel</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x14</TD>
+          <TD>4</TD>
+          <TD>Sample Offset</TD>
+          <TD>Byte Offset to sample byte of First Channel</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    <SMALL>Cue Point Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>ID</I><BR />
+  Each cue point has a unique identification value used to associate cue points with information
+  in other chunks. For example, a Label chunk contains text that describes a point in the wave
+  file by referencing the associated cue point.
+</P>
+
+<P>
+  <I>Position</I><BR />
+  The position specifies the sample offset associated with the cue point in terms of the sample's
+  position in the final stream of samples generated by the play list. Said in another way, if
+  a play list chunk is specified, the position value is equal to the sample number at which this
+  cue point will occur during playback of the entire play list as defined by the play list's
+  order. If no play list chunk is specified this value should be 0.
+</P>
+
+<P>
+  <I>Data Chunk ID</I><BR />
+  This value specifies the four byte ID used by the chunk containing the sample that corresponds
+  to this cue point. A Wave file with no play list is always "data". A Wave file with a play list
+  containing both sample data and silence may be either "data" or "slnt".
+</P>
+
+<P>
+  <I>Chunk Start</I><BR />
+  The Chunk Start value specifies the byte offset into the Wave List Chunk of the chunk
+  containing the sample that corresponds to this cue point. This is the same chunk described by
+  the Data Chunk ID value. If no Wave List Chunk exists in the Wave file, this value is 0. If
+  a Wave List Chunk exists, this is the offset into the "wavl" chunk. The first chunk in
+  the Wave List Chunk would be specified with a value of 0.
+</P>
+
+<P>
+  <I>Block Start</I><BR />
+  The Block Start value specifies the byte offset into the "data" or "slnt" Chunk to the start
+  of the block containing the sample. The start of a block is defined as the first byte in
+  uncompressed PCM wave data or the last byte in compressed wave data where decompression can
+  begin to find the value of the corresponding sample value.
+</P>
+
+<P>
+  <I>Sample Offset</I><BR />
+  The Sample Offset specifies an offset into the block (specified by Block Start) for
+  the sample that corresponds to the cue point. In uncompressed PCM waveform data, this is
+  simply the byte offset into the "data" chunk. In compressed waveform data, this value is
+  equal to the number of samples (may or may not be bytes) from the Block Start to the sample
+  that corresponds to the cue point.
+</P>
+
+<A name="plst" />
+<H1>Playlist Chunk - "plst"</H1>
+
+<P>
+  The playlist chunk specifies the play order of a series of cue points. The cue points are
+  defined in the cue chunk, somewhere else in the file. A playlist consists of an array of
+  segments, each containing information about what sample the segment should start playing from,
+  how long the segment is (in samples) and how many times to repeat the segment before moving on
+  to the next segment in the play order. 
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"plst" (0x736C6E74)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>num segments * 12</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Number of Segments</TD>
+          <TD>1 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0a</TD>
+          <TD colSpan="3">
+            <CENTER>List of Segments</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Playlist Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Number of Segments</I><BR />
+  This value specifies the number of following segments in the playlist chunk.
+</P>
+
+<P>
+  <I>List of Segments</I><BR />
+  A list of segments is simply a set of consecutive segment descriptions that follow the format
+  described below. The segments do not have to be in any particular order because each segments
+  associated cue point position is used to determine the play order.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Cue Point ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Length (in samples)</TD>
+          <TD>1 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Number of Repeats</TD>
+          <TD>1 - 0xFFFFFFFF</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Segment Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Cue Point ID</I><BR />
+  The Cue Point ID specifies the starting sample for this segment by providing the value of
+  a Cue Point defined in the Cue Point List. The ID that associates this segment with
+  a Cue Point must be unique to all other segment Cue Point IDs.
+</P>
+
+<P>
+  <I>Length</I><BR />
+  The Segment Length specifies the number of samples to play/loop from the starting sample
+  defined by the associated Cue Point.
+</P>
+
+<P>
+  <I>Number of Repeats</I><BR />
+  The number of repeats determines how many times this segment should be looped before
+  playback should continue onto the next segment.
+</P>
+
+<A name="list" />
+<H1>Associated Data List Chunk - "list"</H1>
+
+<P>
+  An associated data list chunk is used to define text labels and names which are associated
+  with the cue points to provide each text label or name a position.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"list" (0x6C696E74)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on contained text</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Type ID</TD>
+          <TD>"adtl" (0x6164746C)</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD colSpan="3">
+            <CENTER>List of Text Labels and Names</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Associated Data List Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Type ID</I><BR />
+  The type ID is used to identify the type of associated data list and is always "adtl".
+</P>
+
+<P>
+  <I>List of Text Labels and Names</I><BR />
+  The list of text labels and names is a list of assorted chunks that define text in
+  different ways. The three main chunk types that are used in WAVE files are the Label Chunk,
+  Note Chunk and Labeled Text Chunk.
+</P>
+
+<A name="labl" />
+<H1>Label Chunk - "labl"</H1>
+
+<P>
+  The label chunk is always contained inside of an associated data list chunk. It is used to
+  associate a text label with a Cue Point. This information is often displayed next to markers or
+  flags in digital audio editors.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"labl" (0x6C61626C)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on contained text</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Cue Point ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD colSpan="3">
+            <CENTER>Text</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Label Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Cue Point ID</I><BR />
+  The Cue Point ID specifies the sample point that corresponds to this text label by providing
+  the ID of a Cue Point defined in the Cue Point List. The ID that associates this label with
+  a Cue Point must be unique to all other label Cue Point IDs.
+</P>
+
+<P>
+  <I>Text</I><BR />
+  The text is a null terminated string of characters. If the number of characters in the string
+  is not even, padding must be appended to the string. The appended padding is not considered
+  in the label chunk's chunk size field.
+</P>
+
+<A name="note" />
+<H1>Note Chunk - "note"</H1>
+
+<P>
+  The label chunk is always contained inside of an associated data list chunk. It is used
+  to associate a text comment with a Cue Point. This information is stored in an identical fashion
+  to the labels in the label chunk.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD>
+            <B>Offset</B>
+          </TD>
+          <TD>
+            <B>Size</B>
+          </TD>
+          <TD>
+            <B>Description</B>
+          </TD>
+          <TD>
+            <B>Value</B>
+          </TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"note" (0x6E6F7465)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on contained text</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Cue Point ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0C</TD>
+          <TD colSpan="3">
+            <CENTER>Text</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    <SMALL>Label Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Cue Point ID</I><BR />
+  The Cue Point ID specifies the sample point that corresponds to this text comment by providing
+  the ID of a Cue Point defined in the Cue Point List. The ID that associates this label with
+  a Cue Point must be unique to all other note chunk Cue Point IDs.
+</P>
+
+<P>
+  <I>Text</I><BR />
+  The text is a null terminated string of characters. If the number of characters in the string
+  is not even, padding must be appended to the string. The appended padding is not considered
+  in the note chunk's chunk size field.
+</P>
+
+<A name="ltxt" />
+<H1>Labeled Text Chunk - "ltxt"</H1>
+
+<P>
+  The labeled text chunk is always contained inside of an associated data list chunk. It is used
+  to associate a text label with a region or section of waveform data. This information is often
+  displayed in marked regions of a waveform in digital audio editors.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"ltxt" (0x6C747874)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>depends on contained text</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Cue Point ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0c</TD>
+          <TD>4</TD>
+          <TD>Sample Length</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD>4</TD>
+          <TD>Purpose ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x12</TD>
+          <TD>2</TD>
+          <TD>Country</TD>
+          <TD>0 - 0xFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x14</TD>
+          <TD>2</TD>
+          <TD>Language</TD>
+          <TD>0 - 0xFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x16</TD>
+          <TD>2</TD>
+          <TD>Dialect</TD>
+          <TD>0 - 0xFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x18</TD>
+          <TD>2</TD>
+          <TD>Code Page</TD>
+          <TD>0 - 0xFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x1A</TD>
+          <TD colSpan=3>
+            <CENTER>Text</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Label Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Cue Point ID</I><BR />
+  The Cue Point ID specifies the starting sample point that corresponds to this text label by
+  providing the ID of a Cue Point defined in the Cue Point List. The ID that associates this
+  label with a Cue Point must be unique to all other note chunk Cue Point IDs.
+</P>
+
+<P>
+  <I>Sample Length</I><BR />
+  The sample length defines how many samples from the cue point the region or section spans.
+</P>
+
+<P>
+  <I>Purpose ID</I><BR />
+  The purpose field specifies what the text is used for. For example a value of "scrp" means
+  script text, and "capt" means close-caption. There are several more purpose IDs, but they are
+  meant to be used with other types of RIFF files (not usually found in WAVE files).
+</P>
+
+<P>
+  <I>Country, Language, Dialect and Code Page</I><BR />
+  These fields are used to specify information about the location and language used by the text
+  and are typically used for queries to obtain information from the operating system.
+</P>
+
+<P>
+  <I>Text</I><BR />
+  The text is a null terminated string of characters. If the number of characters in the string
+  is not even, padding must be appended to the string. The appended padding is not considered
+  in the note chunk's chunk size field.
+</P>
+
+<A name="smpl" />
+<H1>Sampler Chunk - "smpl"</H1>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"smpl" (0x736D706C)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>36 + (Num Sample Loops * 24) + Sampler Data</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Manufacturer</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0C</TD>
+          <TD>4</TD>
+          <TD>Product</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD>4</TD>
+          <TD>Sample Period</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x14</TD>
+          <TD>4</TD>
+          <TD>MIDI Unity Note</TD>
+          <TD>0 - 127</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x18</TD>
+          <TD>4</TD>
+          <TD>MIDI Pitch Fraction</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x1C</TD>
+          <TD>4</TD>
+          <TD>SMPTE Format</TD>
+          <TD>0, 24, 25, 29, 30</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x20</TD>
+          <TD>4</TD>
+          <TD>SMPTE Offset</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x24</TD>
+          <TD>4</TD>
+          <TD>Num Sample Loops</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x28</TD>
+          <TD>4</TD>
+          <TD>Sampler Data</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x2C</TD>
+          <TD colSpan="3">
+            <CENTER>List of Sample Loops</CENTER>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+  
+    <SMALL>Sampler Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Manufacturer</I><BR />
+  The manufacturer field specifies the MIDI Manufacturer's Association (MMA) Manufacturer code
+  for the sampler intended to receive this file's waveform. Each manufacturer of a MIDI product
+  is assigned a unique ID which identifies the company. If no particular manufacturer is to be
+  specified, a value of 0 should be used.
+</P>
+
+<P>
+  The value is stored with some extra information to enable translation to the value used in
+  a MIDI System Exclusive transmission to the sampler. The high byte indicates the number of
+  low order bytes (1 or 3) that are valid for the manufacturer code. For example, the value for
+  Digidesign will be 0x01000013 (0x13) and the value for Microsoft will be
+  0x30000041 (0x00, 0x00, 0x41). See the
+  <A href="midimanufacturers.html">MIDI Manufacturers List</A> for a list.
+</P>
+
+<P>
+  <I>Product</I><BR />
+  The product field specifies the MIDI model ID defined by the manufacturer corresponding to
+  the Manufacturer field. Contact the manufacturer of the sampler to get the model ID. If no
+  particular manufacturer's product is to be specified, a value of 0 should be used.
+</P>
+
+<P>
+  <I>Sample Period</I><BR />
+  The sample period specifies the duration of time that passes during the playback of one
+  sample in nanoseconds (normally equal to 1 / Samplers Per Second, where Samples Per Second
+  is the value found in the format chunk).
+</P>
+
+<P>
+  <I>MIDI Unity Note</I><BR />
+  The MIDI unity note value has the same meaning as the instrument chunk's MIDI Unshifted Note
+  field which specifies the musical note at which the sample will be played at it's original
+  sample rate (the sample rate specified in the format chunk).
+</P>
+
+<P>
+  <I>MIDI Pitch Fraction</I><BR />
+  The MIDI pitch fraction specifies the fraction of a semitone up from the specified MIDI unity
+  note field. A value of 0x80000000 means 1/2 semitone (50 cents) and a value of 0x00000000
+  means no fine tuning between semitones.
+</P>
+
+<P>
+  <I>SMPTE Format</I><BR />
+  The SMPTE format specifies the Society of Motion Pictures and Television E time format used
+  in the following SMPTE Offset field. If a value of 0 is set, SMPTE Offset should also be
+  set to 0.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+      <TBODY>
+        <TR bgColor="#dddddd">
+          <TD><B>Value</B></TD>
+          <TD><B>SMPTE Format</B></TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>0</TD>
+          <TD>no SMPTE offset</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>24</TD>
+          <TD>24 frames per second</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>25</TD>
+          <TD>25 frames per second</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>29</TD>
+          <TD>30 frames per second with frame dropping (30 drop)</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>30</TD>
+          <TD>30 frames per second</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>SMPTE Format Values</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>SMPTE Offset</I><BR />
+  The SMPTE Offset value specifies the time offset to be used for
+  the synchronization / calibration to the first sample in the waveform. This value uses a format
+  of 0xhhmmssff where hh is a signed value that specifies the number of hours (-23 to 23), mm is
+  an unsigned value that specifies the number of minutes (0 to 59), ss is an unsigned value that
+  specifies the number of seconds (0 to 59) and ff is an unsigned value that specifies the number
+  of frames (0 to -1).
+</P>
+
+<P>
+  <I>Sample Loops</I><BR />
+  The sample loops field specifies the number Sample Loop definitions in the following list.
+  This value may be set to 0 meaning that no sample loops follow.
+</P>
+
+<P>
+  <I>Sampler Data</I><BR />
+  The sampler data value specifies the number of bytes that will follow this chunk (including
+  the entire sample loop list). This value is greater than 0 when an application needs to save
+  additional information. This value is reflected in this chunks data size value.
+</P>
+
+<P>
+  <I>List of Sample Loops</I><BR />
+  A list of sample loops is simply a set of consecutive loop descriptions that follow the format
+  described below. The sample loops do not have to be in any particular order because each
+  sample loop associated cue point position is used to determine the play order. The sampler
+  chunk is optional.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Cue Point ID</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Type</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>4</TD>
+          <TD>Start</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0C</TD>
+          <TD>4</TD>
+          <TD>End</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x10</TD>
+          <TD>4</TD>
+          <TD>Fraction</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x14</TD>
+          <TD>4</TD>
+          <TD>Play Count</TD>
+          <TD>0 - 0xFFFFFFFF</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+
+    <SMALL>Sample Loop Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Cue Point ID</I><BR />
+  The Cue Point ID specifies the unique ID that corresponds to one of the defined cue points in
+  the cue point list. Furthermore, this ID corresponds to any labels defined in the associated
+  data list chunk which allows text labels to be assigned to the various sample loops.
+</P>
+
+<P>
+  <I>Type</I><BR />
+  The type field defines how the waveform samples will be looped.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4" bgColor="#000000" border="0">
+      <TBODY>
+        <TR bgColor="#dddddd">
+          <TD><B>Value</B></TD>
+          <TD><B>Loop Type</B></TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>0</TD>
+          <TD>Loop forward (normal)</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>1</TD>
+          <TD>Alternating loop (forward/backward, also known as Ping Pong)</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>2</TD>
+          <TD>Loop backward (reverse)</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>3 - 31</TD>
+          <TD>Reserved for future standard types</TD>
+        </TR>
+        <TR bgColor="#dddddd">
+          <TD>32 - 0xFFFFFFFF</TD>
+          <TD>Sampler specific types (defined by manufacturer)</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Loop Type Values</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Start</I><BR />
+  The start value specifies the byte offset into the waveform data of the first sample to be
+  played in the loop.
+</P>
+
+<P>
+  <I>End</I><BR />
+  The end value specifies the byte offset into the waveform data of the last sample to be
+  played in the loop.
+</P>
+
+<P>
+  <I>Fraction</I><BR />
+  The fractional value specifies a fraction of a sample at which to loop. This allows a loop
+  to be fine tuned at a resolution greater than one sample. The value can range from
+  0x00000000 to 0xFFFFFFFF. A value of 0 means no fraction, a value of 0x80000000 means 1/2 of
+  a sample length. 0xFFFFFFFF is the smallest fraction of a sample that can be represented.
+</P>
+
+<P>
+  <I>Play Count</I><BR />
+  The play count value determines the number of times to play the loop. A value of 0 specifies
+  an infinite sustain loop. An infinite sustain loop will continue looping until some external
+  force interrupts playback, such as the musician releasing the key that triggered the wave's
+  playback. All other values specify an absolute number of times to loop.
+</P>
+
+<A name="inst" />
+<H1>Instrument Chunk - "inst"</H1>
+
+<P>
+  The instrument chunk is used to describe how the waveform should be played as an instrument
+  sound. This information is useful for communicating musical information between sample-based
+  music programs, such as trackers or software wavetables. This chunk is optional and no more
+  than 1 may appear in a WAVE file.
+</P>
+
+<P>
+  <CENTER>
+    <TABLE cellSpacing="1" cellPadding="4">
+      <TBODY>
+        <TR bgColor="#999999">
+          <TD><B>Offset</B></TD>
+          <TD><B>Size</B></TD>
+          <TD><B>Description</B></TD>
+          <TD><B>Value</B></TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x00</TD>
+          <TD>4</TD>
+          <TD>Chunk ID</TD>
+          <TD>"ltxt" (0x6C747874)</TD>
+        </TR>
+        <TR bgColor="#b0b0b0">
+          <TD>0x04</TD>
+          <TD>4</TD>
+          <TD>Chunk Data Size</TD>
+          <TD>7</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x08</TD>
+          <TD>1</TD>
+          <TD>Unshifted Note</TD>
+          <TD>0 - 127</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x09</TD>
+          <TD>1</TD>
+          <TD>Fine Tune (dB)</TD>
+          <TD>-50 - +50</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0A</TD>
+          <TD>1</TD>
+          <TD>Gain</TD>
+          <TD>-64 - +64</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0B</TD>
+          <TD>1</TD>
+          <TD>Low Note</TD>
+          <TD>0 - 127</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0C</TD>
+          <TD>1</TD>
+          <TD>High Note</TD>
+          <TD>0 - 127</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0D</TD>
+          <TD>1</TD>
+          <TD>Low Velocity</TD>
+          <TD>1 - 127</TD>
+        </TR>
+        <TR bgColor="#c0c0c0">
+          <TD>0x0E</TD>
+          <TD>1</TD>
+          <TD>High Velocity</TD>
+          <TD>1 - 127</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    
+    <SMALL>Instrument Chunk Format</SMALL>
+  </CENTER>
+</P>
+
+<P>
+  <I>Unshifted Note</I><BR />
+  The unshifted note field has the same meaning as the sampler chunk's MIDI Unity Note which
+  specifies the musical note at which the sample will be played at it's original sample rate
+  (the sample rate specified in the format chunk).
+</P>
+
+<P>
+  <I>Fine Tune</I><BR />
+  The fine tune value specifies how much the sample's pitch should be altered when the sound
+  is played back in cents (1/100 of a semitone). A negative value means that the pitch should
+  be played lower and a positive value means that it should be played at a higher pitch.
+</P>
+
+<P>
+  <I>Gain</I><BR />
+  The gain value specifies the number of decibels to adjust the output when it is played.
+  A value of 0dB means no change, 6dB means double the amplitude of each sample and -6dB means
+  to halve the amplitude of each sample. Every additional +/-6dB will double or halve
+  the amplitude again.
+</P>
+
+<P>
+  <I>Low Note and High Note</I><BR />
+  The note fields specify the MIDI note range for which the waveform should be played when
+  receiving MIDI note events (from software or triggered by a MIDI controller). This range does
+  not need to include the Unshifted Note value. 
+</P>
+
+<P>
+  <I>Low Velocity and High Velocity</I><BR />
+  The velocity fields specify the range of MIDI velocities that should cause the waveform to
+  be played. 1 being the lightest amount and 127 being the hardest.
+</P>
+
+<A name="formatvariations" />
+<H1>Format Variations</H1>
+
+<P>
+  The down side to the Wave file format's popularity is that out of the hundreds of programs that
+  support it, many abuse or misuse it due to bad programming and/or poor documentation. Once some
+  of these "naughty" programs get fairly popular and churn out millions of incorrect Wave files,
+  the rest of the software industry is forced to deal with it and write code that can read
+  the incorrect files. New code should never write these errors, but possibly read them. Below are
+  a few exceptions that have been made to the strict/original Wave file format.
+</P>
+
+<UL>
+  <LI>
+    Incorrect Block Alignment value - this can be dealt with by calculating the Block Alignment
+    with the formula mentioned above.
+  </LI>
+  <LI>
+    Incorrect Average Samples Per Second value - this can be dealt with by calculating
+    the Average Samples Per Second with the formula mentioned above.
+  </LI>
+  <LI>
+    Missing word alignment padding - this can be difficult to deal with, but can be done by
+    giving the user a warning when unrecognized chunk ID's are encountered where a one byte
+    read offset produces a recognized chunk ID. This is not a concrete solution, but will
+    usually work even if the program doesn't have a comprehensive list of legal IDs.
+  </LI>
+</UL>
+
+</body>
+
+</html>

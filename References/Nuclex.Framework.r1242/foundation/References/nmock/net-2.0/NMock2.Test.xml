@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NMock2.Test</name>
+    </assembly>
+    <members>
+        <member name="T:NMock2.Internal.StubMockStyleDictionaryTest">
+            <summary>
+            Tests the <see cref="T:NMock2.Internal.StubMockStyleDictionary"/> class.
+            </summary>
+        </member>
+        <member name="F:NMock2.Internal.StubMockStyleDictionaryTest.mockery">
+            <summary>
+            The mock factory.
+            </summary>
+        </member>
+        <member name="F:NMock2.Internal.StubMockStyleDictionaryTest.testee">
+            <summary>
+            The object under test.
+            </summary>
+        </member>
+        <member name="M:NMock2.Internal.StubMockStyleDictionaryTest.SetUp">
+            <summary>
+            Creates mockery and <see cref="F:NMock2.Internal.StubMockStyleDictionaryTest.testee"/>.
+            </summary>
+        </member>
+        <member name="M:NMock2.Internal.StubMockStyleDictionaryTest.MockStyleForStub">
+            <summary>
+            If a mapping is defined for a mock then it can be requested either for the mock or for a type of that mock.
+            </summary>
+        </member>
+        <member name="M:NMock2.Internal.StubMockStyleDictionaryTest.MockStyleForStubAndType">
+            <summary>
+            Mappings can be set and requested for a type on a mock.
+            </summary>
+        </member>
+        <member name="M:NMock2.Internal.StubMockStyleDictionaryTest.RequestNonExistingItem">
+            <summary>
+            IF there is no entry for the requested mock and type then null is returned.
+            </summary>
+        </member>
+        <member name="M:NMock2.Internal.StubMockStyleDictionaryTest.Override">
+            <summary>
+            A already defined mapping can be overridden.
+            </summary>
+        </member>
+        <member name="T:NMock2.IsTest">
+            <summary>
+            Tests the <see cref="T:NMock2.Is"/> class.
+            </summary>
+        </member>
+        <member name="M:NMock2.IsTest.IsTypeOfGeneric">
+            <summary>
+            Is.TypeOf{T} returns a type matcher on the specified type."/>
+            </summary>
+        </member>
+        <member name="M:NMock2.Test.MockExpectation.Matches(NMock2.Monitoring.Invocation)">
+            <summary>
+            Checks whether stored expectations matches the specified invocation.
+            </summary>
+            <param name="invocation">The invocation to check.</param>
+            <returns>Returns whether one of the stored expectations has met the specified invocation.</returns>
+        </member>
+        <member name="T:NMock2.Test.Matchers.GenericMatcherTest">
+            <summary>
+            Tests the implementation of <see cref="T:NMock2.Matchers.GenericMatcher`1"/>
+            </summary>
+        </member>
+        <member name="F:NMock2.Test.Matchers.GenericMatcherTest.testee">
+            <summary>
+            The object under test
+            </summary>
+        </member>
+        <member name="M:NMock2.Test.Matchers.GenericMatcherTest.SetUp">
+            <summary>
+            Sets up the tests.
+            Creates the testee.
+            </summary>
+        </member>
+        <member name="M:NMock2.Test.Matchers.GenericMatcherTest.WrongTypeDoesNotMatch">
+            <summary>
+            A wrong type does not match the expectation.
+            </summary>
+        </member>
+        <member name="M:NMock2.Test.Matchers.GenericMatcherTest.WrongValueDoesNotMatch">
+            <summary>
+            A wrong value does not match the expectation.
+            </summary>
+        </member>
+        <member name="M:NMock2.Test.Matchers.GenericMatcherTest.CorrectValueMatch">
+            <summary>
+            A correct value matches the expectation.
+            </summary>
+        </member>
+    </members>
+</doc>

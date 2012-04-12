@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="Bundle"
+>
+
+  <include buildfile="msbuild.include" />
+  <include buildfile="nunit.include" />
+  <include buildfile="partcover.include" />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Erases all binaries and intermediate files from the projects in the bundle
+    
+    Inputs:
+      bundle.platform   Platform of which to clean the build outputs
+  -->
+  <target name="bundle-clean">
+
+    <foreach
+      item="Line"
+      in="${bundle.platform}.platform.csv"
+      delim=","
+      property="temp.directory,temp.platform,temp.msbuildfile,temp.binary"
+    >
+
+      <if test="${not string::starts-with(temp.directory, '#')}">
+
+        <!-- Delete the project's own bin and obj folders -->
+        <delete dir="${temp.directory}/bin" />
+        <delete dir="${temp.directory}/obj" />
+
+        <!-- XNA projects can have nested content projects. Clean these, too -->
+        <foreach item="Folder" in="${temp.directory}" property="temp.subdirectory">
+
+          <property name="temp.subdirectory" value="${path::get-file-name(temp.subdirectory)}" />
+          <delete dir="${temp.directory}/${temp.subdirectory}/bin" />
+          <delete dir="${temp.directory}/${temp.subdirectory}/obj" />
+
+        </foreach>
+
+      </if>
+
+    </foreach>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Compiles all the projects in the bundle
+    
+    Inputs:
+      bundle.platform       Platform to compile the bundle for (decides which .platform.cv to use)
+      bundle.configuration  Build configuration ("Debug" or "Release")
+      bundle.unittest       Whether to compile in unit tests ("true" or "false")
+  -->
+  <target name="bundle-compile">
+
+    <foreach
+      item="Line" in="${bundle.platform}.platform.csv" delim=","
+      property="temp.directory,temp.platform,temp.msbuildfile,temp.output"
+    >
+
+      <if test="${not string::starts-with(temp.directory, '#')}">
+
+        <property
+          name="msbuild.project"
+          value="${path::combine(temp.directory, temp.msbuildfile)}"
+        />
+        <property name="msbuild.configuration" value="${bundle.configuration}" />
+        <property name="msbuild.platform" value="${temp.platform}" />
+        <property name="msbuild.unittest" value="${bundle.unittest}" />
+
+        <call target="msbuild" />
+
+      </if>
+
+    </foreach>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs the unit tests on all the projects in the bundle
+    
+    Inputs:
+      bundle.platform       Platform whose unit tests to run (decides which .platform.cv to use)
+      bundle.configuration  Build configuration ("Debug" or "Release")
+  -->
+  <target name="bundle-test">
+
+    <foreach
+      item="Line" in="${bundle.platform}.platform.csv" delim=","
+      property="temp.directory,temp.platform,temp.msbuildfile,temp.output"
+    >
+
+      <if test="${not string::starts-with(temp.directory, '#')}">
+
+        <property
+          name="temp.expandedoutput"
+          value="${string::replace(temp.output, '%build.configuration%', build.configuration)}"
+        />
+        <property
+          name="temp.outputdirectory"
+          value="${temp.directory}/${temp.expandedoutput}"
+        />
+
+        <property name="temp" value="${path::get-file-name(temp.directory)}" />
+        <foreach item="File" property="nunit.testassembly">
+          <in>
+            <items>
+              <include name="${temp.outputdirectory}/${temp}.exe" />
+              <include name="${temp.outputdirectory}/${temp}.dll" />
+            </items>
+          </in>
+          <do>
+            <!-- <if test="${file::is-assembly(nunit.testassembly)}"> -->
+            <call target="nunit" />
+            <!-- </if> -->
+          </do>
+        </foreach>
+
+      </if>
+
+    </foreach>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs the unit tests on all the projects in the bundle and measures coverage
+    
+    Inputs:
+      bundle.platform       Platform whose unit tests to run (decides which .platform.cv to use)
+      bundle.configuration  Build configuration ("Debug" or "Release")
+      bundle.package        Package directory the generated reports will be written to
+  -->
+  <target name="bundle-cover">
+  
+    <mkdir dir="${bundle.package}" if="${not directory::exists(bundle.package)}" />
+
+    <property name="partcover.assemblies" value="" />
+    <property name="partcover.namespaces" value="" />
+    <property name="partcover.targetdir" value="${bundle.package}" />
+    
+    <!-- TeamCity's test runner somehow interferes with PartCover -->
+    <!-- <property name="partcover.noteamcity" value="true" /> -->
+
+    <foreach
+      item="Line" in="${bundle.platform}.platform.csv" delim=","
+      property="temp.directory,temp.platform,temp.msbuildfile,temp.output"
+    >
+
+      <if test="${not string::starts-with(temp.directory, '#')}">
+
+        <property
+          name="temp.expandedoutput"
+          value="${string::replace(temp.output, '%build.configuration%', build.configuration)}"
+        />n
+        <property
+          name="temp.outputdirectory"
+          value="${temp.directory}/${temp.expandedoutput}"
+        />
+        
+        <property name="temp" value="${path::get-file-name(temp.directory)}" />
+        <foreach item="File" property="temp.assembly">
+          <in>
+            <items>
+              <include name="${temp.outputdirectory}/${temp}.exe" />
+              <include name="${temp.outputdirectory}/${temp}.dll" />
+            </items>
+          </in>
+          <do>
+            <!-- Convention: Project name is root namespace -->
+            <property
+              name="partcover.namespaces"
+              value="${partcover.namespaces} --include [${temp.directory}]*"
+            />
+            <property
+              name="partcover.assemblies"
+              value="${partcover.assemblies} &quot;${temp.assembly}&quot;"
+            />
+          </do>
+        </foreach>
+
+      </if>
+
+    </foreach>
+    
+    <call target="partcover" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Packages the build output files of all projects
+    
+    Inputs:
+      bundle.platform       Platform to package (decides which .platform.cv to use)
+      bundle.configuration  Build configuration ("Debug" or "Release")
+      bundle.package        Name of the folder that will receive the output files
+  -->
+  <target name="bundle-package">
+  
+    <fail
+      if="${directory::exists(bundle.package) or file::exists(bundle.package)}"
+      message="Package target directory '${bundle.package}' already exists"
+    />
+    
+    <mkdir dir="${bundle.package}" />
+
+    <foreach
+      item="Line" in="${bundle.platform}.platform.csv" delim=","
+      property="temp.directory,temp.platform,temp.msbuildfile,temp.output"
+    >
+
+      <if test="${not string::starts-with(temp.directory, '#')}">
+
+        <property
+          name="temp.expandedoutput"
+          value="${string::replace(temp.output, '%build.configuration%', build.configuration)}"
+        />
+        <property
+          name="temp.outputdirectory"
+          value="${temp.directory}/${temp.expandedoutput}"
+        />
+      
+        <echo message="Packaging ${temp.outputdirectory}" />
+        
+        <copy todir="${bundle.package}">
+          <fileset basedir="${temp.outputdirectory}">
+            <include name="**/*" />
+            <exclude name="*.pdb" /><!-- Debugging without sources is not possible -->
+            <exclude name="*.idb" /><!-- This is only useful if we modify sources -->
+            <exclude name="*.exp" /><!-- Nobody uses these anymore -->
+          </fileset>
+        </copy>
+      
+      </if>
+      
+    </foreach>
+  
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>

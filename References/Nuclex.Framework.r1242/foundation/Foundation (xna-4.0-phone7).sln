@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010 Express for Windows Phone
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Support (xna-4.0-phone7)", "Nuclex.Support\Nuclex.Support (xna-4.0-phone7).csproj", "{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Math (xna-4.0-phone7)", "Nuclex.Math\Nuclex.Math (xna-4.0-phone7).csproj", "{C5567765-5FED-4BBC-8B68-0078B6D89EE4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Windows Phone = Debug|Windows Phone
+		Release|Windows Phone = Release|Windows Phone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
+		{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
+		{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}.Release|Windows Phone.ActiveCfg = Release|Windows Phone
+		{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}.Release|Windows Phone.Build.0 = Release|Windows Phone
+		{C5567765-5FED-4BBC-8B68-0078B6D89EE4}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
+		{C5567765-5FED-4BBC-8B68-0078B6D89EE4}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
+		{C5567765-5FED-4BBC-8B68-0078B6D89EE4}.Release|Windows Phone.ActiveCfg = Release|Windows Phone
+		{C5567765-5FED-4BBC-8B68-0078B6D89EE4}.Release|Windows Phone.Build.0 = Release|Windows Phone
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

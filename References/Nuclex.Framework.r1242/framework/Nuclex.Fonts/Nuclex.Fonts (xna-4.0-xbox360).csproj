@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{2DCF0891-BDC2-442E-B65A-D0E16B5E3D8F}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Fonts</RootNamespace>
+    <AssemblyName>Nuclex.Fonts</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>8ea32ceb-c173-42a5-98c8-98b01d4136bc</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Debug\Nuclex.Fonts.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Release\Nuclex.Fonts.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\TextBatchResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TextBatchResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\TextBatchResources.Test.cs">
+      <DependentUpon>TextBatchResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Test.cs">
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\VectorFontCharacterReader.cs" />
+    <Compile Include="Source\Content\VectorFontCharacterReader.Test.cs">
+      <DependentUpon>VectorFontCharacterReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\VectorFontReader.cs" />
+    <Compile Include="Source\Content\VectorFontReader.Test.cs">
+      <DependentUpon>VectorFontReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\ExtrudedText.cs" />
+    <Compile Include="Source\FilledText.cs" />
+    <Compile Include="Source\OutlinedText.cs" />
+    <Compile Include="Source\Text.cs" />
+    <Compile Include="Source\Text.Test.cs">
+      <DependentUpon>Text.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\TextBatch.cs" />
+    <Compile Include="Source\TextBatch.Test.cs">
+      <DependentUpon>TextBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\TextDrawContext.cs" />
+    <Compile Include="Source\TextDrawContext.Test.cs">
+      <DependentUpon>TextDrawContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\VectorFont.cs" />
+    <Compile Include="Source\VectorFont.Test.cs">
+      <DependentUpon>VectorFont.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\VectorFontCharacter.cs" />
+    <Compile Include="Source\VectorFontCharacter.Test.cs">
+      <DependentUpon>VectorFontCharacter.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Changelog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\TextBatchResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TextBatchResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UnitTestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitTestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Graphics\Nuclex.Graphics %28xna-4.0-xbox360%29.csproj">
+      <Project>{3F303920-221F-467E-BAFC-F38E57AA8F7B}</Project>
+      <Name>Nuclex.Graphics %28xna-4.0-xbox360%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="EmbeddedContent\Nuclex.Fonts.EmbeddedContent.contentproj">
+      <Project>{3438C492-2CAC-4091-85A8-6079B4AAB69A}</Project>
+      <Name>Nuclex.Fonts.EmbeddedContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

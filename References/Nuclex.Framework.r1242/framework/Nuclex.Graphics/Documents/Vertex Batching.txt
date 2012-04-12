@@ -1,0 +1,44 @@
+﻿---------------------------------------------------------------------------------------------------
+DirectX Batching Best Practices
+---------------------------------------------------------------------------------------------------
+
+A Microsoft DirectX best practices article recommends to approach locking like this:
+
+  Performance Optimizations: Using Dynamic Vertex and Index Buffers (MSDN)
+  http://msdn2.microsoft.com/en-us/library/bb147263.aspx#Using_Dynamic_Vertex_and_Index_Buffers
+
+Create a larger vertex buffer than required and fill it incrementally. For example, if you
+are batching your vertices into 8K chunks, you can create a vertex buffer with space for
+32K vertices, fill in the first 8K (D3DLOCK_NOOVERWRITE), call DrawPrimitive(), then fill
+in the next 8K (D3DLOCK_NOOVERWRITE again), call DrawPrimitive() and so on.
+
+When you reach the end of the Vertex Buffer, you lock with D3DLOCK_DISCARD and start at
+the beginning again.
+
+---------------------------------------------------------------------------------------------------
+Vertex Buffer Renaming
+---------------------------------------------------------------------------------------------------
+
+A Microsoft DirectX driver implementation article reveals some kind of double buffering
+technique for vertex buffers and index buffers being implemented in DirectX 8.0 and later.
+http://msdn.microsoft.com/en-us/library/ms794499.aspx
+
+A vertex/index buffer can allocate two sections of video memory and when you lock using
+D3DLOCK_DISCARD, if the buffer's video memory area is scheduled for a drawing command that's
+still hanging in the air (remember DrawPrimitive() just schedules rendering, it doesn't wait
+for the graphics card), it can silently switch between them.
+
+---------------------------------------------------------------------------------------------------
+XBox 360 UMA
+---------------------------------------------------------------------------------------------------
+
+Various sources seem to suggest that the XBox can more easily cope with the DrawPrimitiveUP()
+methods than with a dynamic vertex/index buffer. This apparently has to do with the UMA which
+allows the memory holding the vertices can be directly used for rendering.
+
+The XBox 360 probably doesn't do vertex buffer renaming (since the D3DLOCK_DISCARD flag is
+not supported), so it needs to copy all vertices into an internal array if SetData() is used.
+
+Conclusion: Use dynamic vertex buffers on PCs and DrawUserPrimitive() on the XBox 360 if
+you're working with dynamic vertices.
+

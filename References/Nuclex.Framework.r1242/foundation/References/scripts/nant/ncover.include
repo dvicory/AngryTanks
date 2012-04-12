@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="NCover"
+>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+      Locates NCover and initializes the ncover.path property
+  -->
+  <target
+    name="locate-ncover"
+    unless="${property::exists('ncover.path')}"
+  >
+
+    <!--
+      Try to locate NCover in its default path on x86 systems
+    -->
+    <if test="${not property::exists('ncover.path')}">
+      <if test="${environment::variable-exists('ProgramFiles')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramFiles')}"
+          property="temp"
+        >
+          <property name="temp.name" value="${string::to-lower(path::get-file-name(temp)}" />
+
+          <if test="${string::starts-with(temp.name, 'ncover')}">
+            <if test="${file::exists(path::combine(temp, 'NCover.Console.exe')}">
+              <property name="ncover.path" value="temp" />
+            </if>
+          </if>
+        </foreach>
+      </if>
+    </if>
+
+    <!--
+      Try to locate NCover in its default path on x64 systems
+    -->
+    <if test="${not property::exists('ncover.path')}">
+      <if test="${environment::variable-exists('ProgramFiles(x86)')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramFiles(x86)')}"
+          property="temp"
+        >
+          <property name="temp.name" value="${string::to-lower(path::get-file-name(temp)}" />
+
+          <if test="${string::starts-with(temp.name, 'ncover')}">
+            <if test="${file::exists(path::combine(temp, 'NCover.Console.exe')}">
+              <property name="ncover.path" value="temp" />
+            </if>
+          </if>
+        </foreach>
+      </if>
+    </if>
+    
+    <!--
+      Display what we've found out
+    -->
+    <if test="${property::exists('ncover.path')}">
+      <echo message="NCover located in ${ncover.path}" />
+    </if>
+    <if test="${not property::exists('ncover.path')}">
+      <echo message="NCover not found. Use -D:ncover.path=... to set path" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-ncover" depends="locate-ncover">
+
+    <if test="${not property::exists('ncover.path')}">
+      <fail message="NCover is required for this build" />
+    </if>
+    <property name="temp" value="${path::combine(ncover.path, 'NCover.Console.exe')}" />
+    <if test="${not file::exists(temp)}">
+      <fail message="NCover is required for this build" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>
+

@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{636816B9-8DD0-47FE-922E-B62B5FE241D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Audio</RootNamespace>
+    <AssemblyName>Nuclex.Audio</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\net-4.0\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNITTEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\net-4.0\Debug\Nuclex.Audio.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\net-4.0\Release\</OutputPath>
+    <DefineConstants>TRACE;UNITTEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\net-4.0\Release\Nuclex.Audio.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\nunit\net-4.0\framework\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Formats\Flac\Constants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\EntropyCodingMethod.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\FlacStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\Frame.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\FrameMarshalHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\StreamDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\Subframe.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\UnsafeNativeMethods.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\UnsafeNativeMethods.Flac.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>UnsafeNativeMethods.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Formats\Flac\UnsafeNativeMethods.Frame.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>UnsafeNativeMethods.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Formats\Wave\ChannelMaskFlags.cs" />
+    <Compile Include="Source\Formats\Wave\WaveFormat.cs" />
+    <Compile Include="Source\Formats\Wave\WaveFormat.Test.cs">
+      <DependentUpon>WaveFormat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Formats\Wave\WaveFormatEx.cs" />
+    <Compile Include="Source\Formats\Wave\WaveFormatEx.Test.cs">
+      <DependentUpon>WaveFormatEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Formats\Wave\WaveFormatExtensible.cs" />
+    <Compile Include="Source\Formats\Wave\WaveReader.cs" />
+    <Compile Include="Source\Formats\Wave\WaveWriter.cs" />
+    <Compile Include="Source\Metadata\Cddb.cs" />
+    <Compile Include="Source\Metadata\Cddb.Test.cs">
+      <DependentUpon>Cddb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\CddbCategory.cs" />
+    <Compile Include="Source\Metadata\CddbConnection.cs" />
+    <Compile Include="Source\Metadata\CddbConnection.Test.cs">
+      <DependentUpon>CddbConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\CddbProtocol.cs" />
+    <Compile Include="Source\Metadata\CddbProtocol.Test.cs">
+      <DependentUpon>CddbProtocol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\AlreadyShookHandsException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\AlreadyShookHandsException.Test.cs">
+      <DependentUpon>AlreadyShookHandsException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\CddbException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\CddbException.Test.cs">
+      <DependentUpon>CddbException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\DatabaseEntryCorruptException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\DatabaseEntryCorruptException.Test.cs">
+      <DependentUpon>DatabaseEntryCorruptException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\EntryNotFoundException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\EntryNotFoundException.Test.cs">
+      <DependentUpon>EntryNotFoundException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\HandshakeFailedException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\HandshakeFailedException.Test.cs">
+      <DependentUpon>HandshakeFailedException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\IllegalProtocolLevelException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\IllegalProtocolLevelException.Test.cs">
+      <DependentUpon>IllegalProtocolLevelException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\NoHandshakeException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\NoHandshakeException.Test.cs">
+      <DependentUpon>NoHandshakeException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\PermissionDeniedException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\PermissionDeniedException.Test.cs">
+      <DependentUpon>PermissionDeniedException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\ProtocolLevelAlreadySetException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\ProtocolLevelAlreadySetException.Test.cs">
+      <DependentUpon>ProtocolLevelAlreadySetException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\ServerErrorException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\ServerErrorException.Test.cs">
+      <DependentUpon>ServerErrorException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\SystemLoadTooHighException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\SystemLoadTooHighException.Test.cs">
+      <DependentUpon>SystemLoadTooHighException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Exceptions\TooManyUsersException.cs" />
+    <Compile Include="Source\Metadata\Exceptions\TooManyUsersException.Test.cs">
+      <DependentUpon>TooManyUsersException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Metadata\Requests\CddbCategoryListRequest.cs" />
+    <Compile Include="Source\Metadata\Requests\CddbConnectionRequest.cs" />
+    <Compile Include="Source\Metadata\Requests\CddbProtocolLevelRequest.cs" />
+    <Compile Include="Source\Metadata\Requests\CddbQueryRequest.cs" />
+    <Compile Include="Source\Metadata\Requests\CddbQuitRequest.cs" />
+    <Compile Include="Source\Metadata\Requests\CddbReadRequest.cs" />
+    <Compile Include="Source\Metadata\XmcdDecoder.cs" />
+    <Compile Include="Source\Metadata\XmcdDecoder.Test.cs">
+      <DependentUpon>XmcdDecoder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Verification\AccurateRip.cs" />
+    <Compile Include="Source\Verification\AccurateRip.Test.cs">
+      <DependentUpon>AccurateRip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Verification\AccurateRipParser.cs" />
+    <Compile Include="Source\Verification\AccurateRipParser.Test.cs">
+      <DependentUpon>AccurateRipParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Verification\Requests\AccurateRipRetrievalRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\AccurateRip\AccurateRip.txt" />
+    <Content Include="Documents\CDDB\CDDB-Server-Protocol.txt" />
+    <Content Include="Documents\CDDB\CDDB.txt" />
+    <Content Include="Documents\CDDB\DbFormat.txt" />
+    <Content Include="Documents\CDDB\FreeDB.txt" />
+    <Content Include="Documents\Wave\WaveFormat.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documents\AccurateRip\ARCue.pl" />
+    <None Include="Documents\AccurateRip\ARFlac.pl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Networking\Nuclex.Networking %28net-4.0%29.csproj">
+      <Project>{BDB73C04-42CC-4A5E-9893-547FD9BF6335}</Project>
+      <Name>Nuclex.Networking %28net-4.0%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nuclex.Support\Nuclex.Support %28net-4.0%29.csproj">
+      <Project>{00567408-4F44-4C00-866E-B04A99E482F2}</Project>
+      <Name>Nuclex.Support %28net-4.0%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

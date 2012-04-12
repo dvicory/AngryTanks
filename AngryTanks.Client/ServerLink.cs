@@ -66,20 +66,6 @@ namespace AngryTanks.Client
         }
     }
 
-    /*
-    public class ServerLinkMessageEvent : EventArgs
-    {
-        public readonly MessageType MessageType;
-        public readonly MsgBaseData MessageData;
-
-        public ServerLinkMessageEvent(MessageType messageType, MsgBaseData messageData)
-        {
-            MessageType = messageType;
-            MessageData = messageData;
-        }
-    }
-    */
-
     public class ServerLinkMessageEvent : EventArgs
     {
         public readonly MessageType MessageType;
@@ -267,16 +253,6 @@ namespace AngryTanks.Client
                     {
                         Log.DebugFormat("Got MsgAddPlayer ({0} bytes)", msg.LengthBytes);
 
-                        /*
-                        Byte slot = msg.ReadByte();
-                        TeamType team = ProtocolHelpers.TeamByteToType(msg.ReadByte());
-                        String callsign = msg.ReadString();
-                        String tag = msg.ReadString();
-
-                        PlayerInformation player = new PlayerInformation(slot, callsign, tag, team);
-                        MsgAddPlayerData msgAddPlayerData = new MsgAddPlayerData(player);
-                        */
-
                         MsgAddPlayerPacket message = MsgAddPlayerPacket.Read(msg);
 
                         FireEvent(message);
@@ -287,13 +263,6 @@ namespace AngryTanks.Client
                 case MessageType.MsgRemovePlayer:
                     {
                         Log.DebugFormat("Got MsgRemovePlayer ({0} bytes)", msg.LengthBytes);
-
-                        /*
-                        Byte slot = msg.ReadByte();
-                        String reason = msg.ReadString();
-
-                        MsgRemovePlayerData msgRemovePlayerData = new MsgRemovePlayerData(slot, reason);
-                        */
 
                         MsgRemovePlayerPacket message = MsgRemovePlayerPacket.Read(msg);
 
@@ -327,21 +296,6 @@ namespace AngryTanks.Client
 
             }
         }
-
-        /*
-        private void FireEvent(MsgBaseData msgData)
-        {
-            EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
-
-            // prevent race condition
-            if (handler != null)
-            {
-                // notify delegates attached to event
-                ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData);
-                handler(this, e);
-            }
-        }
-        */
 
         private void FireEvent(MsgBasePacket msgData)
         {

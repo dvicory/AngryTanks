@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="Deploy"
+>
+
+  <include buildfile="subversion.include" />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Deploys a set of files to a subversion repository
+
+    Inputs:
+      deploy.url            Repository url the files will be deployed to
+      deploy.directory      Directory containing the files that will be deployed
+      deploy.username       User name as whom a working copy will be checked out
+      deploy.password       Password that will be used for logging into the repository
+      deploy.commitmessage  Message to use when committing the changes to the repository
+  -->
+  <target name="deploy-subversion">
+
+    <echo message="===================================================================" />
+    <echo message="Deploying to ${deploy.url}" />
+    <echo message="===================================================================" />
+
+    <if test="${property::exists('deploy.username')}">
+      <property name="subversion.username" value="${deploy.username}" />
+      <property name="subversion.password" value="${deploy.password}" />
+    </if>
+
+    <property name="temp.wcroot" value="${path::get-temp-file-name()}" />
+    <property name="temp.wcrootdir" value="${path::get-full-path(temp.wcroot) + '.dir'}" />
+
+    <!--
+      Check out a working copy from the repository url
+    -->
+    <property name="subversion.url" value="${deploy.url}" />
+    <property name="subversion.target" value="${temp.wcroot}.dir" />
+    <call target="subversion-checkout" />
+
+    <!--
+      Remove all directories from the working copy that don't exist in the source
+    -->
+    <foreach item="Folder" property="temp.wcdirectory">
+      <in>
+        <items>
+          <include name="${temp.wcrootdir}/**" />
+          <exclude name="${temp.wcrootdir}/**/.svn/**" />
+        </items>
+      </in>
+      <do>
+        <property
+          name="temp.wcabsolute"
+          value="${path::get-full-path(temp.wcdirectory)}"
+        />
+        <property
+          name="temp.wcrelative"
+          value="${string::replace(temp.wcabsolute, temp.wcrootdir, '')}"
+        />
+
+        <property name="temp.srcabsolute" value="${deploy.directory}${temp.wcrelative}" />
+        <if test="${not directory::exists(temp.srcabsolute)}">
+          <property name="subversion.filename" value="${temp.wcabsolute}" />
+          <call target="subversion-remove" />
+        </if>
+      </do>
+    </foreach>
+
+    <!--
+      Remove all files from the working copy that don't exist in the source
+    -->
+    <foreach item="File" property="temp.wcfile">
+      <in>
+        <items>
+          <include name="${temp.wcrootdir}/**/*" />
+          <exclude name="${temp.wcrootdir}/**/.svn/**/*" />
+        </items>
+      </in>
+      <do>
+        <property
+          name="temp.wcabsolute"
+          value="${path::get-full-path(temp.wcfile)}"
+        />
+        <property
+          name="temp.wcrelative"
+          value="${string::replace(temp.wcabsolute, temp.wcrootdir, '')}"
+        />
+
+        <property name="temp.srcabsolute" value="${deploy.directory}${temp.wcrelative}" />
+        <if test="${not file::exists(temp.srcabsolute)}">
+          <property name="subversion.filename" value="${temp.wcabsolute}" />
+          <call target="subversion-remove" />
+        </if>
+      </do>
+    </foreach>
+
+    <!--
+      Add all directories to the working copy that only exist in the source
+    -->
+    <foreach item="Folder" property="temp.srcdirectory">
+      <in>
+        <items>
+          <include name="${deploy.directory}/**" />
+        </items>
+      </in>
+      <do>
+
+        <!--
+          For your own sanity, try not to analyze the following piece of code.
+          If uses a target and global variables to go down a path directory-wise by
+          using the path::get-directory-name() method so they can be added in order.
+        -->
+        <property name="temp.base" value="${path::get-full-path(deploy.directory)}" />
+        <property name="temp.start" value="${path::get-full-path(temp.srcdirectory)}" />
+        <if test="${not (temp.start == temp.base)}">
+          <property name="temp.outer" value="${temp.start}" />
+          <call target="deploy-subversion-helper" />
+        </if>
+
+      </do>
+    </foreach>
+
+    <!--
+      Add all files to the working copy that only exist in the source
+    -->
+    <foreach item="File" property="temp.srcfile">
+      <in>
+        <items>
+          <include name="${deploy.directory}/**/*" />
+        </items>
+      </in>
+      <do>
+        <property
+          name="temp.srcabsolute"
+          value="${path::get-full-path(temp.srcfile)}"
+        />
+        <property
+          name="temp.srcrelative"
+          value="${string::replace(temp.srcabsolute, path::get-full-path(deploy.directory), '')}"
+        />
+
+        <property name="temp.wcabsolute" value="${temp.wcrootdir}${temp.srcrelative}" />
+        <property name="temp.exists" value="${file::exists(temp.wcabsolute)}" />
+
+        <!-- Always copy the file - if it exists, we want to replace it with the new version -->
+        <copy file="${temp.srcabsolute}" tofile="${temp.wcabsolute}" overwrite="true" />
+
+        <!-- If the file didn't exist before, add it to the working copy -->
+        <if test="${not temp.exists}">
+          <property name="subversion.filename" value="${temp.wcabsolute}" />
+          <call target="subversion-add" />
+        </if>
+      </do>
+    </foreach>
+
+    <!--
+      Commit the changes to the repository
+    -->
+    <property name="subversion.target" value="${temp.wcrootdir}" />
+    <property name="subversion.message" value="${deploy.commitmessage}" />
+    <call target="subversion-commit" />
+
+    <!--
+      Clean up the mess we've made
+    -->
+    <delete dir="${temp.wcrootdir}" />
+    <delete file="${temp.wcroot}" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Adds the directories of a path (possibly containing multiple unadded directories)
+    from left to right to the working copy.
+
+    Warning: risk of brain meltdown. Avoid analyzing this code.
+
+    Inputs:
+      temp.base             Base directory above which the recursion should not proceed
+      temp.start            Directory which should be added to the working copy
+      temp.outer            Needs to have the same value as temp.start
+      temp.wcroot           Directory containing the subversion working copy
+      deploy.directory      Directory which contains the files that will be deployed
+  -->
+  <target name="deploy-subversion-helper">
+    <if test="${temp.outer == temp.base}">
+      <property name="temp.base" value="${temp.prev}" />
+      <property name="temp.outer" value="${temp.start}" />
+
+      <property
+        name="temp.srcrelative"
+        value="${string::replace(temp.base, path::get-full-path(deploy.directory), '')}"
+      />
+
+      <property name="temp.wcabsolute" value="${temp.wcrootdir}${temp.srcrelative}" />
+      <if test="${not directory::exists(temp.wcabsolute)}">
+        <property name="subversion.directory" value="${temp.wcabsolute}" />
+        <call target="subversion-mkdir" />
+      </if>
+    </if>
+    <if test="${not (temp.outer == temp.base)}">
+      <property name="temp.prev" value="${temp.outer}" />
+      <property name="temp.outer" value="${path::get-directory-name(temp.outer)}" />
+      <call target="deploy-subversion-helper" />
+    </if>
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>

@@ -1,0 +1,129 @@
+
+---------------------------------------------------------------------------------------------------
+Class naming
+---------------------------------------------------------------------------------------------------
+
+This library uses a simple classification scheme you'll immediately understand
+once I've explained it:
+
+Objects can be one-dimensional (think of a line, it has no area or volume, eg. you
+can't put anything within it), two-dimensional (a rectangle for example) or
+three-dimensional (like a box). In this library, the natural names of these
+objects are used: Line, Rectangle, Box and so on.
+
+Now the delicate part is that some of these objects can be located in a space of
+higher order, meaning you could equip a two-dimensional triangle with
+3D coordinates and put it in 3D space. It would still be flat, but could be situated
+at any angle. This fact is encoded in the number behind each class: A Triangle2
+is a triangle in 2D space (with X,Y coordinates) and a Triangle3 is the same
+flat triangle, but in 3D space (with X,Y,Z coordinates).
+
+That's it. Simple and logical.
+
+
+---------------------------------------------------------------------------------------------------
+Strongpoints
+---------------------------------------------------------------------------------------------------
+
+Nuclex.Math / Nuclex.Geometry
+
+  A completely free .NET math library for computer games and scientific applications.
+
+  What does it do?
+  
+    o This library is completely free will stay so. All parts of nuclex are provided
+      under the CPL (not to mistake for the GPL!). You can use it wherever and in any
+      manner you like, including commercial projects.
+
+    o Code quality
+
+      o The code is very well tested using unit tests and real-world projects. Should you
+        still discover a bug, it will be fixed as fast as possible and a new unit test
+        will guarantee that it never comes back!
+
+      o We went out of our way to ensure numerical stability. That means we can make
+        strong guarantees about the amount of rounding errors and inaccuracies that
+        will result from the methods contained in the code
+
+      o Of course, performance is of importance, too. Optimizations here are almost
+        exclusively done by carefully crafting elegant algorithms instead of
+        micro-optimizing processor instructions (which just isn't feasible in a bytecode
+        compiled language like .NET)
+
+    o Every single method is thoroughly documented. Instead of just dumping the code on
+      our poor users, we explain every single option there is. We've set the goal to
+      deliver code that could without modification go into a teaching book for
+      programming classes.
+
+
+---------------------------------------------------------------------------------------------------
+Feature List
+---------------------------------------------------------------------------------------------------
+
+o Geometrical objects
+
+  o Lines, Rays and Segments in 2D and in 3D space
+  o Axis aligned rectangles, oriented rectangles, triangles and dscs in 2D space
+  o Triangles, rectangles, discs and planes in 3D space
+  o Axis aligned boxes, cylinders, oriented boxes, spheres and meshes in 3D space
+
+o Tightest bounding box and bounding sphere calculation for any volume
+
+o Line entry and exit determination
+
+  o Entry and exit of Line/Ray/Segment through an AABB/cylinder/OBB/sphere
+  o Intersection point of Line/Ray/Segment with a triangle or plane
+
+o Closest point determination
+
+  o Closest point to reference location in AABB/cylinder/OBB/sphere/mesh
+
+o Intersection checks
+
+  o Stationary intersection tests
+
+    o Intersection checks between any of AABB/cylinder/OBB/sphere/mesh
+    o Contact location determination for any of AABB/cylinder/OBB/sphere/mesh
+
+  o Moving object intersection checks
+
+    o Swept intersection test between two AABBs
+    o Swept intersection test between two spheres
+
+o Random point generation
+
+  o Generate uniform random points on surface of AABB/cylinder/OBB/sphere/mesh
+  o Generate uniform random points within AABB/cylinder/OBB/sphere/mesh
+
+o Physical property determination
+
+  o Total surface area of AABB/cylinder/OBB/sphere/mesh
+  o Mass of AABB/cylinder/OBB/sphere/mesh
+  o Center of gravity for AABB/cylinder/OBB/sphere/mesh
+
+Cool Resource: http://www.kevlindev.com/geometry/2D/intersections/index.htm
+
+---------------------------------------------------------------------------------------------------
+Exact Feature List
+---------------------------------------------------------------------------------------------------
+
+Collisions
+
+                      Static Check    Contact Location    Moving Check     Impact Location
+
+  AABB to AABB              X                X                  X                X
+  AABB to Cylinder
+  AABB to Mesh
+  AABB to OBB              [X]
+  AABB to Sphere            X
+  Cylinder to Cylinder
+  Cylinder to Mesh
+  Cylinder to OBB
+  Cylinder to Sphere        X
+  Mesh to Mesh
+  Mesh to OBB
+  Mesh to Sphere
+  OBB to OBB               [X]
+  OBB to Sphere             X
+  Sphere to Sphere          X
+

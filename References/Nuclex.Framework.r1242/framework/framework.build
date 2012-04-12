@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="Framework"
+  default="package"
+>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Build number, set by TeamCity in automated builds. Manual builds on the
+    command line will by default be tagged as 'product-wip'.
+  -->
+  <property overwrite="false" name="build.number" value="wip" />
+
+  <!--
+    Build configuration to compile the project in (usually "Debug" or "Release"),
+    use '-D:build.configuration=Debug' on the command line to change.
+  -->
+  <property overwrite="false" name="build.configuration" value="Release" />
+
+  <!--
+    Platform to build for. Valid platforms are 'xna-3.1-x86' 'xna-3.1-xbox360'.
+  -->
+  <property overwrite="false" name="build.platform" value="xna-3.1-x86" />
+
+  <!-- Path to the nunit executable. -->
+  <property
+    overwrite="false"
+    name="nunit.path"
+    value="References/nunit/net-2.0/"
+  />
+  
+  <!-- Path to the partcover executable. -->
+  <property
+    overwrite="false"
+    name="partcover.path"
+    value="References/partcover/"
+  />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <include buildfile="References/scripts/nant/bundle.include" />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="clean" description="Delete all build output files">
+
+    <property name="bundle.platform" value="${build.platform}" />
+    <call target="bundle-clean" />
+
+    <delete dir="artifacts" />
+
+  </target>
+  
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="compile" description="Compiles the solution">
+  
+    <property name="bundle.platform" value="${build.platform}" />
+    <property name="bundle.configuration" value="${build.configuration}" />
+    <property name="bundle.unittest" value="true" />
+
+    <call target="bundle-compile" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="test" depends="compile" description="Runs the unit tests">
+  
+    <property name="bundle.platform" value="${build.platform}" />
+    <property name="bundle.configuration" value="${build.configuration}" />
+
+    <call target="bundle-test" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="package" depends="compile" description="Packages the projects for redistribution">
+
+    <property name="bundle.platform" value="${build.platform}" />
+    <property name="bundle.configuration" value="${build.configuration}" />
+    <property name="bundle.package" value="temp" />
+    
+    <delete dir="${bundle.package}" />
+    <call target="bundle-package" />
+    
+    <property name="temp" value="${project::get-name()}-${build.number}-${build.platform}.zip" />
+    <property name="temp" value="${string::to-lower(string::replace(temp, ' ', '-'))}" />
+
+    <mkdir dir="artifacts" />
+    <zip
+      zipfile="artifacts/${temp}"
+      ziplevel="9"
+    >
+      <fileset basedir="temp">
+        <include name="**/*" />
+        <!-- <exclude name="**/nunit*" /> -->
+        <!-- <exclude name="**/nmock*" /> -->
+        <exclude name="**/*.xnb" />
+      </fileset>
+    </zip>
+    
+    <delete dir="${bundle.package}" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="cover" depends="compile" description="Calculates coverage of the unit tests">
+  
+    <call target="cover-report" />
+
+    <property
+      name="temp"
+      value="${path::combine(bundle.package, 'coverage.ncover.xml')}"
+    />
+    <exec
+      basedir="References/ncoverexplorer/net-2.0-x86"
+      program="NCoverExplorer.Console.exe"
+      managed="true"
+      commandline="&quot;${temp}&quot; /c:NCoverExplorer.config.xml"
+    />
+
+    <zip
+      zipfile="artifacts/coverage.zip"
+      ziplevel="9"
+    >
+      <fileset basedir="${bundle.package}">
+        <include name="coverage.ncover.xml" />
+        <include name="coverage.partcover.xml" />
+        <include name="coverage.html" />
+      </fileset>
+    </zip>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="cover-report" description="Updates the coverage results without compiling">
+  
+    <property name="bundle.platform" value="${build.platform}" />
+    <property name="bundle.configuration" value="${build.configuration}" />
+    <property name="bundle.package" value="artifacts" />
+
+    <call target="bundle-cover" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>

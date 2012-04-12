@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.0.2.746 (http://www.liquid-technologies.com)-->
+
+<xs:schema elementFormDefault="qualified" id="skin" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--
+    targetNamespace="http://tempuri.org/skin.xsd"
+    xmlns="http://tempuri.org/skin.xsd"
+    xmlns:mstns="http://tempuri.org/skin.xsd"
+  -->
+
+  <!-- Complex type for declaring a font used in this skin -->
+  <xs:complexType name="fontType">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="contentPath" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Complex type for declaring a bitmap used in this skin -->
+  <xs:complexType name="bitmapType">
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="contentPath" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Complex type for the resources bracket -->
+  <xs:complexType name="resourcesType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="font" type="fontType" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="bitmap" type="bitmapType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Complex type for specifying a bitmap region to draw into the frame -->
+  <xs:complexType name="regionType">
+    <xs:attribute name="id" type="xs:string" use="optional" />
+    <xs:attribute name="source" type="xs:string" use="required" />
+    <xs:attribute name="hplacement" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="left" />
+          <xs:enumeration value="right" />
+          <xs:enumeration value="stretch" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="vplacement" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="top" />
+          <xs:enumeration value="bottom" />
+          <xs:enumeration value="stretch" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="x" type="xs:int" use="required" />
+    <xs:attribute name="y" type="xs:int" use="required" />
+    <xs:attribute name="w" type="xs:int" use="required" />
+    <xs:attribute name="h" type="xs:int" use="required" />
+  </xs:complexType>
+
+  <!-- Complex type for specifying where text is placed in a frame -->
+  <xs:complexType name="textType">
+    <xs:attribute name="font" type="xs:string" use="required" />
+    <xs:attribute name="hplacement" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="left" />
+          <xs:enumeration value="right" />
+          <xs:enumeration value="center" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="vplacement" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="top" />
+          <xs:enumeration value="bottom" />
+          <xs:enumeration value="center" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="xoffset" type="xs:int" use="optional" />
+    <xs:attribute name="yoffset" type="xs:int" use="optional" />
+    <xs:attribute name="color" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <!-- Complex type for specifying a frame, the building block of GUI elements -->
+  <xs:complexType name="frameType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="region" type="regionType" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="text" type="textType" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Complex type for the frames bracket -->
+  <xs:complexType name="framesType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="frame" type="frameType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Complex type for the root bracket in a skin file -->
+  <xs:complexType name="skinType">
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element minOccurs="1" name="resources" type="resourcesType" />
+      <xs:element minOccurs="1" name="frames" type="framesType" />
+    </xs:all>
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Root element of an XML skin file -->
+  <xs:element name="skin" type="skinType" />
+
+</xs:schema>

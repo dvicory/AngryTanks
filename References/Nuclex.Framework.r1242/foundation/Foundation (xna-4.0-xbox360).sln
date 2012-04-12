@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Math (xna-4.0-xbox360)", "Nuclex.Math\Nuclex.Math (xna-4.0-xbox360).csproj", "{5951C398-7BFF-41DB-B596-9EAC7B3C5331}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Support (xna-4.0-xbox360)", "Nuclex.Support\Nuclex.Support (xna-4.0-xbox360).csproj", "{DCB169D9-417F-4FF1-848A-B00CF7C88B31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Xbox 360 = Debug|Xbox 360
+		Release|Xbox 360 = Release|Xbox 360
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5951C398-7BFF-41DB-B596-9EAC7B3C5331}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
+		{5951C398-7BFF-41DB-B596-9EAC7B3C5331}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
+		{5951C398-7BFF-41DB-B596-9EAC7B3C5331}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{5951C398-7BFF-41DB-B596-9EAC7B3C5331}.Release|Xbox 360.Build.0 = Release|Xbox 360
+		{DCB169D9-417F-4FF1-848A-B00CF7C88B31}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
+		{DCB169D9-417F-4FF1-848A-B00CF7C88B31}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
+		{DCB169D9-417F-4FF1-848A-B00CF7C88B31}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{DCB169D9-417F-4FF1-848A-B00CF7C88B31}.Release|Xbox 360.Build.0 = Release|Xbox 360
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{59CD3936-7F18-40BE-8183-CDCE20AAA0A5}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Geometry</RootNamespace>
+    <AssemblyName>Nuclex.Geometry</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>2ad21b7a-0571-40e9-bf19-564ba4fa31b4</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Debug\Nuclex.Geometry.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Release\Nuclex.Geometry.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Areas\AxisAlignedRectangle2.cs" />
+    <Compile Include="Source\Areas\AxisAlignedRectangle2.Test.cs">
+      <DependentUpon>AxisAlignedRectangle2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Collisions\AabbAabbCollider.cs" />
+    <Compile Include="Source\Areas\Collisions\AabbAabbCollider.Test.cs">
+      <DependentUpon>AabbAabbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Collisions\Disc2Disc2Collider.cs" />
+    <Compile Include="Source\Areas\Collisions\Disc2Disc2Collider.Test.cs">
+      <DependentUpon>Disc2Disc2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Disc2.cs" />
+    <Compile Include="Source\Areas\Disc2.Test.cs">
+      <DependentUpon>Disc2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Disc3.cs" />
+    <Compile Include="Source\Areas\Disc3.Test.cs">
+      <DependentUpon>Disc3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\IArea2.cs" />
+    <Compile Include="Source\Areas\IArea2Visitor.cs" />
+    <Compile Include="Source\Areas\IArea3.cs" />
+    <Compile Include="Source\Areas\IArea3Visitor.cs" />
+    <Compile Include="Source\Areas\Plane3.cs" />
+    <Compile Include="Source\Areas\Plane3.Test.cs">
+      <DependentUpon>Plane3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\PointGenerators\Disc2PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Disc3PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Plane3PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Rectangle2PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Rectangle3PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Triangle2PointGenerator.cs" />
+    <Compile Include="Source\Areas\PointGenerators\Triangle3PointGenerator.cs" />
+    <Compile Include="Source\Areas\Rectangle2.cs" />
+    <Compile Include="Source\Areas\Rectangle2.Test.cs">
+      <DependentUpon>Rectangle2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Rectangle3.cs" />
+    <Compile Include="Source\Areas\Rectangle3.Test.cs">
+      <DependentUpon>Rectangle3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Triangle2.cs" />
+    <Compile Include="Source\Areas\Triangle2.Test.cs">
+      <DependentUpon>Triangle2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Areas\Triangle3.cs" />
+    <Compile Include="Source\Areas\Triangle3.Test.cs">
+      <DependentUpon>Triangle3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\GeoAssertHelper.Test.cs">
+      <DependentUpon>GeoAssertHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\DefaultRandom.cs" />
+    <Compile Include="Source\DefaultRandom.Test.cs">
+      <DependentUpon>DefaultRandom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Definitions.cs" />
+    <Compile Include="Source\IRandom.cs" />
+    <Compile Include="Source\Lines\Collisions\Line2Aabb2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line2Aabb2Collider.Test.cs">
+      <DependentUpon>Line2Aabb2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line2Disc2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line2Disc2Collider.Test.cs">
+      <DependentUpon>Line2Disc2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line2Line2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line2Line2Collider.Test.cs">
+      <DependentUpon>Line2Line2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line2Triangle2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line2Triangle2Collider.Test.cs">
+      <DependentUpon>Line2Triangle2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line3Aabb3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line3Aabb3Collider.Test.cs">
+      <DependentUpon>Line3Aabb3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line3Plane3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line3Plane3Collider.Test.cs">
+      <DependentUpon>Line3Plane3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line3Sphere3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line3Sphere3Collider.Test.cs">
+      <DependentUpon>Line3Sphere3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Line3Triangle3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Line3Triangle3Collider.Test.cs">
+      <DependentUpon>Line3Triangle3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray2Aabb2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray2Aabb2Collider.Test.cs">
+      <DependentUpon>Ray2Aabb2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray2Disc2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray2Disc2Collider.Test.cs">
+      <DependentUpon>Ray2Disc2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray2Line2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray2Line2Collider.Test.cs">
+      <DependentUpon>Ray2Line2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray2Triangle2Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray2Triangle2Collider.Test.cs">
+      <DependentUpon>Ray2Triangle2Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray3Aabb3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray3Aabb3Collider.Test.cs">
+      <DependentUpon>Ray3Aabb3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray3Plane3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray3Plane3Collider.Test.cs">
+      <DependentUpon>Ray3Plane3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray3Sphere3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray3Sphere3Collider.Test.cs">
+      <DependentUpon>Ray3Sphere3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Ray3Triangle3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Ray3Triangle3Collider.Test.cs">
+      <DependentUpon>Ray3Triangle3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Collisions\Segment3Aabb3Collider.cs" />
+    <Compile Include="Source\Lines\Collisions\Segment3Aabb3Collider.Test.cs">
+      <DependentUpon>Segment3Aabb3Collider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\LineContacts.cs" />
+    <Compile Include="Source\Lines\ILine2.cs" />
+    <Compile Include="Source\Lines\ILine3.cs" />
+    <Compile Include="Source\Lines\Line2.cs" />
+    <Compile Include="Source\Lines\Line2.Test.cs">
+      <DependentUpon>Line2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Line3.cs" />
+    <Compile Include="Source\Lines\Line3.Test.cs">
+      <DependentUpon>Line3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\LineContacts.Test.cs">
+      <DependentUpon>LineContacts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Ray2.cs" />
+    <Compile Include="Source\Lines\Ray2.Test.cs">
+      <DependentUpon>Ray2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Ray3.cs" />
+    <Compile Include="Source\Lines\Ray3.Test.cs">
+      <DependentUpon>Ray3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Segment2.cs" />
+    <Compile Include="Source\Lines\Segment2.Test.cs">
+      <DependentUpon>Segment2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Lines\Segment3.cs" />
+    <Compile Include="Source\Lines\Segment3.Test.cs">
+      <DependentUpon>Segment3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MatrixHelper.cs" />
+    <Compile Include="Source\GeoAssertHelper.cs" />
+    <Compile Include="Source\MatrixHelper.Test.cs">
+      <DependentUpon>MatrixHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\VectorHelper.cs" />
+    <Compile Include="Source\VectorHelper.Test.cs">
+      <DependentUpon>VectorHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\AxisAlignedBox3.cs" />
+    <Compile Include="Source\Volumes\AxisAlignedBox3.Test.cs">
+      <DependentUpon>AxisAlignedBox3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Box3.cs" />
+    <Compile Include="Source\Volumes\Box3.Test.cs">
+      <DependentUpon>Box3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\AabbAabbCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\AabbAabbCollider.Test.cs">
+      <DependentUpon>AabbAabbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\AabbCylinderCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\AabbCylinderCollider.Test.cs">
+      <DependentUpon>AabbCylinderCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\AabbMeshCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\AabbMeshCollider.Test.cs">
+      <DependentUpon>AabbMeshCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\AabbObbCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\AabbObbCollider.Test.cs">
+      <DependentUpon>AabbObbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\AabbSphereCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\AabbSphereCollider.Test.cs">
+      <DependentUpon>AabbSphereCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\CylinderCylinderCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\CylinderCylinderCollider.Test.cs">
+      <DependentUpon>CylinderCylinderCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\CylinderMeshCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\CylinderMeshCollider.Test.cs">
+      <DependentUpon>CylinderMeshCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\CylinderObbCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\CylinderObbCollider.Test.cs">
+      <DependentUpon>CylinderObbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\CylinderSphereCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\CylinderSphereCollider.Test.cs">
+      <DependentUpon>CylinderSphereCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\MeshMeshCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\MeshMeshCollider.Test.cs">
+      <DependentUpon>MeshMeshCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\MeshObbCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\MeshObbCollider.Test.cs">
+      <DependentUpon>MeshObbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\MeshSphereCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\MeshSphereCollider.Test.cs">
+      <DependentUpon>MeshSphereCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\ObbObbCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\ObbObbCollider.Test.cs">
+      <DependentUpon>ObbObbCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\ObbSphereCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\ObbSphereCollider.Test.cs">
+      <DependentUpon>ObbSphereCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Collisions\SphereSphereCollider.cs" />
+    <Compile Include="Source\Volumes\Collisions\SphereSphereCollider.Test.cs">
+      <DependentUpon>SphereSphereCollider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\Cylinder3.cs" />
+    <Compile Include="Source\Volumes\Cylinder3.Test.cs">
+      <DependentUpon>Cylinder3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\IVolume3.cs" />
+    <Compile Include="Source\Volumes\PointGenerators\AabbPointGenerator.cs" />
+    <Compile Include="Source\Volumes\PointGenerators\CylinderPointGenerator.cs" />
+    <Compile Include="Source\Volumes\PointGenerators\MeshPointGenerator.cs" />
+    <Compile Include="Source\Volumes\PointGenerators\ObbPointGenerator.cs" />
+    <Compile Include="Source\Volumes\PointGenerators\SpherePointGenerator.cs" />
+    <Compile Include="Source\Volumes\Sphere3.cs" />
+    <Compile Include="Source\Volumes\Sphere3.Test.cs">
+      <DependentUpon>Sphere3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\TriangleMesh3.cs" />
+    <Compile Include="Source\Volumes\TriangleMesh3.Test.cs">
+      <DependentUpon>TriangleMesh3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Volumes\VolumeVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Nuclex.Geometry.txt" />
+    <Content Include="Documents\References.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\Lines\PointGenerators\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

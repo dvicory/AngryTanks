@@ -1,0 +1,13 @@
+# Build Platform Definition
+#
+# This file describes which projects (and which individual project platforms)
+# to build when executing the main build script.
+#
+# The Syntax is
+#   DirectoryName,ProjectPlatform,ProjectName,OutputDirectory
+#
+Nuclex.Support,AnyCPU,Nuclex.Support (net-4.0).csproj,bin/net-4.0/%build.configuration%
+Nuclex.Math,AnyCPU,Nuclex.Math (net-4.0).csproj,bin/net-4.0/%build.configuration%
+Nuclex.Windows.Forms,AnyCPU,Nuclex.Windows.Forms (net-4.0).csproj,bin/net-4.0/%build.configuration%
+Nuclex.Networking,AnyCPU,Nuclex.Networking (net-4.0).csproj,bin/net-4.0/%build.configuration%
+Nuclex.Audio,AnyCPU,Nuclex.Audio (net-4.0).csproj,bin/net-4.0/%build.configuration%

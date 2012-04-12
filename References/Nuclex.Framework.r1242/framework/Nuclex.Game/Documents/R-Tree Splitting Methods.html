@@ -1,0 +1,214 @@
+From: <Mit Microsoft Internet Explorer 7 gespeichert>
+Subject: R-tree Demo
+Date: Thu, 31 Jul 2008 09:59:44 +0200
+MIME-Version: 1.0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.cs.umd.edu/~brabec/quadtree/docs/rtree_split_rules.html
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.3198
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>R-tree Demo</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.6000.16674" name=3DGENERATOR></HEAD>
+<BODY>
+<H1 align=3Dcenter>Splitting Methods</H1>They differ primarily in the =
+techniques=20
+used to split an overflowing node during insertion. The goal is to =
+minimize=20
+coverage and overlap. These goals are at times contradictory and thus =
+heuristics=20
+are often used. The node splitting algorithms described below range from =
+being=20
+quite simple (e.g., exhaustive search) to being fairly complicated =
+(e.g.,=20
+R*-tree <A=20
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#beck9=
+0c">[Beck90c]</A>).=20
+Some just split the overflowing node, while others try to reinsert some =
+of the=20
+objects and nodes from the overflowing nodes thereby striving for better =
+overall=20
+behavior (e.g., reduction in coverage and overlap).=20
+<OL type=3Dl><A name=3Dexhaust></A>
+  <LI><FONT color=3Dred>Exhaustive Search: </FONT>If the R-tree node =
+overflows,=20
+  then try all possible ways of splitting the node into two new nodes =
+that=20
+  satisfy the requirements on the minimal and maximal number of children =
+that=20
+  can be stored in a node. Choose the split which causes bounding boxes =
+of the=20
+  two new nodes to have the smallest area <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#gutt8=
+4">[Gutt84]</A>.=20
+  Thus the goal of this method is to reduce the coverage. This method is =
+quite=20
+  complex as it tries all possibilities. <A name=3Dquad></A>
+  <LI><FONT color=3Dred>Quadratic method: </FONT>Examine all the =
+children of the=20
+  overflowing node and find the pair of bounding boxes that would waste =
+the most=20
+  area were they to be inserted in the same node. This is determined by=20
+  subtracting the sum of the areas of the two bounding boxes from the =
+area of=20
+  the covering bounding box. These two bounding boxes are placed in =
+separate=20
+  nodes, say <I>j </I>and <I>k </I>. The set of remaining bounding boxes =
+are=20
+  examined and the bounding box <I>i </I>whose addition maximizes the =
+difference=20
+  in coverage between the bounding boxes associated with <I>j </I>and =
+<I>k=20
+  </I>is added to the node whose coverage is minimized by the addition. =
+This=20
+  process is reapplied to the remaining bounding boxes <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#gutt8=
+4">[Gutt84]</A>.=20
+  This method takes quadratic time. <A name=3Dlinear></A>
+  <LI><FONT color=3Dred>Linear Method:</FONT> Find the two bounding =
+boxes with the=20
+  greatest normalized separation along both axes, and split along this =
+axis. The=20
+  remaining bounding boxes in the node are assigned to the nodes whose =
+covering=20
+  bounding box is increased the least by the addition <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#gutt8=
+4">[Gutt84]</A>.=20
+  This method takes linear time. <A name=3Drstar></A>
+  <LI><FONT color=3Dred>R*-tree:</FONT> The R*-tree <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#beck9=
+0c">[Beck90c]</A>=20
+  is a name given to a variant of the R-tree which makes use of the most =
+complex=20
+  of the node splitting algorithms. The algorithm differs from the other =
+
+  algorithms as it attempts to reduce both overlap and coverage. In =
+particular,=20
+  the primary focus is on reducing overlap with ties broken by favoring =
+the=20
+  splits that reduce the coverage by using the splits that minimize the=20
+  perimeter of the bounding boxes of the resulting nodes. In addition, =
+when a=20
+  node <I>a </I>overflows, instead of immediately splitting <I>a </I>, =
+an=20
+  attempt is made first to see if some of the objects in <I>a </I>could =
+possibly=20
+  be more suited to being in another node. This is achieved by =
+reinserting a=20
+  fraction (30% has been found to yield good performance <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#beck9=
+0c">[Beck90c]</A>)=20
+  of these objects in the tree (termed <I>forced reinsertion</I>). The =
+node is=20
+  only split if it has been found to overflow after reinsertion has =
+taken place.=20
+  This method is quite complex. <A name=3Dang></A>
+  <LI><FONT color=3Dred>Ang/Tan Method: </FONT>Form four sets, one for =
+each face=20
+  (i.e., side) of the overflowing node <I>a </I>. Associate each =
+bounding box=20
+  <I>o </I>in <I>a </I>with the closest face of <I>a </I>in each of the =
+two=20
+  dimensions. Once the four sets representing four partitions have been=20
+  constructed (i.e., each bounding box <I>o </I>has been associated with =
+two=20
+  sets), select the partition that ensures the most even distribution of =
+
+  bounding boxes. In case of a tie, choose the partition with the least =
+overlap.=20
+  In case of another tie, choose the partition with the least coverage. =
+This=20
+  method takes linear time <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#ang97=
+">[Ang97]</A>.=20
+  <A name=3Dhilnon></A>
+  <LI><FONT color=3Dred>Hilbert Nonpacked Method:</FONT> Order the =
+objects on the=20
+  basis of the Peano-Hilbert number (e.g., <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#same9=
+0a">[Same90a]</A>)=20
+  corresponding to their centroid <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#kame9=
+4">[Kame94]</A>.=20
+  The objects are stored in a B+-tree. <A name=3Dmornon></A>
+  <LI><FONT color=3Dred>Morton Nonpacked Method:</FONT> Order the =
+objects on the=20
+  basis of the Morton number (e.g., <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#same9=
+0a">[Same90a]</A>)=20
+  corresponding to their centroid <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#whit8=
+2">[Whit82]</A>.=20
+  This number is obtained by interleaving the <I>x </I>and <I>y =
+</I>coordinate=20
+  values of the centroid. The objects are stored in a B+-tree. <A=20
+  name=3Dpacked></A>
+  <LI><FONT color=3Dred>Packed Method:</FONT> Order the objects on the =
+basis of=20
+  some criterion <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#rous8=
+5">[Rous85]</A>.=20
+  It has two stages. In our implementation, the first stage orders the =
+centroids=20
+  of the objects in Peano-Hilbert order. The second stage fills the leaf =
+nodes=20
+  by examining the objects in increasing Peano-Hilbert order of their =
+centroids=20
+  (obtained by the first stage). Each leaf node is filled with the first =
+
+  unprocessed object and its <I>M-1 </I>nearest neighbors (in the space =
+in which=20
+  the objects lie) which have not yet been inserted in other leaf nodes. =
+Once an=20
+  entire level of the packed R-tree has been obtained, the algorithm is=20
+  reapplied to add nodes at the next level using the same nearest =
+neighbor=20
+  criterion, terminating when a level contains just one node. The only=20
+  difference between the ordering that is applied at the levels =
+containing the=20
+  nonleaf nodes from that used at the level of the leaf nodes is that in =
+the=20
+  former case we are ordering the bounding boxes while in the latter =
+case we are=20
+  ordering the actual objects. <A name=3Dhilpack></A>
+  <LI><FONT color=3Dred>Hilbert Packed Method:</FONT> Order the objects =
+on the=20
+  basis of the Peano-Hilbert number corresponding to their centroid <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#kame9=
+3">[Kame93]</A>.=20
+  Once this ordering has been obtained, the leaf nodes are filled to =
+capacity by=20
+  examining the objects in increasing order. The nodes at the remaining =
+levels=20
+  are ordered according to the time at which they were created. <A=20
+  name=3Dmorpack></A>
+  <LI><FONT color=3Dred>Morton Packed R-tree:</FONT> Order the objects =
+on the=20
+  basis of the Morton number corresponding to their centroid (e.g., <A=20
+  =
+href=3D"http://www.cs.umd.edu/~brabec/quadtree/docs/references.html#kame8=
+3">[Kame93]</A>).=20
+  This number is obtained by interleaving the <I>x </I>and <I>y =
+</I>coordinate=20
+  values of the centroid. Once this ordering has been obtained, the leaf =
+nodes=20
+  are filled to capacity by examining the objects in increasing order. =
+The nodes=20
+  at the remaining levels are ordered according to the time at which =
+they were=20
+  created. </LI></OL></BODY></HTML>

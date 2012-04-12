@@ -1,0 +1,15 @@
+﻿Themes
+
+  Themes are complete conversions for the look of a GUI.
+
+  For example, one theme could use fancy 3D controls and another could use
+  traditional, flat 2D controls.
+
+  To create a theme, a custom GuiPainter needs to be created
+  
+Skins
+
+  Skins are a specialty of the FlatGuiPainter and only modify the fonts and
+  bitmap resources. Skins can be loaded from XML files and should be
+  sufficient for most users in that they can completely alter the shape
+  and design of any control.

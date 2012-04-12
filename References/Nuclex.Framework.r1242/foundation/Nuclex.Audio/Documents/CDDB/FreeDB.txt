@@ -1,0 +1,9 @@
+﻿How to access freedb.org 
+
+It's really simple:
+
+Configure your CDDB1- or freedb-aware software to point to freedb.freedb.org
+(Random freedb server) as your CDDB/freedb-server.
+
+All official freedb servers are running cddbp at port 8880 and http at
+port 80. The path for http-access is /~cddb/cddb.cgi.

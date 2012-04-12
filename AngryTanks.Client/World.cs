@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Nuclex.Input;
 using log4net;
 
 using AngryTanks.Common;
@@ -216,8 +217,26 @@ namespace AngryTanks.Client
             if (Disposed)
                 throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
-            // TODO make sure to move to a better input solution
-            KeyboardState ks = Keyboard.GetState();
+            HandleKeyDown(Keyboard.GetState());
+
+            // update local player
+            List<StaticSprite> collisionObjects = new List<StaticSprite>();
+            collisionObjects.AddRange(stretched.ToList());
+            collisionObjects.AddRange(tiled.ToList());
+
+            // update the local player
+            lastPlayerPosition = localPlayer.Position;
+            localPlayer.Update(gameTime, collisionObjects);
+
+            // now finally track the tank (disregards any panning)
+            // smoothstep helps smooth the camera if player gets stuck
+            camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
+        }
+
+        protected void HandleKeyDown(KeyboardState ks)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
             // pan the camera
             if (ks.IsKeyDown(Keys.Up))
@@ -237,9 +256,9 @@ namespace AngryTanks.Client
                 camera.Zoom *= 0.99f;
 
             // rotation (testing only)
-            if (ks.IsKeyDown(Keys.LeftShift))
+            if (ks.IsKeyDown(Keys.LeftShift) && ks.IsKeyDown(Keys.LeftAlt))
                 camera.Rotation += 0.01f;
-            if (ks.IsKeyDown(Keys.RightShift))
+            if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
 
             // reset back to tank
@@ -249,19 +268,6 @@ namespace AngryTanks.Client
                 camera.Rotation = 0;
                 camera.PanPosition = Vector2.Zero;
             }
-
-            // update local player
-            List<StaticSprite> collisionObjects = new List<StaticSprite>();
-            collisionObjects.AddRange(stretched.ToList());
-            collisionObjects.AddRange(tiled.ToList());
-
-            // update the local player
-            lastPlayerPosition = localPlayer.Position;
-            localPlayer.Update(gameTime, collisionObjects);
-
-            // now finally track the tank (disregards any panning)
-            // smoothstep helps smooth the camera if player gets stuck
-            camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
         }
 
         public void Draw(GameTime gameTime)

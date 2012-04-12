@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BDB73C04-42CC-4A5E-9893-547FD9BF6335}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Networking</RootNamespace>
+    <AssemblyName>Nuclex.Networking</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\net-4.0\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNITTEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\net-4.0\Debug\Nuclex.Networking.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\net-4.0\Release\</OutputPath>
+    <DefineConstants>TRACE;UNITTEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\net-4.0\Release\Nuclex.Networking.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NMock2">
+      <HintPath>..\References\nmock\net-4.0\NMock2.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\nunit\net-4.0\framework\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Exceptions\BadResponseException.cs" />
+    <Compile Include="Source\Exceptions\BadResponseException.Test.cs">
+      <DependentUpon>BadResponseException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Errors.cs" />
+    <Compile Include="Source\Http\Exceptions\BadRequestException.cs" />
+    <Compile Include="Source\Http\Exceptions\BadRequestException.Test.cs">
+      <DependentUpon>BadRequestException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Exceptions\HttpException.cs" />
+    <Compile Include="Source\Http\ClientConnection.cs" />
+    <Compile Include="Source\Http\Exceptions\HttpException.Test.cs">
+      <DependentUpon>HttpException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Exceptions\RequestEntityTooLargeException.cs" />
+    <Compile Include="Source\Http\Exceptions\RequestEntityTooLargeException.Test.cs">
+      <DependentUpon>RequestEntityTooLargeException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Exceptions\RequestUriTooLargeException.cs" />
+    <Compile Include="Source\Http\Exceptions\RequestUriTooLargeException.Test.cs">
+      <DependentUpon>RequestUriTooLargeException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Exceptions\VersionNotSupportedException.cs" />
+    <Compile Include="Source\Http\Exceptions\VersionNotSupportedException.Test.cs">
+      <DependentUpon>VersionNotSupportedException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\Request.cs" />
+    <Compile Include="Source\Http\RequestBuilder.cs" />
+    <Compile Include="Source\Http\HttpLineParser.cs" />
+    <Compile Include="Source\Http\HttpLineParser.Test.cs">
+      <DependentUpon>HttpLineParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Http\RequestParser.cs" />
+    <Compile Include="Source\Http\Response.cs" />
+    <Compile Include="Source\Http\ResponseFormatter.cs" />
+    <Compile Include="Source\Http\StatusCode.cs" />
+    <Compile Include="Source\Http\HttpServer.cs" />
+    <Compile Include="Source\Http\StatusCodeClass.cs" />
+    <Compile Include="Source\Http\StatusCodeHelper.cs" />
+    <Compile Include="Source\LineParser.cs" />
+    <Compile Include="Source\LineParser.Test.cs">
+      <DependentUpon>LineParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\SocketEventArgs.cs" />
+    <Compile Include="Source\SocketEventArgs.Test.cs">
+      <DependentUpon>SocketEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\SocketListener.cs" />
+    <Compile Include="Source\SocketReceiver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\RFC 2047 - MIME %28Multipurpose Internet Mail Extensions%29 Part 3.txt" />
+    <Content Include="Documents\RFC 2616 - Hypertext Transfer Protocol -- HTTP1.1.txt" />
+    <Content Include="Documents\RFC 2822 - Internet Message Format.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Support\Nuclex.Support %28net-4.0%29.csproj">
+      <Project>{00567408-4F44-4C00-866E-B04A99E482F2}</Project>
+      <Name>Nuclex.Support %28net-4.0%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

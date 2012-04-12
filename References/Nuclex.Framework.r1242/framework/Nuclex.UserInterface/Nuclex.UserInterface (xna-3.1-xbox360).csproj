@@ -1,0 +1,327 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{40041024-6BE6-4D83-BBB3-768C41E327C9}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.UserInterface</RootNamespace>
+    <AssemblyName>Nuclex.UserInterface</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaCrossPlatformGroupID>9e18b0b5-3298-4895-ac2a-f88aa83f928a</XnaCrossPlatformGroupID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-3.1-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;USE_XMLDOCUMENT;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-3.1-xbox360\Debug\Nuclex.UserInterface.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-3.1-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;USE_XMLDOCUMENT;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-3.1-xbox360\Release\Nuclex.UserInterface.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nuclex.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\foundation\xna-3.1-xbox360\Nuclex.Support.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\SuaveSkinResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SuaveSkinResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\SuaveSkinResources.Test.cs">
+      <DependentUpon>SuaveSkinResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Test.cs">
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\DesktopControl.cs" />
+    <Compile Include="Source\Controls\IFocusable.cs" />
+    <Compile Include="Source\Controls\PressableControl.Test.cs">
+      <DependentUpon>PressableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\ProgressControl.cs" />
+    <Compile Include="Source\Controls\Control.Input.cs">
+      <DependentUpon>Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\ControlEventArgs.cs" />
+    <Compile Include="Source\Controls\Arcade\CommandControl.cs" />
+    <Compile Include="Source\Controls\Arcade\PanelControl.cs" />
+    <Compile Include="Source\Controls\Control.cs" />
+    <Compile Include="Source\Controls\Control.Test.cs">
+      <DependentUpon>Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\ControlEventArgs.Test.cs">
+      <DependentUpon>ControlEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\ButtonControl.cs" />
+    <Compile Include="Source\Controls\Desktop\ButtonControl.Test.cs">
+      <DependentUpon>ButtonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\ChoiceControl.cs" />
+    <Compile Include="Source\Controls\Desktop\ChoiceControl.Test.cs">
+      <DependentUpon>ChoiceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\CloseWindowButtonControl.cs" />
+    <Compile Include="Source\Controls\Desktop\CloseWindowButtonControl.Test.cs">
+      <DependentUpon>CloseWindowButtonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\DraggableControl.Test.cs">
+      <DependentUpon>DraggableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\HorizontalSliderControl.cs" />
+    <Compile Include="Source\Controls\Desktop\HorizontalSliderControl.Test.cs">
+      <DependentUpon>HorizontalSliderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\IListRowLocator.cs" />
+    <Compile Include="Source\Controls\Desktop\InputControl.Test.cs">
+      <DependentUpon>InputControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\IOpeningLocator.cs" />
+    <Compile Include="Source\Controls\Desktop\IThumbLocator.cs" />
+    <Compile Include="Source\Controls\Desktop\ListControl.cs" />
+    <Compile Include="Source\Controls\Desktop\ListControl.Test.cs">
+      <DependentUpon>ListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\OptionControl.cs" />
+    <Compile Include="Source\Controls\Desktop\OptionControl.Test.cs">
+      <DependentUpon>OptionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\SliderControl.cs" />
+    <Compile Include="Source\Controls\Desktop\InputControl.cs" />
+    <Compile Include="Source\Controls\Desktop\SliderControl.Test.cs">
+      <DependentUpon>SliderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\VerticalSliderControl.cs" />
+    <Compile Include="Source\Controls\Desktop\VerticalSliderControl.Test.cs">
+      <DependentUpon>VerticalSliderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Desktop\WindowControl.cs" />
+    <Compile Include="Source\Controls\Desktop\DraggableControl.cs" />
+    <Compile Include="Source\Controls\Desktop\WindowControl.Test.cs">
+      <DependentUpon>WindowControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\LabelControl.cs" />
+    <Compile Include="Source\Controls\LabelControl.Test.cs">
+      <DependentUpon>LabelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\ParentingControlCollection.cs" />
+    <Compile Include="Source\Controls\ParentingControlCollection.Test.cs">
+      <DependentUpon>ParentingControlCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\PressableControl.cs" />
+    <Compile Include="Source\Controls\DesktopControl.Test.cs">
+      <DependentUpon>DesktopControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\DuplicateNameException.cs" />
+    <Compile Include="Source\DuplicateNameException.Test.cs">
+      <DependentUpon>DuplicateNameException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\GuiManager.cs" />
+    <Compile Include="Source\GuiManager.Test.cs">
+      <DependentUpon>GuiManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IGuiService.cs" />
+    <Compile Include="Source\Input\Command.cs" />
+    <Compile Include="Source\Input\DefaultInputCapturer.cs" />
+    <Compile Include="Source\Input\DefaultInputCapturer.Test.cs">
+      <DependentUpon>DefaultInputCapturer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Input\IInputReceiver.cs" />
+    <Compile Include="Source\Input\IInputCapturer.cs" />
+    <Compile Include="Source\Controls\IWritable.cs" />
+    <Compile Include="Source\RectangleF.cs" />
+    <Compile Include="Source\RectangleF.Test.cs">
+      <DependentUpon>RectangleF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UniAssertHelper.cs" />
+    <Compile Include="Source\UniAssertHelper.Test.cs">
+      <DependentUpon>UniAssertHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UniRectangle.cs" />
+    <Compile Include="Source\UniRectangle.Test.cs">
+      <DependentUpon>UniRectangle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UniScalar.cs" />
+    <Compile Include="Source\Screen.cs" />
+    <Compile Include="Source\Screen.Test.cs">
+      <DependentUpon>Screen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UniScalar.Test.cs">
+      <DependentUpon>UniScalar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UniVector.cs" />
+    <Compile Include="Source\UniVector.Test.cs">
+      <DependentUpon>UniVector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\FlatGuiGraphics.Drawing.cs">
+      <DependentUpon>FlatGuiGraphics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\FlatGuiGraphics.SkinParsing2.cs">
+      <DependentUpon>FlatGuiGraphics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\FlatGuiGraphics.Test.cs">
+      <DependentUpon>FlatGuiGraphics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\FlatGuiVisualizer.Test.cs">
+      <DependentUpon>FlatGuiVisualizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\OpeningLocator.cs" />
+    <Compile Include="Source\Visuals\Flat\OpeningLocator.Test.cs">
+      <DependentUpon>OpeningLocator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\ControlRendererTest.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatButtonControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\FlatGuiGraphics.cs" />
+    <Compile Include="Source\Visuals\Flat\FlatGuiVisualizer.cs" />
+    <Compile Include="Source\Visuals\Flat\FlatGuiGraphics.SkinParsing.cs">
+      <DependentUpon>FlatGuiGraphics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatButtonControlRenderer.Test.cs">
+      <DependentUpon>FlatButtonControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatChoiceControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatChoiceControlRenderer.Test.cs">
+      <DependentUpon>FlatChoiceControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatHorizontalSliderControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatHorizontalSliderControlRenderer.Test.cs">
+      <DependentUpon>FlatHorizontalSliderControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatInputControlRenderer.Test.cs">
+      <DependentUpon>FlatInputControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatLabelControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatLabelControlRenderer.Test.cs">
+      <DependentUpon>FlatLabelControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatListControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatListControlRenderer.Test.cs">
+      <DependentUpon>FlatListControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatOptionControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatOptionControlRenderer.Test.cs">
+      <DependentUpon>FlatOptionControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatPanelControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatPanelControlRenderer.Test.cs">
+      <DependentUpon>FlatPanelControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatProgressControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatProgressControlRenderer.Test.cs">
+      <DependentUpon>FlatProgressControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatVerticalSliderControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatInputControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatVerticalSliderControlRenderer.Test.cs">
+      <DependentUpon>FlatVerticalSliderControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatWindowControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\IFlatControlRenderer.cs" />
+    <Compile Include="Source\Visuals\Flat\IFlatGuiGraphics.cs" />
+    <Compile Include="Source\Visuals\Flat\Renderers\FlatWindowControlRenderer.Test.cs">
+      <DependentUpon>FlatWindowControlRenderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Visuals\IGuiVisualizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Behavior.txt" />
+    <Content Include="Documents\Efficient Drawing.txt" />
+    <Content Include="Documents\Focus Switching.txt" />
+    <Content Include="Documents\NewVisuals.txt" />
+    <Content Include="Documents\Nuclex.UserInterface.txt" />
+    <Content Include="Documents\TextInput.txt" />
+    <Content Include="Documents\ThemesAndSkins.txt" />
+    <Content Include="Documents\Unified Coordinates.txt" />
+    <Content Include="Resources\Skins\Suave\Suave.skin.xml" />
+    <Content Include="Resources\UnitTest\BadColor.skin.xml" />
+    <Content Include="Resources\UnitTest\BadHorizontalPosition.skin.xml" />
+    <Content Include="Resources\UnitTest\BadVerticalPosition.skin.xml" />
+    <Content Include="Resources\UnitTest\UnitTest.skin.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\skin.xsd" />
+    <EmbeddedResource Include="Resources\SuaveSkinResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SuaveSkinResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UnitTestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitTestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documents\Sketches\ui-concept-1.uml" />
+    <None Include="Documents\Sketches\ui-concept-2.uml" />
+    <None Include="Documents\Sketches\ui-concept-3.uml" />
+    <None Include="Documents\Sketches\ui-concept-4.uml" />
+    <None Include="Documents\Sketches\ui-concept-5.uml" />
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="EmbeddedContent\EmbeddedContent.contentproj">
+      <Project>865ff6fd-3eac-473f-895a-9c816c403445</Project>
+      <Visible>false</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Input\Nuclex.Input %28xna-3.1-xbox360%29.csproj">
+      <Project>{7FF1D513-CE43-47E2-BC82-AF40ACA481A4}</Project>
+      <Name>Nuclex.Input %28xna-3.1-xbox360%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

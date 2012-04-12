@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Fonts (xna-4.0-x86)", "Nuclex.Fonts\Nuclex.Fonts (xna-4.0-x86).csproj", "{D8146A59-5232-4B64-911E-0300506A46B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Game (xna-4.0-x86)", "Nuclex.Game\Nuclex.Game (xna-4.0-x86).csproj", "{5FEA504F-5662-4A55-B788-3753467B788D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Geometry (xna-4.0-x86)", "Nuclex.Geometry\Nuclex.Geometry (xna-4.0-x86).csproj", "{1589D931-4679-421F-A22B-DA4C1778DC86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Graphics (xna-4.0-x86)", "Nuclex.Graphics\Nuclex.Graphics (xna-4.0-x86).csproj", "{08C25323-3EAD-41AC-AEE4-D856845BD6D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Input (xna-4.0-x86)", "Nuclex.Input\Nuclex.Input (xna-4.0-x86).csproj", "{4D9CD97B-289E-4519-A6F8-58C6DB8040D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.UserInterface (xna-4.0-x86)", "Nuclex.UserInterface\Nuclex.UserInterface (xna-4.0-x86).csproj", "{2CB08AB5-46B8-44A9-92AE-33790629696D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Graphics.SpecialEffects (xna-4.0-x86)", "Nuclex.Graphics.SpecialEffects\Nuclex.Graphics.SpecialEffects (xna-4.0-x86).csproj", "{1D1E8CAE-0068-48F0-9D3E-E44F6C27E5D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Graphics.SpecialEffects.EmbeddedContent", "Nuclex.Graphics.SpecialEffects\EmbeddedContent\Nuclex.Graphics.SpecialEffects.EmbeddedContent.contentproj", "{4490A1C9-32EE-40B4-9F9C-D71556154E9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Fonts.EmbeddedContent", "Nuclex.Fonts\EmbeddedContent\Nuclex.Fonts.EmbeddedContent.contentproj", "{3438C492-2CAC-4091-85A8-6079B4AAB69A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Graphics.EmbeddedContent", "Nuclex.Graphics\EmbeddedContent\Nuclex.Graphics.EmbeddedContent.contentproj", "{1B2C1970-E62B-4F9F-9BD9-D273FFE465E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Game.EmbeddedContent", "Nuclex.Game\EmbeddedContent\Nuclex.Game.EmbeddedContent.contentproj", "{3C9927AC-9E66-4A18-97FE-B44538C567B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.UserInterface.EmbeddedContent", "Nuclex.UserInterface\EmbeddedContent\Nuclex.UserInterface.EmbeddedContent.contentproj", "{FD57D556-4449-4C04-A0F8-763AA510B705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Testing.Xna (xna-4.0-x86)", "Nuclex.Testing.Xna\Nuclex.Testing.Xna (xna-4.0-x86).csproj", "{A9F5E976-241D-4765-ACCE-C027D2610A3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuclex.Game.ContentCompressor (net-4.0)", "Nuclex.Game.ContentCompressor\Nuclex.Game.ContentCompressor (net-4.0).csproj", "{AFD03238-BBD9-4416-997D-D7A1915EBDEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8146A59-5232-4B64-911E-0300506A46B4}.Debug|x86.ActiveCfg = Debug|x86
+		{D8146A59-5232-4B64-911E-0300506A46B4}.Debug|x86.Build.0 = Debug|x86
+		{D8146A59-5232-4B64-911E-0300506A46B4}.Release|x86.ActiveCfg = Release|x86
+		{D8146A59-5232-4B64-911E-0300506A46B4}.Release|x86.Build.0 = Release|x86
+		{5FEA504F-5662-4A55-B788-3753467B788D}.Debug|x86.ActiveCfg = Debug|x86
+		{5FEA504F-5662-4A55-B788-3753467B788D}.Debug|x86.Build.0 = Debug|x86
+		{5FEA504F-5662-4A55-B788-3753467B788D}.Release|x86.ActiveCfg = Release|x86
+		{5FEA504F-5662-4A55-B788-3753467B788D}.Release|x86.Build.0 = Release|x86
+		{1589D931-4679-421F-A22B-DA4C1778DC86}.Debug|x86.ActiveCfg = Debug|x86
+		{1589D931-4679-421F-A22B-DA4C1778DC86}.Debug|x86.Build.0 = Debug|x86
+		{1589D931-4679-421F-A22B-DA4C1778DC86}.Release|x86.ActiveCfg = Release|x86
+		{1589D931-4679-421F-A22B-DA4C1778DC86}.Release|x86.Build.0 = Release|x86
+		{08C25323-3EAD-41AC-AEE4-D856845BD6D8}.Debug|x86.ActiveCfg = Debug|x86
+		{08C25323-3EAD-41AC-AEE4-D856845BD6D8}.Debug|x86.Build.0 = Debug|x86
+		{08C25323-3EAD-41AC-AEE4-D856845BD6D8}.Release|x86.ActiveCfg = Release|x86
+		{08C25323-3EAD-41AC-AEE4-D856845BD6D8}.Release|x86.Build.0 = Release|x86
+		{4D9CD97B-289E-4519-A6F8-58C6DB8040D4}.Debug|x86.ActiveCfg = Debug|x86
+		{4D9CD97B-289E-4519-A6F8-58C6DB8040D4}.Debug|x86.Build.0 = Debug|x86
+		{4D9CD97B-289E-4519-A6F8-58C6DB8040D4}.Release|x86.ActiveCfg = Release|x86
+		{4D9CD97B-289E-4519-A6F8-58C6DB8040D4}.Release|x86.Build.0 = Release|x86
+		{2CB08AB5-46B8-44A9-92AE-33790629696D}.Debug|x86.ActiveCfg = Debug|x86
+		{2CB08AB5-46B8-44A9-92AE-33790629696D}.Debug|x86.Build.0 = Debug|x86
+		{2CB08AB5-46B8-44A9-92AE-33790629696D}.Release|x86.ActiveCfg = Release|x86
+		{2CB08AB5-46B8-44A9-92AE-33790629696D}.Release|x86.Build.0 = Release|x86
+		{1D1E8CAE-0068-48F0-9D3E-E44F6C27E5D8}.Debug|x86.ActiveCfg = Debug|x86
+		{1D1E8CAE-0068-48F0-9D3E-E44F6C27E5D8}.Debug|x86.Build.0 = Debug|x86
+		{1D1E8CAE-0068-48F0-9D3E-E44F6C27E5D8}.Release|x86.ActiveCfg = Release|x86
+		{1D1E8CAE-0068-48F0-9D3E-E44F6C27E5D8}.Release|x86.Build.0 = Release|x86
+		{4490A1C9-32EE-40B4-9F9C-D71556154E9B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4490A1C9-32EE-40B4-9F9C-D71556154E9B}.Release|x86.ActiveCfg = Debug|Any CPU
+		{3438C492-2CAC-4091-85A8-6079B4AAB69A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3438C492-2CAC-4091-85A8-6079B4AAB69A}.Release|x86.ActiveCfg = Debug|Any CPU
+		{1B2C1970-E62B-4F9F-9BD9-D273FFE465E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B2C1970-E62B-4F9F-9BD9-D273FFE465E0}.Release|x86.ActiveCfg = Debug|Any CPU
+		{3C9927AC-9E66-4A18-97FE-B44538C567B4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3C9927AC-9E66-4A18-97FE-B44538C567B4}.Release|x86.ActiveCfg = Debug|Any CPU
+		{FD57D556-4449-4C04-A0F8-763AA510B705}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD57D556-4449-4C04-A0F8-763AA510B705}.Release|x86.ActiveCfg = Debug|Any CPU
+		{A9F5E976-241D-4765-ACCE-C027D2610A3A}.Debug|x86.ActiveCfg = Debug|x86
+		{A9F5E976-241D-4765-ACCE-C027D2610A3A}.Debug|x86.Build.0 = Debug|x86
+		{A9F5E976-241D-4765-ACCE-C027D2610A3A}.Release|x86.ActiveCfg = Release|x86
+		{A9F5E976-241D-4765-ACCE-C027D2610A3A}.Release|x86.Build.0 = Release|x86
+		{AFD03238-BBD9-4416-997D-D7A1915EBDEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AFD03238-BBD9-4416-997D-D7A1915EBDEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{AFD03238-BBD9-4416-997D-D7A1915EBDEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{AFD03238-BBD9-4416-997D-D7A1915EBDEF}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

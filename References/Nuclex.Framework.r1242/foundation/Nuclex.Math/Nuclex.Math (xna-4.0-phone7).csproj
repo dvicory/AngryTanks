@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{C5567765-5FED-4BBC-8B68-0078B6D89EE4}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Math</RootNamespace>
+    <AssemblyName>Nuclex.Math</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows Phone</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>4879bcbd-b3da-48b3-93fe-b67f14952e07</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-phone7\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS_PHONE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>false</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-phone7\Debug\Nuclex.Math.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Windows Phone' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-phone7\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS_PHONE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>false</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-phone7\Release\Nuclex.Math.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Arithmetics.cs" />
+    <Compile Include="Source\Arithmetics.Test.cs">
+      <DependentUpon>Arithmetics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\AssertHelper.cs" />
+    <Compile Include="Source\Generic\CheckedScalarMath.cs" />
+    <Compile Include="Source\Generic\CheckedScalarMath.Double.cs">
+      <DependentUpon>CheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generic\CheckedScalarMath.Float.cs">
+      <DependentUpon>CheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generic\CheckedScalarMath.Integer.cs">
+      <DependentUpon>CheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generic\IAbsoluteValueProvider.cs" />
+    <Compile Include="Source\Generic\IArithmeticsProvider.cs" />
+    <Compile Include="Source\Generic\IBitOperationsProvider.cs" />
+    <Compile Include="Source\Generic\IComparisonProvider.cs" />
+    <Compile Include="Source\Generic\IDoubleConversionProvider.cs" />
+    <Compile Include="Source\Generic\IIntConversionProvider.cs" />
+    <Compile Include="Source\Generic\ILimitProvider.cs" />
+    <Compile Include="Source\Generic\ILogarithmicsProvider.cs" />
+    <Compile Include="Source\Generic\IScalingProvider.cs" />
+    <Compile Include="Source\Generic\ITrigonometricsProvider.cs" />
+    <Compile Include="Source\Generic\UncheckedScalarMath.cs" />
+    <Compile Include="Source\Generic\UncheckedScalarMath.Double.cs">
+      <DependentUpon>UncheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generic\UncheckedScalarMath.Float.cs">
+      <DependentUpon>UncheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generic\UncheckedScalarMath.Integer.cs">
+      <DependentUpon>UncheckedScalarMath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Interpolation\IInterpolator.cs" />
+    <Compile Include="Source\Interpolation\IrregularArraySampleProvider.cs" />
+    <Compile Include="Source\Interpolation\ISampleProvider.cs" />
+    <Compile Include="Source\Interpolation\LinearInterpolator.cs" />
+    <Compile Include="Source\Generic\Number.cs" />
+    <Compile Include="Source\Interpolation\CubicInterpolator.cs" />
+    <Compile Include="Source\Interpolation\PeriodicArraySampleProvider.cs" />
+    <Compile Include="Source\Interpolation\Sample.cs" />
+    <Compile Include="Source\Interpolation\Sample.Test.cs">
+      <DependentUpon>Sample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Interpolation\SimplifiedCubicInterpolator.cs" />
+    <Compile Include="Source\Interpolation\StepInterpolator.cs" />
+    <Compile Include="Source\Interpolation\StepInterpolator.Test.cs">
+      <DependentUpon>StepInterpolator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Matrix33.cs" />
+    <Compile Include="Source\Matrix33.Test.cs">
+      <DependentUpon>Matrix33.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Matrix44.cs" />
+    <Compile Include="Source\Matrix44.Test.cs">
+      <DependentUpon>Matrix44.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\PolarVector2.cs" />
+    <Compile Include="Source\PolarVector2.Test.cs">
+      <DependentUpon>PolarVector2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Quaternion.cs" />
+    <Compile Include="Source\Quaternion.Test.cs">
+      <DependentUpon>Quaternion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Trigonometry.cs" />
+    <Compile Include="Source\Trigonometry.Test.cs">
+      <DependentUpon>Trigonometry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Vector2.cs" />
+    <Compile Include="Source\Vector2.Test.cs">
+      <DependentUpon>Vector2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Vector3.cs" />
+    <Compile Include="Source\Vector3.Test.cs">
+      <DependentUpon>Vector3.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Nuclex.Math.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Support\Nuclex.Support %28xna-4.0-phone7%29.csproj">
+      <Project>{7AC614A7-E1FC-4EB9-9229-13B26280FF9B}</Project>
+      <Name>Nuclex.Support %28xna-4.0-phone7%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

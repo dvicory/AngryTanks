@@ -1,0 +1,45 @@
+﻿This document explains unified coordinates as they're used within
+the Nuclex User Interface library
+
+
+Principle
+
+  The idea of unified coordinates comes from CeGui.
+
+  Unified coordinates contain a fractional part (called 'relative' in CeGui) that describes
+  the position or size as a fraction of the dimensions of the parent coordinate frame. For
+  example, a unified coordinate with a fractional part of 0.5 would always start out in the
+  center of its parent coordinate frame.
+
+  In addition to the fractional part, unified coordinates also have an offset part (called
+  'absolute' in CeGui) which is the offset, in pixels, from the position indicated by the
+  fractional part. This allows you to do things like place an object 10 pixels from the
+  right of the parent coordinate frame (by setting the fractional part to 1.0 and the offset
+  to -10).
+
+
+Usage in Nuclex.UserInterface
+
+  All controls in the Nuclex GUI library use unified coordinates. The final pixel positions
+  and sizes of everything thus depend on the scale of the root coordinate frame that is
+  hosting the GUI.
+
+  This root coordinate frame here is the Screen class. A Screen manages the entire state of
+  the GUI (eg. which control has input focus, where the cursor is currently) and knows the
+  absolute pixel coordinates of the area the GUI can occupy.
+
+  Any screen manages a single invisible control that forms the topmost element of any GUI
+  control hierarchy: The desktop. This elegantly allows you to use the unified coordinate
+  features for the size of the actual GUI area (eg. you could make the GUI always stay away
+  10% from the screen's borders for TVs where these areas may be invisible).
+  
+  An example of this hierarchy:
+
+  Screen  (Nuclex.UserInterface.Screen)
+    Desktop  (Nuclex.UserInterface.Controls.Control)
+      MyDialog1  (MyProject.Dialog)
+        MyControl1  (Nuclex.UserInterface.Controls.ButtonControl)
+        MyControl2  (Nuclex.UserInterface.Controls.ButtonControl)
+      MyDialog2  (MyProject.Dialog)
+        MyControl1  (Nuclex.UserInterface.Controls.ButtonControl)
+        MyControl2  (Nuclex.UserInterface.Controls.ButtonControl)

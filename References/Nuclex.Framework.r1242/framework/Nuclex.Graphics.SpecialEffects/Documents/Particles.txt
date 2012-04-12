@@ -1,0 +1,21 @@
+﻿// Maximum lifetime
+//   Particle system should be disabled while out of view. If they've been
+//   out of view for more than the maximum particle lifetime, only
+//   maximum particle lifetime is played back when the come into view again.
+//
+//   Optimally, they should be low-priority updateale (eg. per frame budget)
+//   to prevent the hang that would occur when they come into view again
+
+
+ParticleSystem:
+  Just manages raw particles
+  
+ParticleRenderer:
+  Converts particles to vertices (if neccessary) and draws them (usually
+  through the PrimitiveBatch)
+
+IEmitter:
+  Emits particles
+
+I { affector attractor influencer manipulator interferer }
+  Influences particles (eg. wind, gravity)

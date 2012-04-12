@@ -1,0 +1,143 @@
+﻿The Nuclex GUI library supports focus switching between controls using either
+traditional Tab-jumping or navigation using the cursor keys or game pad sticks.
+
+GUIs for game pads should be designed to be very simple, of course. Ideally,
+they should consist of a single active control, like a numeric value that can
+be adjusted by pressing up/down, plus an ok/cancel button pair with assigned
+shortcut buttons so the user can acknowledge with (A) and cancel with (B).
+
+If you design more elaborate dialogs, however, the GUI will try its best to
+let a game pad user navigate the controls using his cursor keys or game pad
+thumb sticks. The GUI will decide which controls to focus based on their
+position automatically.
+
+This document describes the logic behind the control selection system.
+
+-------------------------------------------------------------------------------
+Controls being Considered
+-------------------------------------------------------------------------------
+
+Only other controls in the same container are taken into consideration for
+focus jumping. The search inspects any control which implements IFocusable
+with CanGetFocus returning true.
+
+For an inspected control to become a candidate for focus change, it must touch
+the quadrant of the direction the user wants to move focus towards.
+
+A Quadrant is on each of the for sides of a control, their boundaries being
+lines diagonally extending away from each of the control's corners like this:
+
+               \                     /
+                \    Top Quadrant   /
+                 \                 /
+                  \               /
+                   +-------------+
+  Left Quadrant    |   Control   |    Right Quadrant
+                   +-------------+
+                  /               \
+                 /                 \
+                /  Bottom Quadrant  \
+               /                     \
+
+The algorithm by which this can be tested is explained in the next section.
+
+-------------------------------------------------------------------------------
+Controls being Considered II
+-------------------------------------------------------------------------------
+
+First, the center of the inspected control is calculated. Then an imaginary
+line is drawn through it either horizontally or vertically, depending on
+whether the focus change direction is up/down or left/right.
+
+Assuming the user wants to change focus to the control above the currently
+focused control, this is the line that would be generated:
+
+         \                         /
+      +-------------------------------+
+      | - - - - - - - - - - - - - - - |   <-- line through center
+      +-------------------------------+
+             \                 /
+              \               /
+               +-------------+
+               |   Focused   |
+               |   Control   |
+               +-------------+
+              /               \
+
+To find out whether the line intersects with the quadrant, the closest point
+on the line to the center of the focused control is calculated. This can be
+done simply by taking the X coordinate of the focused control's center and
+clamping it into the left and right borders of the inspected control.
+
+         \                         /
+  +-----------+                   /
+  | - - - - - X  <--  closest    /
+  +-----------+        point    /
+             \                 /
+              \               /
+               +-------------+
+               |   Focused   |
+               |   Control   |
+               +-------------+
+              /               \
+
+How we determine whether the calculated closest point is within the quadrant
+is explained in the next section.
+
+-------------------------------------------------------------------------------
+Controls being Considered III
+-------------------------------------------------------------------------------
+
+Our next task is to find out whether the point calculated in the previous
+step is within the quadrant. To do this, we first determine whether the point
+leaves the left (points 1 and 4) or the right (points 3 and 6) boundary of
+the control.
+
+         \     :             :     /
+          \                       /
+           \ 1 :      2      :   /
+            \                   /
+             \ :             : /  3
+              \               /
+       - - - - +-------------+ - - - -
+           4   | Focused  5  |   6
+               | Control     |
+               +-------------+
+              /               \
+
+If the point is within the horizontal boundary (points 2 and 5), all is fine
+and we can proceed to calculate the distance.
+
+If it leaves the boundary, we need to look whether it is above or below the
+focused control's border. If it is below (points 4 and 6), we can count it
+out.
+
+If it is above the border (points 1 and 3) we need an additional calculation
+to determine whether it is within the target quadrant. This will be explained
+in the next section.
+
+-------------------------------------------------------------------------------
+Controls being Considered IV
+-------------------------------------------------------------------------------
+
+To determine which side of the diagonal quadrant boundary a point is on,
+it is sufficient to calculate the horizontal and vertical distance to the
+nearest corner:
+
+         \                         /
+          \                       /
+           \ 1                   /
+            \                   /
+         2   \                 /
+              \               /
+               +-------------+
+               | Focused  5  |
+               | Control     |
+               +-------------+
+              /               \
+
+In the illustration above, if the point is in the top quadrant, its distance
+on the Y axis will be larger than its distance on the X axis.
+
+So point 1 will have a larger Y distance while point 2 will have a larger
+X distance and thus be counted out.

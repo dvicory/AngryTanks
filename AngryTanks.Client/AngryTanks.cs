@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Nuclex.Input;
 using log4net;
 
 namespace AngryTanks.Client
@@ -24,9 +25,8 @@ namespace AngryTanks.Client
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         GraphicsDeviceManager graphics;
+        public static InputManager Input;
         SpriteBatch spriteBatch;
-
-        private bool fullscreen = false;
 
         private static ServerLink serverLink;
         public static ServerLink ServerLink
@@ -46,10 +46,21 @@ namespace AngryTanks.Client
             get { return gameConsole; }
         }
 
+
+        private bool fullscreen = false;
+        private Viewport lastViewport;
+
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            // down with xna's input!
+            Input = new InputManager(Services, Window.Handle);
+            Components.Add(Input);
+            Input.UpdateOrder = 100;
+
+            //Services.AddService(typeof(IInputService), new InputManager(Services, Window.Handle));
 
             // instantiate server link
             serverLink = new ServerLink();
@@ -68,8 +79,10 @@ namespace AngryTanks.Client
             world.Initialize();
 
             // instantiate game console
-            gameConsole = new GameConsole(Services, new Vector2(0, 400), new Vector2(800, 200));
-            gameConsole.Initialize();
+            gameConsole = new GameConsole(this, new Vector2(0, 400), new Vector2(800, 200),
+                                          new Vector2(10, 10), new Vector2(10, 10), new Color(255, 255, 255, 100));
+            Components.Add(gameConsole);
+            gameConsole.UpdateOrder = 100;
 
             base.Initialize();
         }
@@ -89,8 +102,6 @@ namespace AngryTanks.Client
                 world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
             }
 
-            gameConsole.LoadContent();
-
             base.LoadContent();
         }
 
@@ -102,8 +113,6 @@ namespace AngryTanks.Client
         {
             if (world != null)
                 world.UnloadContent();
-
-            gameConsole.UnloadContent();
 
             base.UnloadContent();
         }
@@ -189,7 +198,20 @@ namespace AngryTanks.Client
             if (world != null)
                 world.Update(gameTime);
 
+            // TODO should probably have console do more advanced positioning that accounts for this...
+            // do we need to change console's position and size?
+            Viewport viewport = GraphicsDevice.Viewport;
+
+            if ((viewport.Width != lastViewport.Width) || (viewport.Height != lastViewport.Height))
+            {
+                gameConsole.Position = new Vector2(0, viewport.Height - 200);
+                gameConsole.Size = new Vector2(viewport.Width, 200);
+            }
+
+            lastViewport = viewport;
+
             base.Update(gameTime);
+
         }
 
         /// <summary>
@@ -202,8 +224,6 @@ namespace AngryTanks.Client
 
             if (world != null)
                 world.Draw(gameTime);
-
-            gameConsole.Draw(gameTime);
 
             base.Draw(gameTime);
         }

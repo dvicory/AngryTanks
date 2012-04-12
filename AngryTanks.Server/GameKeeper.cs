@@ -95,8 +95,7 @@ namespace AngryTanks.Server
 
             NetOutgoingMessage packet = Program.Server.CreateMessage();
 
-            MsgAddPlayerPacket message =
-                new MsgAddPlayerPacket(new PlayerInformation(slot, playerInfo.Callsign, playerInfo.Tag, playerInfo.Team));
+            MsgAddPlayerPacket message = new MsgAddPlayerPacket(players[slot].PlayerInfo);
 
             packet.Write((Byte)message.MsgType);
             message.Write(packet);

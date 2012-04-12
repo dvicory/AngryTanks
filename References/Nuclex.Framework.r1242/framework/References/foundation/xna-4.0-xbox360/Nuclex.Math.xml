@@ -1,0 +1,2631 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nuclex.Math</name>
+    </assembly>
+    <members>
+        <member name="T:Nuclex.Math.Arithmetics">
+            <summary>Arithmetical auxiliary functions</summary>
+        </member>
+        <member name="M:Nuclex.Math.Arithmetics.NearestMultiple(System.Double,System.Double)">
+            <summary>Determines the nearest multiple of a number to another number</summary>
+            <param name="value">Number to which to determine the nearest multiple</param>
+            <param name="factor">Factors whose nearest multiple will be returned</param>
+            <returns>The nearest multiple of the specified factor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Arithmetics.InRange(System.Double,System.Double,System.Double)">
+            <summary>Checks whether a double is within a specific range of another double</summary>
+            <param name="value">Comparison value</param>
+            <param name="other">Value to compare to</param>
+            <param name="range">Allowed range within the value is allowed to be</param>
+            <returns>True if both values are within the specified range of each other</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.CheckedScalarMath">
+            <summary>Checked math operations for double values</summary>
+            <summary>Checked math operations for float values</summary>
+            <summary>Checked math operations for integer values</summary>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IComparisonProvider`1">
+            <summary>Provides comparison operations on the given type</summary>
+            <typeparam name="ScalarType">
+              Type for which comparison operations are provided
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IComparisonProvider`1.Equal(`0,`0)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IComparisonProvider`1.GreaterThan(`0,`0)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IComparisonProvider`1.LessThan(`0,`0)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IComparisonProvider`1.IsPositive(`0)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IComparisonProvider`1.IsNegative(`0)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IDoubleConversionProvider`1">
+            <summary>Provides double conversion operations for a data type</summary>
+            <typeparam name="ScalarType">
+              Data type for which to provide conversion operations
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IDoubleConversionProvider`1.FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IDoubleConversionProvider`1.ToDouble(`0)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IIntConversionProvider`1">
+            <summary>Provides integer conversion operations for a data type</summary>
+            <typeparam name="ScalarType">
+              Data type for which to provide conversion operations
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IIntConversionProvider`1.FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IIntConversionProvider`1.ToInteger(`0)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.ILimitProvider`1">
+            <summary>Provides methods for limiting values of the provided type</summary>
+            <typeparam name="ScalarType">
+              Type for which limiting operations are provided
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILimitProvider`1.Min(`0,`0)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILimitProvider`1.Max(`0,`0)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILimitProvider`1.Clamp(`0,`0,`0)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILimitProvider`1.Wrap(`0,`0,`0)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.ITrigonometricsProvider`1">
+            <summary>Trigonometrical operations on a given data type</summary>
+            <typeparam name="ScalarType">
+              Type for which trigonometrical operations are provided
+            </typeparam>
+            <remarks>
+              Throughout this library, angles are always expressed as doubles, so only
+              cartesian coordinates which might be the result of these operations
+              actually use the generic data type.
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Tan(`0)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Atan(`0)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ITrigonometricsProvider`1.Atan2(`0,`0)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IAbsoluteValueProvider`1">
+            <summary>Provides numbers with special meanings for a data type</summary>
+            <typeparam name="ScalarType">Data type for which to provide special numbers</typeparam>
+        </member>
+        <member name="P:Nuclex.Math.Generic.IAbsoluteValueProvider`1.Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.IAbsoluteValueProvider`1.One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.IAbsoluteValueProvider`1.MinValue">
+            <summary>
+              The lower end of the value range that can be expressed by the data type
+            </summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.IAbsoluteValueProvider`1.MaxValue">
+            <summary>
+              The upper end of the value range that can be expressed by the data type
+            </summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.IAbsoluteValueProvider`1.Epsilon">
+            <summary>
+              The smallest change in value that can be expressed with the data type
+            </summary>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IScalingProvider`1">
+            <summary>Scales and unscales generic number</summary>
+            <typeparam name="ScalarType">Data type of the numbers to be scaled</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IScalingProvider`1.Scale(`0,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IScalingProvider`1.Unscale(`0,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IArithmeticOperationsProvider`1">
+            <summary>Provides arithmetical operations</summary>
+            <typeparam name="ScalarType">
+              The data type for which to provide arithmetical operations
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Abs(`0)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Inv(`0)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Negate(`0)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Add(`0,`0)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Subtract(`0,`0)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Multiply(`0,`0)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IArithmeticOperationsProvider`1.Divide(`0,`0)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.ILogarithmicsProvider`1">
+            <summary>Provides logarithmical operations for generic numbers</summary>
+            <typeparam name="ScalarType">
+              Type for which logarithmical operations are provided
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILogarithmicsProvider`1.Pow(`0,`0)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILogarithmicsProvider`1.Sqrt(`0)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILogarithmicsProvider`1.Log(`0)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.ILogarithmicsProvider`1.Exp(`0)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="T:Nuclex.Math.Generic.IBitOperationsProvider`1">
+            <summary>Binary math routines</summary>
+            <typeparam name="ScalarType">
+              Data type for which to provide binary operations
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IBitOperationsProvider`1.And(`0,`0)">
+            <summary>Binarily ANDs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ANDing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IBitOperationsProvider`1.Or(`0,`0)">
+            <summary>Binarily ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IBitOperationsProvider`1.Xor(`0,`0)">
+            <summary>Binarily exclusive ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary exclusive ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.IBitOperationsProvider`1.Not(`0)">
+            <summary>Binarily negates the bits of a number</summary>
+            <param name="value">Value to be negated</param>
+            <returns>The result of the binary negation</returns>
+        </member>
+        <member name="F:Nuclex.Math.Generic.CheckedScalarMath.instance">
+            <summary>Stores the singleton instance</summary>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Equal(System.Double,System.Double)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.GreaterThan(System.Double,System.Double)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.LessThan(System.Double,System.Double)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsPositive(System.Double)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsNegative(System.Double)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.ToDouble(System.Double)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Double}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.ToInteger(System.Double)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Min(System.Double,System.Double)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Max(System.Double,System.Double)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Clamp(System.Double,System.Double,System.Double)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Wrap(System.Double,System.Double,System.Double)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Tan(System.Double)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Atan(System.Double)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Atan2(System.Double,System.Double)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Scale(System.Double,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Unscale(System.Double,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Abs(System.Double)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Inv(System.Double)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Negate(System.Double)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Add(System.Double,System.Double)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Subtract(System.Double,System.Double)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Multiply(System.Double,System.Double)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Divide(System.Double,System.Double)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Pow(System.Double,System.Double)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Sqrt(System.Double)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Log(System.Double)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Exp(System.Double)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Equal(System.Single,System.Single)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.GreaterThan(System.Single,System.Single)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.LessThan(System.Single,System.Single)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsPositive(System.Single)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsNegative(System.Single)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Single}#FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Single}#ToDouble(System.Single)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Single}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.ToInteger(System.Single)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Min(System.Single,System.Single)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Max(System.Single,System.Single)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Clamp(System.Single,System.Single,System.Single)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Wrap(System.Single,System.Single,System.Single)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Tan(System.Single)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Atan(System.Single)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Atan2(System.Single,System.Single)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Scale(System.Single,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Unscale(System.Single,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Abs(System.Single)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Inv(System.Single)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Negate(System.Single)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Add(System.Single,System.Single)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Subtract(System.Single,System.Single)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Multiply(System.Single,System.Single)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Divide(System.Single,System.Single)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Pow(System.Single,System.Single)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Sqrt(System.Single)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Log(System.Single)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Exp(System.Single)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Equal(System.Int32,System.Int32)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.GreaterThan(System.Int32,System.Int32)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.LessThan(System.Int32,System.Int32)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsPositive(System.Int32)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.IsNegative(System.Int32)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Int32}#FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.ToDouble(System.Int32)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Int32}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.ToInteger(System.Int32)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Min(System.Int32,System.Int32)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Max(System.Int32,System.Int32)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Clamp(System.Int32,System.Int32,System.Int32)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Wrap(System.Int32,System.Int32,System.Int32)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Tan(System.Int32)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Atan(System.Int32)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Atan2(System.Int32,System.Int32)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Scale(System.Int32,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Unscale(System.Int32,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.And(System.Int32,System.Int32)">
+            <summary>Binarily ANDs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ANDing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Or(System.Int32,System.Int32)">
+            <summary>Binarily ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Xor(System.Int32,System.Int32)">
+            <summary>Binarily exclusive ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary exclusive ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Not(System.Int32)">
+            <summary>Binarily negates the bits of a number</summary>
+            <param name="value">Value to be negated</param>
+            <returns>The result of the binary negation</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Abs(System.Int32)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Inv(System.Int32)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Negate(System.Int32)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Add(System.Int32,System.Int32)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Subtract(System.Int32,System.Int32)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Multiply(System.Int32,System.Int32)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Divide(System.Int32,System.Int32)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Pow(System.Int32,System.Int32)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Sqrt(System.Int32)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Log(System.Int32)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.CheckedScalarMath.Exp(System.Int32)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Instance">
+            <summary>Provides the one and only instance of this class</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.CheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="T:Nuclex.Math.Generic.UncheckedScalarMath">
+            <summary>Unchecked math operations for double values</summary>
+            <summary>Unchecked math operations for float values</summary>
+            <summary>Unchecked math operations for integer values</summary>
+        </member>
+        <member name="F:Nuclex.Math.Generic.UncheckedScalarMath.instance">
+            <summary>Stores the singleton instance</summary>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Equal(System.Double,System.Double)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.GreaterThan(System.Double,System.Double)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.LessThan(System.Double,System.Double)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsPositive(System.Double)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsNegative(System.Double)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.ToDouble(System.Double)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Double}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.ToInteger(System.Double)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Min(System.Double,System.Double)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Max(System.Double,System.Double)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Clamp(System.Double,System.Double,System.Double)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Wrap(System.Double,System.Double,System.Double)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Tan(System.Double)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Atan(System.Double)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Atan2(System.Double,System.Double)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Scale(System.Double,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Unscale(System.Double,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Abs(System.Double)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Inv(System.Double)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Negate(System.Double)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Add(System.Double,System.Double)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Subtract(System.Double,System.Double)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Multiply(System.Double,System.Double)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Divide(System.Double,System.Double)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Pow(System.Double,System.Double)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Sqrt(System.Double)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Log(System.Double)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Exp(System.Double)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Equal(System.Single,System.Single)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.GreaterThan(System.Single,System.Single)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.LessThan(System.Single,System.Single)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsPositive(System.Single)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsNegative(System.Single)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Single}#FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Single}#ToDouble(System.Single)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Single}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.ToInteger(System.Single)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Min(System.Single,System.Single)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Max(System.Single,System.Single)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Clamp(System.Single,System.Single,System.Single)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Wrap(System.Single,System.Single,System.Single)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Tan(System.Single)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Atan(System.Single)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Single}#Atan2(System.Single,System.Single)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Scale(System.Single,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Unscale(System.Single,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Abs(System.Single)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Inv(System.Single)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Negate(System.Single)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Add(System.Single,System.Single)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Subtract(System.Single,System.Single)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Multiply(System.Single,System.Single)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Divide(System.Single,System.Single)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Pow(System.Single,System.Single)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Sqrt(System.Single)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Log(System.Single)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Exp(System.Single)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Equal(System.Int32,System.Int32)">
+            <summary>Checks whether two values are equal</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the two value are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.GreaterThan(System.Int32,System.Int32)">
+            <summary>Checks whether the first value is greater than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is greater than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.LessThan(System.Int32,System.Int32)">
+            <summary>Checks whether the first value is less than the second value</summary>
+            <param name="first">The first value to compare</param>
+            <param name="second">The second value to compare</param>
+            <returns>Whether the first value is less than the second one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsPositive(System.Int32)">
+            <summary>Checks whether the scalar is a positive value</summary>
+            <param name="value">Value that will be checked for positiveness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.IsNegative(System.Int32)">
+            <summary>Checks whether the scalar is a negative value</summary>
+            <param name="value">Value that will be checked for negativeness</param>
+            <returns>True if the value is positive</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IDoubleConversionProvider{System#Int32}#FromDouble(System.Double)">
+            <summary>Converts a double to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.ToDouble(System.Int32)">
+            <summary>Converts a generic data type into a double</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as a double</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IIntConversionProvider{System#Int32}#FromInteger(System.Int32)">
+            <summary>Converts an integer to the generic data type</summary>
+            <param name="value">Value to convert</param>
+            <returns>The input value as the generic data type</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.ToInteger(System.Int32)">
+            <summary>Converts a generic data type into an integer</summary>
+            <param name="value">Generic value to convert</param>
+            <returns>The generic input value as an integer</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Min(System.Int32,System.Int32)">
+            <summary>Returns the smaller one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The smaller of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Max(System.Int32,System.Int32)">
+            <summary>Returns the bigger one of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The bigger of the two input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Clamp(System.Int32,System.Int32,System.Int32)">
+            <summary>Limits a value to specific range</summary>
+            <param name="value">Value to be limited</param>
+            <param name="minimum">Lower end of range (inclusive)</param>
+            <param name="maximum">Upper end of range (exlusive)</param>
+            <returns>The limited input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Wrap(System.Int32,System.Int32,System.Int32)">
+            <summary>Normalizes a value in a wraparound numeric range</summary>
+            <param name="value">Value to be normalized</param>
+            <param name="lower">Lower wraparound point (inclusive)</param>
+            <param name="upper">Upper wraparound point (exclusive)</param>
+            <returns>The normalized input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Sin(System.Double)">
+            <summary>Calculates the sine of the specified angle</summary>
+            <param name="angle">Angle whose sine is calculated</param>
+            <returns>The sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Cos(System.Double)">
+            <summary>Calculates the cosine of the specified angle</summary>
+            <param name="angle">Angle whose cosine is calculated</param>
+            <returns>The cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Asin(System.Double)">
+            <summary>Calculates the arcus sine of the specified angle</summary>
+            <param name="angle">Angle whose arcus sine is calculated</param>
+            <returns>The arcus sine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Acos(System.Double)">
+            <summary>Calculates the arcus cosine of the specified angle</summary>
+            <param name="angle">Angle whose arcus cosine is calculated</param>
+            <returns>The arcus cosine of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Tan(System.Int32)">
+            <summary>Calculates the tangent of the specified angle</summary>
+            <param name="value">Angle whose tangent is calculated</param>
+            <returns>The tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Atan(System.Int32)">
+            <summary>Calculates the arcus tangent of the specified angle</summary>
+            <param name="value">Angle whose arcus tangent is calculated</param>
+            <returns>The arcus tangent of the provided angle</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#ITrigonometricsProvider{System#Int32}#Atan2(System.Int32,System.Int32)">
+            <summary>Calculates the arcus tangent of the provided vector</summary>
+            <param name="y">Length of the vector on the Y axis</param>
+            <param name="x">Length of the vector on the X axis</param>
+            <returns>The tangent of the input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Scale(System.Int32,System.Double)">
+            <summary>Scales a value by an arbitrary factor</summary>
+            <param name="number">Value to be scaled</param>
+            <param name="factor">Scaling factor</param>
+            <returns>The scaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Unscale(System.Int32,System.Double)">
+            <summary>Unscales a value by an arbitrary factor</summary>
+            <param name="number">Value to be unscaled</param>
+            <param name="divisor">Unscaling factor</param>
+            <returns>The unscaled value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.And(System.Int32,System.Int32)">
+            <summary>Binarily ANDs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ANDing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Or(System.Int32,System.Int32)">
+            <summary>Binarily ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Xor(System.Int32,System.Int32)">
+            <summary>Binarily exclusive ORs the bits of two values</summary>
+            <param name="first">First value</param>
+            <param name="second">Second value</param>
+            <returns>The result of the binary exclusive ORing</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Not(System.Int32)">
+            <summary>Binarily negates the bits of a number</summary>
+            <param name="value">Value to be negated</param>
+            <returns>The result of the binary negation</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Abs(System.Int32)">
+            <summary>Returns the absolute value of a number</summary>
+            <param name="number">Number to return the absolute value of</param>
+            <returns>The absolute value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Inv(System.Int32)">
+            <summary>Returns the inverse value of a number</summary>
+            <param name="number">Number to return the inverse value of</param>
+            <returns>The inverse value of the number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Negate(System.Int32)">
+            <summary>Negates a number</summary>
+            <param name="number">Number to negate</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Add(System.Int32,System.Int32)">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to be summed</param>
+            <param name="second">Second number to be summed</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Subtract(System.Int32,System.Int32)">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Multiply(System.Int32,System.Int32)">
+            <summary>The product of both numbers</summary>
+            <param name="number">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both factors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Divide(System.Int32,System.Int32)">
+            <summary>Divides the number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor</param>
+            <returns>The quotient of the number divided by the provided divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Pow(System.Int32,System.Int32)">
+            <summary>Calculates the mathematical power of a value</summary>
+            <param name="number">Value to calculate the power of</param>
+            <param name="power">Power to which to take the value</param>
+            <returns>The resulting value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Sqrt(System.Int32)">
+            <summary>Calculates the square root of a number</summary>
+            <param name="number">Value of which to calculate the square root</param>
+            <returns>The square root of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Log(System.Int32)">
+            <summary>Calculates the logarithm of a number</summary>
+            <param name="number">Value of which to calculate the logarithm</param>
+            <returns>The logarithm of the input value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.UncheckedScalarMath.Exp(System.Int32)">
+            <summary>Calculates the exponent of a number</summary>
+            <param name="number">Value of which to calculate the exponent</param>
+            <returns>The exponent of the input value</returns>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Instance">
+            <summary>Provides the one and only instance of this class</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Single}#Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#Zero">
+            <summary>The number 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#One">
+            <summary>The number 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#MinValue">
+            <summary>The lower end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#MaxValue">
+            <summary>The upper end of the value range that can be expressed by the data type</summary>
+        </member>
+        <member name="P:Nuclex.Math.Generic.UncheckedScalarMath.Nuclex#Math#Generic#IAbsoluteValueProvider{System#Int32}#Epsilon">
+            <summary>The smallest change in value that can be expressed with the data type</summary>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.IInterpolator`2">
+            <summary>Interface for interpolators</summary>
+            <typeparam name="TimeType">
+              Data type of the time specifications provided to the interpolator
+            </typeparam>
+            <typeparam name="SampleType">
+              Data type being interpolated by the interpolator
+            </typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Interpolation.IInterpolator`2.Interpolate(`0)">
+            <summary>Interpolates the value expected for the given point in time</summary>
+            <param name="time">Interpolation time</param>
+            <returns>The interpolated value</returns>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.IInterpolator`1">
+            <summary>Interface for interpolators</summary>
+            <typeparam name="SampleType">
+              Data type being interpolated by the interpolator
+            </typeparam>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.ISampleProvider`2">
+            <summary>Interface used to dynamically query samples</summary>
+            <typeparam name="TimeType">Data type of the time values</typeparam>
+            <typeparam name="SampleType">Data type of the sample values</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Interpolation.ISampleProvider`2.LocateSample(`0,System.Int32)">
+            <summary>Queries for a sample</summary>
+            <param name="time">Time of which to determine the sample</param>
+            <param name="offset">
+               An offset of 0 means that the sample directly before or at the specified
+               time is returned. The sample provider is supposed to always refer to the
+               left (the past) sample, not to look for the nearest sample of something.
+               Offsets other than 0 are relative to this sample, +1 means the sample to
+               the right of that and -1 the sample to the left.
+            </param>
+            <returns>The sample relative to the specified time and offset</returns>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.ISampleProvider`1">
+            <summary>Interface used to dynamically query samples</summary>
+            <typeparam name="SampleType">Data type of the sample values</typeparam>
+        </member>
+        <member name="T:Nuclex.Math.Generic.Number`2">
+            <summary>Provides a generic data type with implicit operators</summary>
+            <typeparam name="NumericalType">Generic numerical data type</typeparam>
+            <typeparam name="MathType">Set of math routines to be used on it</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.#ctor(`0)">
+            <summary>Initializes the wrapped number to the direct generic number</summary>
+            <param name="number">The directly given generic number</param>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Implicit(`0)~Nuclex.Math.Generic.Number{`0,`1}">
+            <summary>Implicit conversion from a direct number to this wrapper</summary>
+            <param name="number">Direct generic number to be wrapped</param>
+            <returns>The wrapped generic number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Implicit(Nuclex.Math.Generic.Number{`0,`1})~`0">
+            <summary>Implicit conversion from this wrapper to a direct number</summary>
+            <param name="number">Wrapped to be unwrapped</param>
+            <returns>The unwrapped direct generic number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_UnaryNegation(Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Negates the number</summary>
+            <param name="number">Number to be negated</param>
+            <returns>The negated number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Addition(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Forms the sum of two numbers</summary>
+            <param name="first">First number to sum</param>
+            <param name="second">Second number to sum</param>
+            <returns>The sum of both numbers</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Subtraction(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Subtracts one number from the other</summary>
+            <param name="number">Base number from which to subtract</param>
+            <param name="subtrahend">Number to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Multiply(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Forms the product of two numebrs</summary>
+            <param name="number">First multiplication factor</param>
+            <param name="factor">Second multiplication factor</param>
+            <returns>The product of the multiplication of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Division(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Divides one number by another one</summary>
+            <param name="number">Number to be divided</param>
+            <param name="divisor">Divisor by which to divide</param>
+            <returns>The quotient of the number and the divisor</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Equality(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Checks if two numbers are equal</summary>
+            <param name="a">First number to be compared</param>
+            <param name="b">Second number to be compared</param>
+            <returns>True if both numbers are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_Inequality(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Check if two numbers are unequal</summary>
+            <param name="a">First number to be compared</param>
+            <param name="b">Second number to be compared</param>
+            <returns>True if both numbers are unequal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.Equals(System.Object)">
+            <summary>Checks if another object is identical to this object</summary>
+            <param name="a">Other object to compare this instance to</param>
+            <returns>True if both the other object is identical to this one</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_GreaterThan(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Tests whether the first value is greater than the second value</summary>
+            <param name="a">First value to compare</param>
+            <param name="b">Second value to compare</param>
+            <returns>True if the first value is greater than the second value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.op_LessThan(Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Tests whether the first value is less than the second value</summary>
+            <param name="a">First value to compare</param>
+            <param name="b">Second value to compare</param>
+            <returns>True if the first value is less than the second value</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.ToString">
+            <summary>Converts the wrapped generic number into a string</summary>
+            <returns>The string representation of the generic number</returns>
+        </member>
+        <member name="M:Nuclex.Math.Generic.Number`2.GetHashCode">
+            <summary>Provides a hashing value for the instance</summary>
+            <returns>The hashing value for this instance</returns>
+        </member>
+        <member name="F:Nuclex.Math.Generic.Number`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="F:Nuclex.Math.Generic.Number`2.value">
+            <summary>The direct generic value that is wrapped by this instance</summary>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3">
+            <summary>Provides samples from a regularly spaced sample array</summary>
+            <typeparam name="TimeType">Data type of the time values</typeparam>
+            <typeparam name="SampleType">Data type of the sample values</typeparam>
+            <typeparam name="TimeMathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.#ctor(`1[],`0,`0)">
+            <summary>Initializes the periodally spaced sample provider</summary>
+            <param name="samples">Array containing the sample values</param>
+            <param name="interval">Time between each two samples</param>
+            <param name="start">Point in time where the first sample is located</param>
+        </member>
+        <member name="M:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.LocateSample(`0,System.Int32)">
+            <summary>Queries for a sample</summary>
+            <param name="time">Time of which to determine the sample</param>
+            <param name="offset">
+               An offset of 0 means that the sample directly before or at the specified
+               time is returned. The sample provider is supposed to always refer to the
+               left (the past) sample, not to look for the nearest sample of something.
+               Offsets other than 0 are relative to this sample, +1 means the sample to
+               the right of that and -1 the sample to the left.
+            </param>
+            <returns>The sample relative to the specified time and offset</returns>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.samples">
+            <summary>Array containing the samples provided by this sample provider</summary>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.start">
+            <summary>Time index of the first sample</summary>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.interval">
+            <summary>Interval from one sample to the next</summary>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.PeriodicArraySampleProvider`3.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="T:Nuclex.Math.Interpolation.Sample`2">
+            <summary>Interpolation sample</summary>
+            <typeparam name="TimeType">Data type of the time values</typeparam>
+            <typeparam name="SampleType">Data type being interpolated</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Interpolation.Sample`2.#ctor(`0,`1)">
+            <summary>Initializes thesample</summary>
+            <param name="value">Value at the given time</param>
+            <param name="time">Time at which the specified value is prevalent</param>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.Sample`2.Time">
+            <summary>Time at which this sample is located</summary>
+        </member>
+        <member name="F:Nuclex.Math.Interpolation.Sample`2.Value">
+            <summary>Interpolation sample value</summary>
+        </member>
+        <member name="T:Nuclex.Math.Matrix33`2">
+            <summary>Specialized 3x3 matrix class like used for 3D orientations</summary>
+            <typeparam name="ScalarType">Type that the matrix uses for its components</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.BuildXRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the X axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.BuildYRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the Y axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.BuildZRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the Z axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.FromQuaternion(Nuclex.Math.Quaternion{`0,`1})">
+            <summary>Builds a rotation matrix from a quaternion</summary>
+            <param name="quaternion">Quaternion from which the orientation is taken</param>
+            <returns>A matrix with the same orientation as the quaternion</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.#ctor(Nuclex.Math.Matrix33{`0,`1})">
+            <summary>Constructs a new matrix as copy of an existing matrix</summary>
+            <param name="other">Matrix to copy</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.#ctor(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>
+              Constructs a new matrix from three orthogonal vectors and a translation
+            </summary>
+            <param name="right">A vector pointing to the right</param>
+            <param name="up">A vector pointing upwards</param>
+            <param name="into">A vector pointing into the direction the matrix faces</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.#ctor(`0,`0,`0,`0,`0,`0,`0,`0,`0)">
+            <summary>Constructs a new matrix from the specified components</summary>
+            <param name="m00">The value for element 0, 0 of the matrix</param>
+            <param name="m01">The value for element 0, 1 of the matrix</param>
+            <param name="m02">The value for element 0, 2 of the matrix</param>
+            <param name="m10">The value for element 1, 0 of the matrix</param>
+            <param name="m11">The value for element 1, 1 of the matrix</param>
+            <param name="m12">The value for element 1, 2 of the matrix</param>
+            <param name="m20">The value for element 2, 0 of the matrix</param>
+            <param name="m21">The value for element 2, 1 of the matrix</param>
+            <param name="m22">The value for element 2, 2 of the matrix</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.op_Multiply(Nuclex.Math.Matrix33{`0,`1},Nuclex.Math.Matrix33{`0,`1})">
+            <summary>Calculates the product of two matrices</summary>
+            <param name="matrix">First matrix for the multiplication</param>
+            <param name="factor">Second matrix for the multiplication</param>
+            <returns>The product of the multiplication of both vector's elements</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.op_Multiply(Nuclex.Math.Matrix33{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Transforms a vector by this matrix</summary>
+            <param name="matrix">Matrix to transform the vector by</param>
+            <param name="vector">Vector to be transformed</param>
+            <returns>The transformed vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.op_Equality(Nuclex.Math.Matrix33{`0,`1},Nuclex.Math.Matrix33{`0,`1})">
+            <summary>Determines if two matrices are equal</summary>
+            <param name="first">First matrix to be compared</param>
+            <param name="second">Second matrix to be compared</param>
+            <returns>True if both matrices are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.op_Inequality(Nuclex.Math.Matrix33{`0,`1},Nuclex.Math.Matrix33{`0,`1})">
+            <summary>Determines if two matrices are unequal</summary>
+            <param name="first">First matrix to be compared</param>
+            <param name="second">Second matrix to be compared</param>
+            <returns>True if both matrices are unequal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.Equals(System.Object)">
+            <summary>Determines if an object is identical to the matrix</summary>
+            <param name="obj">Object to compare to</param>
+            <returns>True if the object is identical to the matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.GetHashCode">
+            <summary>Builds a hashing code for the instance</summary>
+            <returns>The instance's hashing code</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.ToString">
+            <summary>Converts the matrix to a readable string representation</summary>
+            <returns>The matrix as a string</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix33`2.N(`0)">
+            <summary>Constructs a number wrapper around the generic data type</summary>
+            <param name="value">Instance of the generic data type to wrap</param>
+            <returns>A number wrapper that wraps the generic data type instance</returns>
+        </member>
+        <member name="F:Nuclex.Math.Matrix33`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="F:Nuclex.Math.Matrix33`2.m">
+            <summary>The elements of the matrix</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Zero">
+            <summary>A matrix whose elements have been initialized to 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.One">
+            <summary>A matrix whose elements have been initialized to 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Identity">
+            <summary>The identity matrix, doing nothing</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Item(System.Int32,System.Int32)">
+            <summary>Access a component of the matrix by its index</summary>
+            <param name="y">The row of the matrix to access</param>
+            <param name="x">The column of the matrix to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Item(System.Int32)">
+            <summary>Access a component of the matrix by its index</summary>
+            <param name="row">The row of the matrix to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Right">
+            <summary>Vector pointing to the right</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Up">
+            <summary>Vector pointing upwards</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix33`2.Into">
+            <summary>Vector pointing inwards</summary>
+        </member>
+        <member name="T:Nuclex.Math.Matrix44`2">
+            <summary>Specialized 4x4 matrix class like used for 3D transforms</summary>
+            <typeparam name="ScalarType">Type that the matrix uses for its components</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.BuildXRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the X axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.BuildYRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the Y axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.BuildZRotation(System.Double)">
+            <summary>Constructs a matrix with the specified rotation on the Z axis</summary>
+            <param name="phi">Rotation angle of the matrix in radians</param>
+            <returns>The rotated matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.BuildPerspectiveProjection(System.Double,`0,Nuclex.Math.Generic.Number{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Creates a perspective projection matrix</summary>
+            <param name="fieldOfView">Angle that the camera can capture on screen</param>
+            <param name="aspectRatio">Display aspect ratio (width divided by height)</param>
+            <param name="clipNear">Near clipping plane distance from camera</param>
+            <param name="clipFar">Far clipping plane distance from camera</param>
+            <returns>A new projection matrix with the specified properties</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.#ctor(Nuclex.Math.Matrix44{`0,`1})">
+            <summary>Constructs a new matrix as copy of an existing matrix</summary>
+            <param name="other">Matrix to copy</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.#ctor(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Constructs a new matrix from three orthogonal vectors</summary>
+            <param name="right">A vector pointing to the right</param>
+            <param name="up">A vector pointing upwards</param>
+            <param name="into">A vector pointing into the direction the matrix faces</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.#ctor(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Constructs a new matrix from three orthogonal vectors and a translation</summary>
+            <param name="right">A vector pointing to the right</param>
+            <param name="up">A vector pointing upwards</param>
+            <param name="into">A vector pointing into the direction the matrix faces</param>
+            <param name="translation">The translation to be stored in the matrix</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.#ctor(`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0,`0)">
+            <summary>Constructs a new matrix from the specified components</summary>
+            <param name="m00">The value for element 0, 0 of the matrix</param>
+            <param name="m01">The value for element 0, 1 of the matrix</param>
+            <param name="m02">The value for element 0, 2 of the matrix</param>
+            <param name="m03">The value for element 0, 3 of the matrix</param>
+            <param name="m10">The value for element 1, 0 of the matrix</param>
+            <param name="m11">The value for element 1, 1 of the matrix</param>
+            <param name="m12">The value for element 1, 2 of the matrix</param>
+            <param name="m13">The value for element 1, 3 of the matrix</param>
+            <param name="m20">The value for element 2, 0 of the matrix</param>
+            <param name="m21">The value for element 2, 1 of the matrix</param>
+            <param name="m22">The value for element 2, 2 of the matrix</param>
+            <param name="m23">The value for element 2, 3 of the matrix</param>
+            <param name="m30">The value for element 3, 0 of the matrix</param>
+            <param name="m31">The value for element 3, 1 of the matrix</param>
+            <param name="m32">The value for element 3, 2 of the matrix</param>
+            <param name="m33">The value for element 3, 3 of the matrix</param>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.op_Multiply(Nuclex.Math.Matrix44{`0,`1},Nuclex.Math.Matrix44{`0,`1})">
+            <summary>Calculates the product of two matrices</summary>
+            <param name="matrix">First matrix for the multiplication</param>
+            <param name="factor">Second matrix for the multiplication</param>
+            <returns>The product of the multiplication of both vector's elements</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.op_Multiply(Nuclex.Math.Matrix44{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Applies a matrix to a vector</summary>
+            <param name="matrix">Matrix to be applied</param>
+            <param name="vector">Vector to apply matrix to</param>
+            <returns>The input vector transformed by the matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.op_Equality(Nuclex.Math.Matrix44{`0,`1},Nuclex.Math.Matrix44{`0,`1})">
+            <summary>Determines if two matrices are equal</summary>
+            <param name="first">First matrix to be compared</param>
+            <param name="second">Second matrix to be compared</param>
+            <returns>True if both matrices are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.op_Inequality(Nuclex.Math.Matrix44{`0,`1},Nuclex.Math.Matrix44{`0,`1})">
+            <summary>Determines if two matrices are unequal</summary>
+            <param name="first">First matrix to be compared</param>
+            <param name="second">Second matrix to be compared</param>
+            <returns>True if both matrices are unequal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.Equals(System.Object)">
+            <summary>Determines if an object is identical to the matrix</summary>
+            <param name="obj">Object to compare to</param>
+            <returns>True if the object is identical to the matrix</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.GetHashCode">
+            <summary>Builds a hashing code for the instance</summary>
+            <returns>The instance's hashing code</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.ToString">
+            <summary>Converts the matrix to a readable string representation</summary>
+            <returns>The matrix as a string</returns>
+        </member>
+        <member name="M:Nuclex.Math.Matrix44`2.N(`0)">
+            <summary>Constructs a number wrapper around the generic data type</summary>
+            <param name="value">Instance of the generic data type to wrap</param>
+            <returns>A number wrapper that wraps the generic data type instance</returns>
+        </member>
+        <member name="F:Nuclex.Math.Matrix44`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="F:Nuclex.Math.Matrix44`2.m">
+            <summary>The elements of the matrix</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Zero">
+            <summary>A matrix whose elements have been initialized to 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.One">
+            <summary>A matrix whose elements have been initialized to 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Identity">
+            <summary>The identity matrix, doing nothing</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Item(System.Int32,System.Int32)">
+            <summary>Access a component of the matrix by its index</summary>
+            <param name="y">The row of the matrix to access</param>
+            <param name="x">The column of the matrix to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Item(System.Int32)">
+            <summary>Access a row of the matrix by its index</summary>
+            <param name="row">The row of the matrix to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Right">
+            <summary>The right pointing vector of the matrix</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Up">
+            <summary>The upwards pointing vector of the matrix</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Into">
+            <summary>The inwards pointing vector of the matrix</summary>
+        </member>
+        <member name="P:Nuclex.Math.Matrix44`2.Translation">
+            <summary>The translation vector of the matrix</summary>
+        </member>
+        <member name="T:Nuclex.Math.PolarVector2Components">
+            <summary>The components of a 2D vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.PolarVector2Components.Radius">
+            <summary>The radius from the coordinate system's center</summary>
+        </member>
+        <member name="F:Nuclex.Math.PolarVector2Components.Phi">
+            <summary>The angle of the vector</summary>
+        </member>
+        <member name="T:Nuclex.Math.PolarVector2`2">
+            <summary>2D vector in polar coordinates</summary>
+            <typeparam name="ScalarType">Type of the the vector uses for its radius</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.Normalize(Nuclex.Math.PolarVector2{`0,`1})">
+            <summary>Normalizes the vector to a length of 1</summary>
+            <param name="vector">Vector to be normalized</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.Rotate(Nuclex.Math.PolarVector2{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Explicit(Nuclex.Math.Vector2{`0,`1})~Nuclex.Math.PolarVector2{`0,`1}">
+            <summary>Converts a normal cartesian vector into a polar vector</summary>
+            <param name="vector">Cartesian vector to convert</param>
+            <returns>An equivalent polar vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Explicit(Nuclex.Math.PolarVector2{`0,`1})~Nuclex.Math.Vector2{`0,`1}">
+            <summary>Converts a polar vector into a normal cartesian vector</summary>
+            <param name="vector">Polar vector to convert</param>
+            <returns>An equivalent cartesian vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.#ctor(System.Double,`0)">
+            <summary>Constructs a new vector from the specified components</summary>
+            <param name="phi">Direction at which the vector points</param>
+            <param name="radius">Radius of the vector from the coordinate system's center</param>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.Equals(System.Object)">
+            <summary>Determines if an object is identical to the vector</summary>
+            <param name="obj">Object to compare to</param>
+            <returns>True if the object is identical to the vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.GetHashCode">
+            <summary>Builds a hashing code for the instance</summary>
+            <returns>The instance's hashing code</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_UnaryNegation(Nuclex.Math.PolarVector2{`0,`1})">
+            <summary>Returns a vector that points into the exact oppsite direction</summary>
+            <param name="vector">Vector of which to return the opposite direction</param>
+            <returns>The inverted vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Multiply(Nuclex.Math.PolarVector2{`0,`1},`0)">
+            <summary>Calculates the product of a vector and a scalar</summary>
+            <param name="vector">First factor of the multiplication</param>
+            <param name="factor">Scalar value by which to scale the vector</param>
+            <returns>The product of the multiplication of the vector with the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Division(Nuclex.Math.PolarVector2{`0,`1},`0)">
+            <summary>Divides a vector by a scalar</summary>
+            <param name="vector">Vector to be divided</param>
+            <param name="divisor">The divisor</param>
+            <returns>The quotient of the vector and the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Equality(Nuclex.Math.PolarVector2{`0,`1},Nuclex.Math.PolarVector2{`0,`1})">
+            <summary>Determines if two vectors are equal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.PolarVector2`2.op_Inequality(Nuclex.Math.PolarVector2{`0,`1},Nuclex.Math.PolarVector2{`0,`1})">
+            <summary>Determines if two vectors are unequal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are unequal</returns>
+        </member>
+        <member name="F:Nuclex.Math.PolarVector2`2.Phi">
+            <summary>The phi component of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.PolarVector2`2.Radius">
+            <summary>The radius component of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.PolarVector2`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.Zero">
+            <summary>A vector whose elements have been initialized to 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.Right">
+            <summary>A unit-length vector pointing right</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.Up">
+            <summary>A unit-length vector pointing upwards</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.Length">
+            <summary>The length of the vector (cheaper to calculate than the squared length)</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.SquaredLength">
+            <summary>The squared length of the vector </summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.Perpendicular">
+            <summary>The vector clockwise rotated by 90 degrees</summary>
+        </member>
+        <member name="P:Nuclex.Math.PolarVector2`2.InvPerpendicular">
+            <summary>The vector coounter clockwise rotated by 90 degrees</summary>
+        </member>
+        <member name="T:Nuclex.Math.QuaternionComponents">
+            <summary>The components of a quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.QuaternionComponents.X">
+            <summary>The X component of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.QuaternionComponents.Y">
+            <summary>The Y component of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.QuaternionComponents.Z">
+            <summary>The Z component of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.QuaternionComponents.W">
+            <summary>The W component of the quaternion</summary>
+        </member>
+        <member name="T:Nuclex.Math.Quaternion`2">
+            <summary>Quaternion for expressing rotations and orientations</summary>
+            <typeparam name="ScalarType">Type that the quaternion uses for its components</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.FromMatrix(Nuclex.Math.Matrix33{`0,`1})">
+            <summary>Builds a quaternion with the same orientation as a matrix</summary>
+            <param name="matrix">Matrix from which the orientation is taken</param>
+            <returns>A quaternion with an identical orientation as the matrix</returns>
+            <remarks>
+              Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
+              article "Quaternion Calculus and Fast Animation".
+            </remarks>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.FromEulerAngles(System.Double,System.Double,System.Double)">
+            <summary>Construct a quaternion from the given euler angles</summary>
+            <param name="yaw">Rotation angle around the Y axis</param>
+            <param name="pitch">Rotation angle around the X axis</param>
+            <param name="roll">Rotation angle around the Z axis</param>
+            <returns>A quaternion with an orientation equivalent to the input angles</returns>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.Normalize(Nuclex.Math.Quaternion{`0,`1})">
+            <summary>Normalizes the quaternion to a length of 1</summary>
+            <param name="quaternion">Quaternion to be normalized</param>
+            <returns>The normalized quaternion</returns>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.DotProduct(Nuclex.Math.Quaternion{`0,`1},Nuclex.Math.Quaternion{`0,`1})">
+            <summary>Forms the scalar product of two quaternions</summary>
+            <param name="first">First quaternion for the multiplication</param>
+            <param name="second">Second quaternion for the multiplication</param>
+            <returns>The scalar product of the multiplication of both quaternions</returns>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.#ctor(`0,`0,`0)">
+            <summary>Initializes the quaternion instance</summary>
+            <param name="x">X component of the quaternion</param>
+            <param name="y">Y component of the quaternion</param>
+            <param name="z">Z component of the quaternion</param>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.#ctor(`0,`0,`0,`0)">
+            <summary>Initializes the quaternion instance</summary>
+            <param name="x">X component of the quaternion</param>
+            <param name="y">Y component of the quaternion</param>
+            <param name="z">Z component of the quaternion</param>
+            <param name="w">W component of the quaternion</param>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.op_Multiply(Nuclex.Math.Quaternion{`0,`1},Nuclex.Math.Quaternion{`0,`1})">
+            <summary>Multiplies two quaternions</summary>
+            <param name="quaternion">Quaternion to be multiplied</param>
+            <param name="factor">Quaternion which serves as multiplication factor</param>
+            <returns>The product of the two quaternions</returns>
+        </member>
+        <member name="F:Nuclex.Math.Quaternion`2.X">
+            <summary>The components of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.Quaternion`2.Y">
+            <summary>The components of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.Quaternion`2.Z">
+            <summary>The components of the quaternion</summary>
+        </member>
+        <member name="F:Nuclex.Math.Quaternion`2.W">
+            <summary>The components of the quaternion</summary>
+        </member>
+        <member name="M:Nuclex.Math.Quaternion`2.n(`0)">
+            <summary>Construct a number wrapper for the generic value</summary>
+            <param name="value">Value that is wrapped</param>
+            <returns>The wrapped input value</returns>
+        </member>
+        <member name="F:Nuclex.Math.Quaternion`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="P:Nuclex.Math.Quaternion`2.SquaredLength">
+            <summary>The squared length of the quaternion</summary>
+        </member>
+        <member name="P:Nuclex.Math.Quaternion`2.Length">
+            <summary>The length of the quaternion</summary>
+        </member>
+        <member name="P:Nuclex.Math.Quaternion`2.Item(System.Int32)">
+            <summary>Access a component of the quaternion by its index</summary>
+            <param name="component">Index of the component to access</param>
+        </member>
+        <member name="T:Nuclex.Math.TangentialPath">
+            <summary>Possible paths to take between to angles</summary>
+        </member>
+        <member name="F:Nuclex.Math.TangentialPath.Positive">
+            <summary>Path in positive direction (from begin to end)</summary>
+        </member>
+        <member name="F:Nuclex.Math.TangentialPath.Negative">
+            <summary>Path in negative direction (from end to begin)</summary>
+        </member>
+        <member name="F:Nuclex.Math.TangentialPath.Shortest">
+            <summary>Shortest path</summary>
+        </member>
+        <member name="T:Nuclex.Math.Trigonometry">
+            <summary>Trigonometrical helper methods</summary>
+            <remarks>
+              Unless otherwise specified, all methods taking angles work in radians.
+              A direction given in radians is commonly referred to by "phi" in this context.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Math.Trigonometry.Perigon">
+            <summary>Angle in radians of a full circle</summary>
+        </member>
+        <member name="F:Nuclex.Math.Trigonometry.RadiansPerDegree">
+            <summary>Factor used to convert from degrees to radians</summary>
+        </member>
+        <member name="F:Nuclex.Math.Trigonometry.DegreesPerRadian">
+            <summary>Factor used to convert from radians to degrees</summary>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.ToDegrees(System.Double)">
+            <summary>Converts an angle from radians to degrees</summary>
+            <param name="radians">Angle in radians that will be converted</param>
+            <returns>The input angle in degrees</returns>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.ToDegrees(System.Single)">
+            <summary>Converts an angle from radians to degrees</summary>
+            <param name="radians">Angle in radians that will be converted</param>
+            <returns>The input angle in degrees</returns>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.ToRadians(System.Double)">
+            <summary>Converts an angle from degrees to radians</summary>
+            <param name="degrees">Angle in degrees that will be converted</param>
+            <returns>The input angle in radians</returns>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.ToRadians(System.Single)">
+            <summary>Converts an angle from degrees to radians</summary>
+            <param name="degrees">Angle in degrees that will be converted</param>
+            <returns>The input angle in radians</returns>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.AngleBetween(System.Double,System.Double)">
+            <summary>Calculates the angle between two absolute directions</summary>
+            <param name="firstPhi">First absolute direction in radians</param>
+            <param name="secondPhi">Second absolute direction in radians</param>
+            <returns>The angle between both directions</returns>
+        </member>
+        <member name="M:Nuclex.Math.Trigonometry.AngleBetween(System.Double,System.Double,Nuclex.Math.TangentialPath)">
+            <summary>Calculates the angle between two absolute directions</summary>
+            <param name="firstPhi">First absolute direction in radians</param>
+            <param name="secondPhi">Second absolute direction in radians</param>
+            <param name="path">Path to take from first to second</param>
+            <returns>The angle between both directions using the desired path</returns>
+            <remarks>
+              See the remarks on the TangentialPath enumeration to determine the exact
+              behavior of this function. A positive path is always from the first angle
+              to the second, independent of whether this is clockwise or counter-clockwise.
+            </remarks>
+        </member>
+        <member name="F:Nuclex.Math.Trigonometry.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="T:Nuclex.Math.Vector2Components">
+            <summary>The components of a 2D vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector2Components.X">
+            <summary>The X coordinate of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector2Components.Y">
+            <summary>The Y coordinate of the vector</summary>
+        </member>
+        <member name="T:Nuclex.Math.Vector2`2">
+            <summary>Simple 2D vector which also doubles as point class</summary>
+            <typeparam name="ScalarType">Type the vector uses for its components</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.#ctor(`0,`0)">
+            <summary>Constructs a new vector from the specified components</summary>
+            <param name="x">Location of the vector on the X axis</param>
+            <param name="y">Location of the vector on the Y axis</param>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Normalize(Nuclex.Math.Vector2{`0,`1})">
+            <summary>Normalizes the vector to a length of 1</summary>
+            <param name="vector">Vector to be normalized</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.DotProduct(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Forms the scalar product of two vectors</summary>
+            <param name="first">First vector for the multiplication</param>
+            <param name="second">Second vector for the multiplication</param>
+            <returns>The scalar product of the multiplication of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.CrossProduct(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Forms the cross product of two vectors</summary>
+            <param name="first">First vector for the multiplication</param>
+            <param name="second">Second vector for the multiplication</param>
+            <returns>The cross product of the multiplication of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Abs(Nuclex.Math.Vector2{`0,`1})">
+            <summary>Returns a vector consisting of the absolute values of the input vector</summary>
+            <param name="vector">Vector whose elements to use the absolute values of</param>
+            <returns>New vector constructed from the absolute values of input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Max(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Returns a vector consisting of the maximum values of two vectors</summary>
+            <param name="first">First vector to be considered</param>
+            <param name="second">Second vector to be considered</param>
+            <returns>A vector with the element-wise maximum values of both input vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Min(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Returns a vector consisting of the minimum values of two vectors</summary>
+            <param name="first">First vector to be considered</param>
+            <param name="second">Second vector to be considered</param>
+            <returns>A vector with the element-wise minimum values of both input vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Rotate(Nuclex.Math.Vector2{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.Equals(System.Object)">
+            <summary>Determines if an object is identical to the vector</summary>
+            <param name="obj">Object to compare to</param>
+            <returns>True if the object is identical to the vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.GetHashCode">
+            <summary>Builds a hashing code for the instance</summary>
+            <returns>The instance's hashing code</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.ToString">
+            <summary>Converts the instance to a string</summary>
+            <returns>A string describing this instance</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_UnaryNegation(Nuclex.Math.Vector2{`0,`1})">
+            <summary>Negates the vector's elements</summary>
+            <param name="vector">vector to negate</param>
+            <returns>The negated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Addition(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Forms the sum of two vectors</summary>
+            <param name="first">First vector to be summed</param>
+            <param name="second">Second vector to be summed</param>
+            <returns>The sum of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Subtraction(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Subtracts one vector from another</summary>
+            <param name="vector">Base vector from which the subtraction occurs</param>
+            <param name="subtrahend">Vector to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Multiply(Nuclex.Math.Vector2{`0,`1},`0)">
+            <summary>Calculates the product of a vector and a scalar</summary>
+            <param name="vector">First factor of the multiplication</param>
+            <param name="factor">Scalar value by which to scale the vector</param>
+            <returns>The product of the multiplication of the vector with the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Multiply(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Calculates the product of two vectors</summary>
+            <param name="vector">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both vector's elements</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Division(Nuclex.Math.Vector2{`0,`1},`0)">
+            <summary>Divides a vector by a scalar</summary>
+            <param name="vector">Vector to be divided</param>
+            <param name="divisor">The divisor</param>
+            <returns>The quotient of the vector and the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Division(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Element-wise division of a vector by another vector</summary>
+            <param name="vector">Vector to be divided</param>
+            <param name="divisor">Vector containing the divisors for each axis</param>
+            <returns>The quotient vector of the vector and the divisor vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Equality(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Determines if two vectors are equal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector2`2.op_Inequality(Nuclex.Math.Vector2{`0,`1},Nuclex.Math.Vector2{`0,`1})">
+            <summary>Determines if two vectors are unequal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are unequal</returns>
+        </member>
+        <member name="F:Nuclex.Math.Vector2`2.X">
+            <summary>The components of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector2`2.Y">
+            <summary>The components of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector2`2.math">
+            <summary>Instance of the math package we are using</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Zero">
+            <summary>A vector whose elements have been initialized to 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.One">
+            <summary>A vector whose elements have been initialized to 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Right">
+            <summary>A unit-length vector pointing right</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Up">
+            <summary>A unit-length vector pointing upwards</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Item(System.Int32)">
+            <summary>Access a component of the vector by its index</summary>
+            <param name="component">Index of the component to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Length">
+            <summary>The length of the vector</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.SquaredLength">
+            <summary>The squared length of the vector (cheaper to calculate than the length)</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.Perpendicular">
+            <summary>The vector clockwise rotated by 90 degrees</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector2`2.InvPerpendicular">
+            <summary>The vector coounter clockwise rotated by 90 degrees</summary>
+        </member>
+        <member name="T:Nuclex.Math.Vector3Components">
+            <summary>The components of a 3D vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3Components.X">
+            <summary>The X coordinate of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3Components.Y">
+            <summary>The Y coordinate of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3Components.Z">
+            <summary>The Z coordinate of the vector</summary>
+        </member>
+        <member name="T:Nuclex.Math.Vector3`2">
+            <summary>Simple 3D vector which also doubles as point class</summary>
+            <typeparam name="ScalarType">Type the vector uses for its components</typeparam>
+            <typeparam name="MathType">Math routines that are to be used</typeparam>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.#ctor(`0,`0,`0)">
+            <summary>Constructs a new vector from the specified components</summary>
+            <param name="x">Location of the vector on the X axis</param>
+            <param name="y">Location of the vector on the Y axis</param>
+            <param name="z">Location of the vector on the Z axis</param>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.Normalize(Nuclex.Math.Vector3{`0,`1})">
+            <summary>Normalizes the vector to a length of 1</summary>
+            <param name="vector">Vector to be normalized</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.DotProduct(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Forms the scalar product of two vectors</summary>
+            <param name="first">First vector for the multiplication</param>
+            <param name="second">Second vector for the multiplication</param>
+            <returns>The scalar product of the multiplication of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.CrossProduct(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Forms the cross product of two vectors</summary>
+            <param name="first">First vector for the multiplication</param>
+            <param name="second">Second vector for the multiplication</param>
+            <returns>The cross product of the multiplication of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.Abs(Nuclex.Math.Vector3{`0,`1})">
+            <summary>Returns a vector consisting of the absolute values of the input vector</summary>
+            <param name="vector">Vector whose elements to use the absolute values of</param>
+            <returns>New vector constructed from the absolute values of input vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.Min(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Returns a vector consisting of the minimum values of two vectors</summary>
+            <param name="first">First vector to be considered</param>
+            <param name="second">Second vector to be considered</param>
+            <returns>A vector with the element-wise minimum values of both input vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.Max(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Returns a vector consisting of the maximum values of two vectors</summary>
+            <param name="first">First vector to be considered</param>
+            <param name="second">Second vector to be considered</param>
+            <returns>A vector with the element-wise maximum values of both input vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.RotateX(Nuclex.Math.Vector3{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle around the X axis</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.RotateY(Nuclex.Math.Vector3{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle around the Y axis</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.RotateZ(Nuclex.Math.Vector3{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle around the Z axis</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.RotateAround(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1},System.Double)">
+            <summary>Rotates the vector by an arbitrary angle around a free axis</summary>
+            <param name="vector">Vector to rotate</param>
+            <param name="axis">Rotation axis</param>
+            <param name="angle">Rotation angle</param>
+            <returns>The rotated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.Equals(System.Object)">
+            <summary>Determines if an object is identical to the vector</summary>
+            <param name="obj">Object to compare to</param>
+            <returns>True if the object is identical to the vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.GetHashCode">
+            <summary>Builds a hashing code for the instance</summary>
+            <returns>The instance's hashing code</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.ToString">
+            <summary>Converts the instance to a string</summary>
+            <returns>A string describing this instance</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_UnaryNegation(Nuclex.Math.Vector3{`0,`1})">
+            <summary>Negates the vector's elements</summary>
+            <param name="vector">vector to negate</param>
+            <returns>The negated vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Addition(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Forms the sum of two vectors</summary>
+            <param name="first">First vector to be summed</param>
+            <param name="second">Second vector to be summed</param>
+            <returns>The sum of both vectors</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Subtraction(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Subtracts one vector from another</summary>
+            <param name="vector">Base vector from which the subtraction occurs</param>
+            <param name="subtrahend">Vector to be subtracted</param>
+            <returns>The result of the subtraction</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Multiply(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Calculates the product of a vector and a scalar</summary>
+            <param name="vector">First factor of the multiplication</param>
+            <param name="factor">Scalar value by which to scale the vector</param>
+            <returns>The product of the multiplication of the vector with the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Multiply(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Calculates the product of two vectors</summary>
+            <param name="vector">First factor of the multiplication</param>
+            <param name="factor">Second factor of the multiplication</param>
+            <returns>The product of the multiplication of both vector's elements</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Division(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Generic.Number{`0,`1})">
+            <summary>Divides a vector by a scalar</summary>
+            <param name="vector">Vector to be divided</param>
+            <param name="divisor">The divisor</param>
+            <returns>The quotient of the vector and the scalar</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Division(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Element-wise division of a vector by another vector</summary>
+            <param name="vector">Vector to be divided</param>
+            <param name="divisor">Vector containing the divisors for each axis</param>
+            <returns>The quotient vector of the vector and the divisor vector</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Equality(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Determines if two vectors are equal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are equal</returns>
+        </member>
+        <member name="M:Nuclex.Math.Vector3`2.op_Inequality(Nuclex.Math.Vector3{`0,`1},Nuclex.Math.Vector3{`0,`1})">
+            <summary>Determines if two vectors are unequal</summary>
+            <param name="first">First vector to be compared</param>
+            <param name="second">Second vector to be compared</param>
+            <returns>True if both vectors are unequal</returns>
+        </member>
+        <member name="F:Nuclex.Math.Vector3`2.math">
+            <summary>Internally used math package</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3`2.X">
+            <summary>The components of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3`2.Y">
+            <summary>The components of the vector</summary>
+        </member>
+        <member name="F:Nuclex.Math.Vector3`2.Z">
+            <summary>The components of the vector</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.Zero">
+            <summary>A vector whose elements have been initialized to 0</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.One">
+            <summary>A vector whose elements have been initialized to 1</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.Right">
+            <summary>A unit-length vector pointing right</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.Up">
+            <summary>A unit-length vector pointing upwards</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.In">
+            <summary>A unit-length vector pointing inwards</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.Item(System.Int32)">
+            <summary>Access a component of the vector by its index</summary>
+            <param name="component">Index of the component to access</param>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.Length">
+            <summary>The length of the vector</summary>
+        </member>
+        <member name="P:Nuclex.Math.Vector3`2.SquaredLength">
+            <summary>The squared length of the vector (cheaper to calculate than the length)</summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,14 @@
+﻿Should the Debug Drawer use the PrimitiveBatch class?
+
+Maybe like this:
+
+  public DebugDrawer(PrimitiveBatch primitiveBatch);
+  public DebugDrawer(GraphicsDevice graphicsDevice);
+
+Would allow for shared drawing of debugging primitives.
+
+----------
+
+DrawableComponent Problem still not solved.
+
+Move DrawableComponent to Nuclex.Graphics?

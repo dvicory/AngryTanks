@@ -1,0 +1,109 @@
+
+Future
+
+  + Write a custom SpriteFont renderer
+
+  + Support for \t in drawing calls
+
+  + Word wise line breaking
+
+  + Make \n work (including for centered and right-aligned text)
+
+  + Add support for kerning
+
+  + Use VertexPositionNormalTexture for the text to allow for
+    texturing and lighting to work
+
+2.0.0
+
+  + BitmapFont and associated classes removed from library. This is a major
+    compatibility break, but I don't want to maintain a parallel
+    implementation of the font rendering code, now that Microsoft has
+    released XNA 1.0 Refresh with built-in font rendering code.
+
+  + Importer now serializes into an XNA SpriteFont compatible format,
+    allowing for imported fonts to be loaded and used by the XNA SpriteFont
+    class as if they had been created with the Microsoft Importer
+
+    The Nuclex/FreeType importer is a bit faster than the Microsoft one,
+    provides slightly better quality (this is a matter of taste, of course)
+    and offsets fonts so the VertexBatch.DrawString() method aligns the
+    text's baseline with the target Y coordinate.
+
+  + Added vector-based fonts. By switching the content pipeline processor
+    to the vector font processor, you can import any TrueType font in
+    vector-based form. This enables many new effects, such as smoothly
+    zooming text, high quality rotating text and usage of the vertices for
+    any font character on your own.
+
+  + Outlined text, filled flat text and extruded 3d text implemented on top
+    of the vector-based font importer
+
+1.2.0
+
+  + 1.1.0 still had problems with the XBox 360 because the XBox apparently
+    is unable to update smaller regions within a texture or vertex buffer.
+
+    Thanks to Peter Pashley, these issues have finally been adressed and
+    unless my own stupidity messed things up (again!) Nuclex.Fonts 1.2.0
+    should have no more issues.
+
+    There are some minor performance issues left on the XBox360 that will
+    be adressed at a later time. Namely, the first time a character is used,
+    it will eat up some performance. Successive frames won't be affected,
+    however, since the character will be in the cache after that.
+
+  + The TextManager component now greatly improves rendering speed by
+    making better use of vertex batching.
+
+    For the curious: the DrawString() method has to flush the vertices
+    to the graphics card after each call to ensure no unwanted surprises
+    in the drawing order when you mix text rendering with other drawing
+    calls. Thus, it can not make effective use of vertex batching. The
+    TextManager, on the other hand, can postpone flushing the vertices
+    to the graphics card until all the strings have been drawn.
+
+  + Due to popular demand, newline ('\n') support has been added!
+
+    This is still a work-in-progress feature. It will not yet yield the
+    correct results when used for centered or right-aligned text.
+    Automatic word-wise line breaking and tab ('\t') spacing haven't
+    been completed either and will be provided with a future release.
+
+  + Font character bounding box is now expressed in pixels. The importer
+    in 1.1.0 had a minor glitch that would save the font's bounding box
+    in font units rather than pixels.
+
+1.1.0
+
+  + The alpha part of the drawing color is now respected,
+    allowing semi-transparent text to be rendered
+
+  + Fonts now provide a bounding box that makes it easier to properly align
+    text and calculate the line height amongst other things
+
+  + Fonts now use BGRA-32 bitmaps. The original release used alpha8,
+    which turned out to be not that widely supported. Even the XBox 360
+    cannot cope with this format. The new release should work on
+    the XBox 360 now!
+
+  + Custom effects can be passed when rendering fonts. This allows for all
+    kinds of distortion, recoloring and touch-up effects in the text
+
+  + FreeType library in the importer has been upgraded to FreeType 2.3.0
+
+  + New Text manager that helps queueing text until the rest of the drawing
+    commands has been finished to ensure text is on top of everything else.
+
+
+1.0.1
+
+  No source code changes, just noticed that VC++ 2005 SP1 + SP1 for Vista
+  creates binaries that don't run with the normal
+  VC 2005 Runtime Redistributables and recompiled the importer on an
+  XP system without the SP1 for Vista update.
+
+
+1.0.0
+
+  First completed release

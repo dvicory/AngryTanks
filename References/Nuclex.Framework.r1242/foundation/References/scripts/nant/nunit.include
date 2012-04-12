@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="NUnit"
+>
+
+  <!-- Use NUnit 2.5.5 if launched by TeamCity -->
+  <property name="teamcity.dotnet.nant.nunit2.version" value="NUnit-2.5.5" />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+      Locates NUnit and initializes the nunit.path property
+  -->
+  <target name="locate-nunit" unless="${property::exists('nunit.path')}">
+
+    <!--
+      Try to locate NUnit in its default path on x86 systems
+    -->
+    <if test="${not property::exists('nunit.path')}">
+      <if test="${environment::variable-exists('ProgramFiles')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramFiles')}"
+          property="temp"
+        >
+          <if test="${string::starts-with(string::to-lower(path::get-file-name(temp)), 'nunit')}">
+            <property name="nunit.path" value="${path::combine(temp, 'bin')}" />
+          </if>
+        </foreach>
+        
+        <if test="${property::exists('nunit.path')}">
+          <property name="nunit.path" value="${path::get-full-path(nunit.path)}" />
+        </if>
+      </if>
+    </if>
+
+    <!--
+      Try to locate NUnit in its default path on x64 systems
+    -->
+    <if test="${not property::exists('nunit.path')}">
+      <if test="${environment::variable-exists('ProgramW6432')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramW6432')}"
+          property="temp"
+        >
+          <if test="${string::starts-with(string::to-lower(path::get-file-name(temp)), 'nunit')}">
+            <property name="nunit.path" value="${path::combine(temp, 'bin')}" />
+          </if>
+        </foreach>
+
+        <if test="${property::exists('nunit.path')}">
+          <property name="nunit.path" value="${path::get-full-path(nunit.path)}" />
+        </if>
+      </if>
+    </if>
+    
+    <!--
+      Newer NUnit versions have a net-2.0 subfolder the binaries are stored in.
+    -->
+    <if test="${property::exists('nunit.path')}">
+      <property name="temp" value="${path::combine(nunit.path, 'net-2.0')}" />
+      <if test="${directory::exists(temp)}">
+        <property name="nunit.path" value="${temp}" />
+      </if>
+    </if>
+
+    <!--
+      Display what we've found out
+    -->
+    <if test="${property::exists('teamcity.dotnet.nunitlauncher')}">
+      <echo message="Using NUnit from TeamCity" />
+    </if>
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher')}">
+      <if test="${property::exists('nunit.path')}">
+        <echo message="NUnit located in ${nunit.path}" />
+      </if>
+      <if test="${not property::exists('nunit.path')}">
+        <echo message="NUnit not found. Use -D:nunit.path=... to set path" />
+      </if>
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-nunit" depends="locate-nunit">
+
+    <!--
+      TeamCity has its own NUnit version that allows you to select x86 or x64 mode,
+      so we don't require NUnit to be installed separately there.
+    -->
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <if test="${not property::exists('nunit.path')}">
+        <fail message="NUnit is required for this build" />
+      </if>
+      <property name="temp" value="${path::combine(nunit.path, 'nunit-console.exe')}" />
+      <if test="${not file::exists(temp)}">
+        <fail message="NUnit is required for this build" />
+      </if>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-nunit-x86" depends="locate-nunit">
+
+    <!--
+      TeamCity has its own NUnit version that allows you to select x86 or x64 mode,
+      so we don't require NUnit to be installed separately there.
+    -->
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <if test="${not property::exists('nunit.path')}">
+        <fail message="NUnit 2.4.2 or later is required for this build" />
+      </if>
+      <property name="temp" value="${path::combine(nunit.path, 'nunit-console-x86.exe')}" />
+      <if test="${not file::exists(temp)}">
+        <fail message="NUnit 2.4.2 or later is required for this build" />
+      </if>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs unit tests in a single assembly
+
+    Inputs:
+      nunit.testassembly    Assembly that will be tested with NUnit
+  -->
+  <target name="nunit" depends="require-nunit">
+
+    <property name="temp" value="${path::get-file-name(nunit.testassembly)}" />
+    <echo message="===================================================================" />
+    <echo message="Running tests in ${temp}" />
+    <echo message="===================================================================" />
+
+    <!--
+      If we're being run by TeamCity, use their NUnit launcher
+    -->
+    <if test="${property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <!-- If we're targeting .NET 4.0, use the .NET 4.0 NUnit runner -->
+      <if test="${framework::get-target-framework() == 'net-4.0'}">
+        <property name="teamcity.dotnet.nant.nunit2.platformVersion" value="v4.0" />
+      </if>
+      <if test="${not (framework::get-target-framework() == 'net-4.0')}">
+        <property name="teamcity.dotnet.nant.nunit2.platformVersion" value="v2.0" />
+      </if>
+
+      <!--
+        Run the TeamCity NUnit2 task
+      -->
+      <nunit2 failonerror="false">
+        <formatter type="Plain" />
+        <test assemblyname="${nunit.testassembly}" />
+      </nunit2>
+
+    </if>
+
+    <!--
+      If we're not being run by TeamCity, start NUnit directly
+    -->
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <exec
+        program="${path::combine(nunit.path, 'nunit-console-x86.exe')}"
+        failonerror="false"
+        managed="true"
+      >
+        <environment>
+          <variable
+            name="COMPLUS_Version"
+            value="v4.0.30319"
+            if="${framework::get-target-framework() == 'net-4.0'}"
+          />
+        </environment>
+
+        <arg file="${nunit.testassembly}" />
+        <arg value="/nologo" />
+        <arg value="/nodots" />
+        <arg value="/noshadow" />
+      </exec>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs unit tests in a single assembly
+
+    Inputs:
+      nunit.testassembly    Assembly that will be tested with NUnit
+  -->
+  <target name="nunit-x86" depends="require-nunit-x86">
+
+    <property name="temp" value="${path::get-file-name(nunit.testassembly)}" />
+    <echo message="===================================================================" />
+    <echo message="Running tests in ${temp}" />
+    <echo message="===================================================================" />
+
+    <!--
+      If we're being run by TeamCity, use their NUnit launcher
+    -->
+    <if test="${property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <!-- If we're targeting .NET 4.0, use the .NET 4.0 NUnit runner -->
+      <if test="${framework::get-target-framework() == 'net-4.0'}">
+        <property name="teamcity.dotnet.nant.nunit2.platformVersion" value="v4.0" />
+      </if>
+      <if test="${not (framework::get-target-framework() == 'net-4.0')}">
+        <property name="teamcity.dotnet.nant.nunit2.platformVersion" value="v2.0" />
+      </if>
+
+      <!-- Use the x86 runner -->
+      <if test="${nunit.platform == 'x86'}">
+        <property name="teamcity.dotnet.nant.nunit2.platform" value="x86" />
+      </if>
+
+      <!--
+        Run the TeamCity NUnit2 task
+      -->
+      <nunit2 failonerror="false">
+        <formatter type="Plain" />
+        <test assemblyname="${nunit.testassembly}" />
+      </nunit2>
+
+    </if>
+
+    <!--
+      If we're not being run by TeamCity, start NUnit directly
+    -->
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher')}">
+
+      <exec
+        program="${path::combine(nunit.path, 'nunit-console-x86.exe')}"
+        failonerror="false"
+        managed="true"
+      >
+        <environment>
+          <variable
+            name="COMPLUS_Version"
+            value="v4.0.30319"
+            if="${framework::get-target-framework() == 'net-4.0'}"
+          />
+        </environment>
+
+        <arg file="${nunit.testassembly}" />
+        <arg value="/nologo" />
+        <arg value="/noshadow" />
+        <arg value="/nodots" />
+      </exec>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>
+

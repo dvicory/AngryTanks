@@ -4,7 +4,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
+using Nuclex.Input;
 using log4net;
 
 using AngryTanks.Common;
@@ -60,83 +62,312 @@ namespace AngryTanks.Client
         }
     }
 
-    public class GameConsole
+    public class GameConsole : DrawableGameComponent
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region GameConsole Properties
 
+        public bool Opened
+        {
+            get;
+            set;
+        }
+
         public Vector2 Position
         {
-            get; set;
+            get;
+            set;
         }
 
         public Vector2 Size
         {
-            get; set;
+            get;
+            set;
+        }
+
+        public Vector2 Margin
+        {
+            get;
+            set;
+        }
+
+        public Vector2 Padding
+        {
+            get;
+            set;
+        }
+
+        public Color BackgroundColor
+        {
+            get;
+            set;
+        }
+
+        public ConsoleMessagePart Prompt
+        {
+            get;
+            set;
+        }
+
+        public bool PromptActive
+        {
+            get;
+            set;
+        }
+
+        public Int16 PromptBlinkRate
+        {
+            get;
+            set;
+        }
+
+        public RectangleF Bounds
+        {
+            get
+            {
+                return new RectangleF(Position + Margin, Size - (Margin * 2));
+            }
+        }
+
+        public RectangleF InnerBounds
+        {
+            get
+            {
+                return new RectangleF(Bounds.X + Padding.X, Bounds.Y + Padding.Y,
+                                      Bounds.Width - Padding.X, Bounds.Height - Padding.Y);
+            }
         }
         
         #endregion
 
-        /// <summary>
-        /// Allows us to get a reference to various services
-        /// </summary>
-        private readonly IServiceProvider IService;
+        private IInputService inputService;
 
-        private ContentManager contentManager;
         private SpriteBatch spriteBatch;
         private SpriteFont consoleFont;
+        private Texture2D background;
+
+        private int currentBlinkTime;
+        private bool promptBlinking;
+
+        private String currentPromptInput = "";
+        private bool promptJustOpened = false;
 
         private LinkedList<ConsoleMessageLine> lines = new LinkedList<ConsoleMessageLine>();
 
-        public GameConsole(IServiceProvider iservice, Vector2 position, Vector2 size)
+        public GameConsole(Game game, Vector2 position, Vector2 size, Vector2 margin, Vector2 padding, Color backgroundColor)
+            : base(game)
         {
-            this.IService = iservice;
             this.Position = position;
             this.Size     = size;
+            this.Margin   = margin;
+            this.Padding  = padding;
+            this.BackgroundColor = backgroundColor;
+
+            this.Opened = true;
+            this.Prompt = new ConsoleMessagePart("# ", Color.Yellow);
+            this.PromptActive = false;
+            this.PromptBlinkRate = 200; // 200 ms prompt blink rate
+
+            inputService = (IInputService)Game.Services.GetService(typeof(IInputService));
+
+            inputService.GetKeyboard().CharacterEntered += CharacterEntered;
+            inputService.GetKeyboard().KeyPressed += KeyPressed;
         }
 
-        public void Initialize()
+        protected override void Dispose(bool disposing)
         {
-            contentManager = new ContentManager(IService, "Content");
-
-            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
-
-            spriteBatch = new SpriteBatch(graphicsDeviceService.GraphicsDevice);
-        }
-
-        public void LoadContent()
-        {
-            consoleFont = contentManager.Load<SpriteFont>("fonts/ConsoleFont10");
-        }
-
-        public void UnloadContent()
-        {
-            contentManager.Unload();
-        }
-
-        public void Draw(GameTime gameTime)
-        {
-            Vector2 remaining = Size;
-            remaining.X = Position.X;
-
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.FrontToBack, SaveStateMode.None);
-
-            foreach (ConsoleMessageLine line in lines)
+            if (disposing)
             {
-                foreach (ConsoleMessagePart part in line.Parts)
+                try
                 {
-                    Vector2 messageSize = consoleFont.MeasureString(part.Message);
-                    remaining.Y -= messageSize.Y;
-
-                    if (remaining.Y <= 0)
-                        break;
-
-                    spriteBatch.DrawString(consoleFont, part.Message, Position + remaining, part.Color);
+                    inputService.GetKeyboard().CharacterEntered -= CharacterEntered;
+                    inputService.GetKeyboard().KeyPressed -= KeyPressed;
+                }
+                // our input service disposed before we did... a dirty hack
+                catch (NullReferenceException e)
+                {
+                    Log.Error(e.Message);
+                    Log.Error(e.StackTrace);
                 }
             }
 
+            base.Dispose(disposing);
+        }
+
+        public override void Initialize()
+        {
+            spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            consoleFont = Game.Content.Load<SpriteFont>("fonts/ConsoleFont12");
+            background = new Texture2D(GraphicsDevice, 1, 1);
+            background.SetData(new Color[] { Color.Black });
+
+            base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        protected void KeyPressed(Keys key)
+        {
+            switch (key)
+            {
+                // shows/hides console
+                // closing an open prompt if it's open 
+                case Keys.OemTilde:
+                    if (!PromptActive)
+                        Opened = !Opened;
+
+                    // prompt is never active if we're closed
+                    if (!Opened)
+                    {
+                        PromptActive = false;
+                        currentPromptInput = "";
+                    }
+
+                    break;
+
+                // starts a new prompt if one wasn't already started (/ is a valid input key as well)
+                case Keys.OemQuestion:
+                    // open if we weren't already open
+                    if (!Opened)
+                        Opened = true;
+
+                    if (!PromptActive)
+                    {
+                        currentPromptInput = "";
+                        PromptActive = true;
+                        promptJustOpened = true;
+                    }
+
+                    break;
+
+                // backspaces prompt
+                case Keys.Back:
+                    if (currentPromptInput.Length > 0)
+                        currentPromptInput = currentPromptInput.Substring(0, currentPromptInput.Length - 1);
+
+                    break;
+
+                // abandon whatever was in prompt
+                case Keys.Escape:
+                    PromptActive = false;
+                    currentPromptInput = "";
+
+                    break;
+
+                // submits contents of prompt
+                case Keys.Enter:
+                    // TODO handle submitting prompt
+                    PromptActive = false;
+                    currentPromptInput = "";
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        protected void CharacterEntered(char c)
+        {
+            // we should ignore this key input because it was used to open the prompt
+            if (promptJustOpened)
+            {
+                promptJustOpened = false;
+                return;
+            }
+
+            if (PromptActive && c >= (char)32 && c <= (char)126 && c != '\\')
+                currentPromptInput += c;
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (!Opened)
+            {
+                base.Draw(gameTime);
+                return;
+            }
+
+            currentBlinkTime += gameTime.ElapsedGameTime.Milliseconds;
+
+            Vector2 position = new Vector2(InnerBounds.X, InnerBounds.Y + InnerBounds.Height);
+
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.FrontToBack, SaveStateMode.None);
+
+            spriteBatch.Draw(background,
+                             (Rectangle)Bounds,
+                             null, BackgroundColor, 0,
+                             Vector2.Zero,
+                             SpriteEffects.None, 0);
+
+            position.Y -= DrawPrompt(gameTime, position);
+
+            foreach (ConsoleMessageLine line in lines)
+            {
+                // we have no more room left to draw
+                if (position.Y < (InnerBounds.Y + consoleFont.MeasureString("qABC!").Y))
+                    break;
+
+                position.Y -= DrawLine(gameTime, line, position);
+            }
+
             spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public virtual Single DrawLine(GameTime gameTime, ConsoleMessageLine line, Vector2 position)
+        {
+            // decrement our intial position
+            Vector2 messageSize = consoleFont.MeasureString("ABC!");
+            position.Y -= messageSize.Y / 2; // nuclex's truetype font importer measures from the baseline
+
+            foreach (ConsoleMessagePart part in line.Parts)
+            {
+                // TODO break lines/words to span across multiple lines if necessary
+                spriteBatch.DrawString(consoleFont,
+                                       part.Message,
+                                       position,
+                                       part.Color, 0,
+                                       Vector2.Zero,
+                                       1, SpriteEffects.None, 1);
+
+                position.X += consoleFont.MeasureString(part.Message).X;
+            }
+
+            return messageSize.Y;
+        }
+
+        public virtual Single DrawPrompt(GameTime gameTime, Vector2 position)
+        {
+            ConsoleMessageLine promptLine = new ConsoleMessageLine();
+
+            // blink prompt
+            if (currentBlinkTime > PromptBlinkRate)
+            {
+                promptBlinking = !promptBlinking;
+                currentBlinkTime -= PromptBlinkRate;
+            }
+            
+            if (promptBlinking && PromptActive)
+                promptLine.Parts.AddLast(new ConsoleMessagePart(Prompt.Message, Color.Black));
+            else
+                promptLine.Parts.AddLast(Prompt);
+
+            promptLine.Parts.AddLast(new ConsoleMessagePart(currentPromptInput == null ? "" : currentPromptInput,
+                                                            Color.White));
+
+            return DrawLine(gameTime, promptLine, position);
         }
 
         public void WriteLine(String message)

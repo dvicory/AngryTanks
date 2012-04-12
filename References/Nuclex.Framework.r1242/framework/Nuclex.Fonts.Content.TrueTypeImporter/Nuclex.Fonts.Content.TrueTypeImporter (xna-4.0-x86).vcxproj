@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B3106C04-B760-4C01-AD81-972C0D01A612}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>NuclexFontsContentTrueTypeImporter</RootNamespace>
+    <ProjectName>Nuclex.Fonts.Content.TrueTypeImporter</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin/xna-4.0-x86/$(Configuration)/</OutDir>
+    <IntDir>obj/xna-4.0-x86/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin/xna-4.0-x86/$(Configuration)/</OutDir>
+    <IntDir>obj/xna-4.0-x86/$(Configuration)/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;XNA_4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../References/freetype-new/include</AdditionalIncludeDirectories>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freetype.$(Configuration).lib;glu32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../References/freetype-new/msvc-10.0-x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;XNA_4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../References/freetype-new/include</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freetype.$(Configuration).lib;glu32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../References/freetype-new/msvc-10.0-x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Properties\AssemblyInfo.cpp" />
+    <ClCompile Include="Source\FreeTypeFontProcessor.cpp" />
+    <ClCompile Include="Source\FreeTypeFontProcessor.Test.cpp" />
+    <ClCompile Include="Source\FreeTypeManager.cpp" />
+    <ClCompile Include="Source\SpriteFonts\CygonRectanglePacker.cpp" />
+    <ClCompile Include="Source\SpriteFonts\FreeTypeFontRasterizer.cpp" />
+    <ClCompile Include="Source\SpriteFonts\NuclexSpriteFontDescriptionProcessor.cpp" />
+    <ClCompile Include="Source\SpriteFonts\OutOfSpaceException.cpp" />
+    <ClCompile Include="Source\SpriteFonts\RectanglePacker.cpp" />
+    <ClCompile Include="Source\SpriteFonts\SpriteFontContent.cpp" />
+    <ClCompile Include="Source\SpriteFonts\SpriteFontWriter.cpp" />
+    <ClCompile Include="Source\VectorFonts\FreeTypeFontTessellator.cpp" />
+    <ClCompile Include="Source\VectorFonts\FreeTypeFontVectorizer.cpp" />
+    <ClCompile Include="Source\VectorFonts\NuclexVectorFontDescriptionProcessor.cpp" />
+    <ClCompile Include="Source\VectorFonts\VectorFontCharacterContent.cpp" />
+    <ClCompile Include="Source\VectorFonts\VectorFontCharacterWriter.cpp" />
+    <ClCompile Include="Source\VectorFonts\VectorFontContent.cpp" />
+    <ClCompile Include="Source\VectorFonts\VectorFontWriter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Source\clix.h" />
+    <ClInclude Include="Source\FreeTypeFontProcessor.h" />
+    <ClInclude Include="Source\FreeTypeManager.h" />
+    <ClInclude Include="Source\SpriteFonts\CygonRectanglePacker.h" />
+    <ClInclude Include="Source\SpriteFonts\FreeTypeFontRasterizer.h" />
+    <ClInclude Include="Source\SpriteFonts\NuclexSpriteFontDescriptionProcessor.h" />
+    <ClInclude Include="Source\SpriteFonts\OutOfSpaceException.h" />
+    <ClInclude Include="Source\SpriteFonts\RectanglePacker.h" />
+    <ClInclude Include="Source\SpriteFonts\SpriteFontContent.h" />
+    <ClInclude Include="Source\SpriteFonts\SpriteFontWriter.h" />
+    <ClInclude Include="Source\VectorFonts\FreeTypeFontTessellator.h" />
+    <ClInclude Include="Source\VectorFonts\FreeTypeFontVectorizer.h" />
+    <ClInclude Include="Source\VectorFonts\NuclexVectorFontDescriptionProcessor.h" />
+    <ClInclude Include="Source\VectorFonts\VectorFontCharacterContent.h" />
+    <ClInclude Include="Source\VectorFonts\VectorFontCharacterWriter.h" />
+    <ClInclude Include="Source\VectorFonts\VectorFontContent.h" />
+    <ClInclude Include="Source\VectorFonts\VectorFontWriter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics" />
+    <Reference Include="nunit.framework, Version=2.5.5.0, Culture=neutral, PublicKeyToken=96bb577564343f16">
+      <HintPath>..\References\nunit\net-4.0\framework\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

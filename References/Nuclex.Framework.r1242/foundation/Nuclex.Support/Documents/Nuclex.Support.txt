@@ -1,0 +1,28 @@
+  #if DEBUG
+  
+    /// <summary>Generates a new random shuffle table</summary>
+    /// <param name="iterationCount">
+    ///   Number of iterations in which to randomize the shuffle table
+    /// </param>
+    /// <returns>The new random shuffle table</returns>
+    public static byte[] generateShuffleTable(int iterationCount) {
+      byte[] shuffleTable = new byte[128];
+      for(int index = 0; index < 128; ++index)
+        shuffleTable[index] = index;
+
+      Random rng = new Random();
+
+      for(int iteration = 0; iteration < iterationCount; ++iteration) {
+        int firstIndex = rng.Next() % 128;
+        int secondIndex = rng.Next() % 128;
+
+        byte temp = shuffleTable[firstIndex];
+        shuffleTable[firstIndex] = shuffleTable[secondIndex];
+        shuffleTable[secondIndex] = temp;
+      }
+
+      return shuffleTable;      
+    }
+  
+  #endif
+

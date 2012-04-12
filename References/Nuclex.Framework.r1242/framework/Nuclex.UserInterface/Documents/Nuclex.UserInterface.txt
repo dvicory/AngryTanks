@@ -1,0 +1,66 @@
+Design Goals:
+
+  NTH  The complete state of an UI should be saveable
+
+  REQ  Enable multiple active GUIs for ingame computers
+
+  REQ  Themeable GUI
+
+
+Control
+
+  Controls are the building blocks of a windowing system. Famous controls include lists,
+  input boxes, radio buttons, but also dialogs and the desktop itself.
+
+Control Tree
+
+  Like all windowing systems, Nuclex.UserInterface manages its controls in a tree.
+  Any control can be added as a child to any other control, which causes its positioning
+  to become relative to its new parent.
+
+  Since controls are state-bound, they are not allowed to have more than one parent.
+  The Nuclex.UserInterface library checks this and throws an exception if you attempt
+  to create an inconsistent tree (this also includes controls being their own parent
+  and other misformings)
+
+GUI
+
+  The Gui class in Nuclex.UserInterface manages the state of a distinct gui. This
+  enables the library to have multiple gui environments active at the same time, which
+  is useful if you want to create ingame computers or switch between sessions.
+
+
+
+
+---
+
+Visual
+
+  Unlike the design of most other windowing systems, controls are not baked tightly
+  together with their the graphics device resources.
+
+
+Desktop / Arcade
+
+  The nuclex UserInterface library differentiates between desktop and arcade controls.
+  Desktop controls may incorporate features that require a mouse and/or keyboard to
+  use such as list boxes and tab strips. Arcade controls need to be simple and fully
+  usable through the action commands alone (of course, they can also work on a desktop
+  application or provide additional functionality when used with desktop input devices).
+
+
+Gui
+  + Desktop : Control
+
+Control
+  + Children
+  
+
+
+Control     <->     Visual
+  ^                   ^
+  -                   -
+  |                   |
+ButtonControl <-> ButtonVisual
+
+HitRegion

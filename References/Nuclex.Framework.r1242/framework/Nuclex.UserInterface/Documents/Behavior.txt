@@ -1,0 +1,418 @@
+﻿The Nuclex GUI tries to clean up with the clutches that have accumulated in
+years of GUI design by finding a common behavior model for all controls.
+In other words, there's a generic way of processing input notifications
+which doesn't require controls to capture the mouse, register for
+events or take any special role in the GUI.
+
+This greatly simplifies the implementation of controls and allows the state
+management to stay hidden from the user. Which, again, means the implementer
+of controls doesn't have to worry as much about breaking the GUI or messing
+up its state if he doesn't meticulously follow some expected behavior.
+
+Of course, the behavior model is layed out so GUIs work exactly like expected
+from a modern GUI (eg. Windows). However, it can also be used on a gaming
+console through a game pad (there are special controls design to work well
+with a game pad)
+
+-------------------------------------------------------------------------------
+Design
+-------------------------------------------------------------------------------
+
+Anything in the GUI is a control and controls are managed in a tree. The
+entire desktop is a control, a window is a control and, of course, buttons,
+checkboxes and lists are controls.
+
++---------+
+| Desktop |
++---------+
+     |
+     |  +----------+
+     |__| MyDialog |
+        +----------+
+              |
+              |  +----------+
+              |__| OkButton |
+              |  +----------+
+              |
+              |  +--------------+
+              |__| CancelButton |
+                 +--------------+
+
+That also means that any control can act as a container. And that you could
+put buttons directly on the desktop, create windows within a checkbox and
+other funny things. The behavior of such constructs is well defined and all
+controls will act like they were designed to. You, the game programmer, are
+asked to create a GUI that makes sense to your players!
+
+The GUI also does not use a messaging system, at least not in the sense of
+passing 'Message' objects forth and back between controls. In the eyes of this
+GUI's designer, such message systems were thought to be a good idea in
+the 90s, but are proven to be error prone, hard to debug, inefficient,
+not typesafe and in general a very bad idea.
+
+Notifications are sent by direct method calls which are speedy, can be
+followed in a debugger, provide full type-safety, can be seen in IntelliSense
+and don't cause garbage collection.
+
+-------------------------------------------------------------------------------
+Behavior of the GUI
+-------------------------------------------------------------------------------
+
+The Nuclex GUI doesn't use CaptureMouse() or other global state helpers.
+Clicking, dragging and other actions are handled by the controls themselves.
+This means the controls keep track over where the mouse buttons were pressed,
+which child should receive mouse movement messages and so on.
+
+This behavior is built into the Control class and cannot be overridden by
+the user in order to guarantee consistent behavior across all controls. The
+behavior model is designed to allow for robust control dragging, clicking,
+drag & drop, scrolling and everything else you might expect from a modern GUI.
+
+You don't have to understand this model if you just use controls (the GUI
+will behave nearly exactly like the GUI on a Windows system), but if you're
+planning to write your own control classes, it's better to become comfortable
+with the design choices made by this library ;-)
+
+-------------------------------------------------------------------------------
+Mouse Movement Notifications
+-------------------------------------------------------------------------------
+
+Controls receive 3 kinds of notifications when the mouse is moved over them:
+OnMouseEntered() notifies the control that the mouse has just entered the
+control's boundaries. OnMouseMove() will only be called whilst the mouse is
+within the control. OnMouseLeft() finally will notify the control when the
+mouse left the control's boundaries again.
+
+If a control has child controls in it, as soon as the mouse enters the
+boundaries of a child control, the parent control will receive an
+OnMouseLeft() notification.
+
+Assume the mouse was moved horizontally across this dialog:
+
+  +-----------------------------------+
+  | MyDialog                   _ [] X |
+  +-----------------------------------+
+  |                                   |
+  | +--------+                        |
+. |.| Button | . . . . . . . . . . . .| . . . <- mouse follows this path
+  | +--------+                        |
+  |                                   |
+  +-----------------------------------+
+
+This would cause the following chain of calls:
+
+  1. Mouse reaches MyDialog
+     - Desktop.OnMouseLeft()
+     - MyDialog.OnMouseEntered()
+  2. Mouse reaches Button
+     - MyDialog.OnMouseLeft()
+     - Button.OnMouseEntered()
+  3. Mouse leaves Button
+     - Button.OnMouseLeft()
+     - MyDialog.OnMouseEntered()
+  4. Mouse leaves MyDialog
+     - MyDialog.OnMouseLeft()
+     - Desktop.OnMouseEntered()
+
+Only entered controls would receive OnMouseMove() notifications.
+
+-------------------------------------------------------------------------------
+Mouse Movement Notifications II
+-------------------------------------------------------------------------------
+
+Controls that leave the boundaries of their parent controls are not allowed
+by design. The behavior in such cases is actually well-defined. If you design
+a dialog like this:
+
+  +------------------------+
+  | MyDialog        _ [] X |
+  +------------------------+
+  |                        |
+  |                   +----------+
+  |                   | Button 1 |   <--- Not allowed!
+  |                   +----------+
+  |                        |
+  |                   +----------+
+  |                   | Button 2 |
+  |                   +----------+
+  |                        |
+  +------------------------+
+
+When the mouse moves over the button inside the dialog, the button will light
+up (because it received an OnMouseEntered() notification behind the scenes).
+
+As soon as you move the mouse outside of the dialog, even if you stay on
+the button, the button will dim again and is not clickable at this position.
+
+While this may sound drastic, it allows the GUI to process input notifications
+far more efficiently. Each control only has to check whether the mouse is
+over its direct children to pass on mouse notifications. Otherwise each mouse
+movement would force the GUI to evaluate the whole control tree or to build
+a global screen region map, both of which are detrimental to performance.
+
+-------------------------------------------------------------------------------
+Mouse Click Notifications
+-------------------------------------------------------------------------------
+
+When the user presses down a mouse button (that means any mouse button), the
+control the mouse was over at this time receives a OnMousePressed()
+notification. From this point on, until all mouse buttons have been released
+again, the control is "tracked".
+
+This simply means it will receive OnMouseMove() even if the mouse leaves
+the control's area.
+
+  +-----------------------------------+
+  | MyDialog                   _ [] X |
+  +-----------------------------------+
+  |                                   |
+  |                                   |
+  |                                   |
+  |                                   |
+  |                                   |
+  |             +--------+ +--------+ |
+  |             |   Ok   | | Cancel | |
+  |             +--------+ +--------+ |
+  +-----------------------------------+
+
+Imagine the user clicked on a button, but held the mouse button depressed
+while moving the mouse away from the button.
+
+Windows' behavior is to have the button capture the mouse. If you move the
+mouse away from the button, it will rise again from its depressed state, but
+other controls will not receive notifications, so the mouse will not light
+up other buttons it moves across in this state.
+
+This is a well known way to last-second-abort a button click in windows and
+the Nuclex GUI emulates this behavior, only that other controls do receive
+the mouse movement notifications in addition to the "tracked" control, which
+allows to also have drag & drop operations in clean, unified behavior model.
+
+-------------------------------------------------------------------------------
+Mouse Click Notifications II
+-------------------------------------------------------------------------------
+
+When a control becomes "tracked", the delivery order of notifications will
+also change. The control will receive its OnMouseMove() notifications first
+and any OnMouseLeft() or OnMouseEntered() notifications later.
+
+Imagine the user dragged a window by clicking where the dot is and moving
+the mouse upwards:
+
+               ^
+               |
+  +------------.-----------+
+  | MyDialog        _ [] X |
+  +------------------------+
+  |                        |
+  |                        |
+  |                        |
+  +------------------------+
+
+As you can see, the mouse is very close to the dialog's upper border. If the
+mouse is moved up, that means the coordinates given to the next OnMouseMove()
+will be outside of the dialog.
+
+If normal procedures would be followed, the dialog would now receive an
+OnMouseLeft() notification and the mouse might "lose" the dialog while the
+user is dragging it. With the changed delivery order, the dialog will receive
+the OnMouseMove() notification first, update its position and the
+OnMouseLeft() will never occur.
+
+The same goes for other controls that can be dragged, such as the slider in
+a scroll bar:
+
+  +-----------------------------------+
+  | MyDialog                   _ [] X |
+  +-----------------------------------+
+  | +-----------------------------+-+ |
+  | | List Item 1                 | | |
+  | | List Item 2                 |=| |
+  | | List Item 3                 |_| |
+  | | List Item 4                 | | |
+  | | List Item 5                 | | |
+  | +-----------------------------+-+ |
+  |                                   |
+  |             +--------+ +--------+ |
+  |             |   Ok   | | Cancel | |
+  |             +--------+ +--------+ |
+  +-----------------------------------+
+
+Here, the slider could still follow the mouse even if the user moved the mouse
+off away horizontally. Because the mouse movement notifications are delivered
+first, the slider can move according to the mouse and will not receive
+OnMouseLeft() and OnMouseEntered() notifications if the mouse is kept over
+the slider, so it will not dim and light up again when it is moved.
+
+In short, the altered delivery order for "tracked" controls avoids useless
+OnMouseLeft() and OnMouseEntered() notifications. This allows custom controls
+to use these notifications directly for their control's logic instead of
+storing the last mouse position somewhere and doing additional checks inside
+the methods.
+
+-------------------------------------------------------------------------------
+Key Presses
+-------------------------------------------------------------------------------
+
+When a key is pressed on the keyboard, it is passed down the control tree
+until a control is found that indicates that it handled the key press.
+
+Assume you had a window with two buttons, the left one responding to
+the [A] key and the right one to the [B] key, the following would happen when
+the user presses the [A] key:
+
+  1. The dialog is asked to process the key press. It doesn't know what to
+     do with it, so it returns false
+  2. The left button is asked to process the key press. It recognizes the
+     key as its shortcut, triggers the Pressed event and returns true
+  3. Processing ends because the button has handled the key press.
+
+  +-----------------------------------+
+  | MessageDialog                     |
+  +-----------------------------------+
+  |                                   |
+  | This is an important message!     |
+  |                                   |
+  | (A) Ok                 (B) Cancel |
+  +-----------------------------------+
+
+-------------------------------------------------------------------------------
+Key Presses II
+-------------------------------------------------------------------------------
+
+In certain cases, not all controls in the tree will be traversed when looking
+for a control to handle a key press.
+
+If a control has its 'affectsOrdering' parameter set in the constructor, this
+means it is assumed to be in competition with any siblings that also have
+the 'affectsOrdering' parameter set.
+
+Assume there were two windows, each with buttons that responded to the keys
+[A] and [B] respectively. Another button exists outside the windows and
+therefore exists in the control tree as a sibling.
+
+  +-----------------------------------+
+  | BackgroundDialog                  |
+  +-----------------------------------+
+  |                                   |
+  | Some+-----------------------------------+
+  |     | MessageDialog                     |
+  | (A) +-----------------------------------+
+  |     |                                   |
+  +-----| This is an important message!     |
+        |                                   |        +----------+
+        | (A) Ok                 (B) Cancel |        | (C) Quit |
+        +-----------------------------------+        +----------+
+
+When the user pressed the [C] key, the screen starts looking for a control
+that handles the key press with the topmost control, in this case the window.
+Neither the window nor any of its children handles the key press.
+
+Next in line is the window in background. But because the window has its
+'affectsOrdering' parameter set and the screen has already processed one
+control with 'affectsOrdering' set, it will ignore this window.
+
+Finally, the windowless button is notified, because it doesn't have the
+'affectsOrdering' parameter set and is not in competition with the windows.
+
+-------------------------------------------------------------------------------
+Focusing
+-------------------------------------------------------------------------------
+
+In each screen, one control can have the input focus. The focused control will
+get a chance to process keyboard notifications ahead of the normal processing
+chain.
+
+For a control to become focused, it either has to be focused programmatically
+by assigning it to the screen's FocusedControl property, or the control has
+to implement the IFocusable interface and let the user select it using one of
+his input devices.
+
+Changing the focused control through the input devices entails clicking on
+a control that implements IFocusable with the mouse or moving through the
+controls using Tab, Shift+Tab, the arrow keys or the sticks on the game pad,
+where only those controls that implement IFocusable will be jumped to.
+
+Assume we had the following dialog:
+
+  +-----------------------------------+
+  | MyDialog                   _ [] X |
+  +-----------------------------------+
+  |                                   |
+  | This is a test dialog             |
+  |                                   |
+  |  +--------+ +--------+ +--------+ |
+  |  |   Ok   | | Cancel | |  Apply | |
+  |  +--------+ +--------+ +--------+ |
+  +-----------------------------------+
+
+If the Ok button was focused and the user moved the game pad's stick to the
+right, focus would jump to the Cancel button. If the cancel button was not
+focusable (either by not implementing IFocusable or returning false from
+IFocusable.CanGetFocus), focus would instead jump to the Apply button.
+
+-------------------------------------------------------------------------------
+Game Pad Notifications
+-------------------------------------------------------------------------------
+
+GUIs designed for game pad use should only display one single, modal dialog at
+a time and also limit its complexity. This is the responsibility of the
+game's developer.
+
+There is no mouse cursor, instead game pad input is directly propagated down
+the control tree. As with key press notifications, the screen will traverse
+the controls until a control is found that handles the game pad button press.
+
+The focused control will have a chance to respond to button pressed before
+the normal processing chain.
+
+Assuming there was a dialog with an input box on it:
+
+  +-----------------------------------+
+  | New Game                          |
+  +-----------------------------------+
+  |               __________________  |
+  | Your Name:   [__________________] |
+  |                                   |
+  | Difficulty:  o Easy               |
+  |              o Normal             |
+  |              o Hard               |
+  |                                   |
+  | (A) Ok                 (B) Cancel |
+  +-----------------------------------+
+
+If the input box is the focused control and the user presses the (A) button on
+his game pad, the input box will be asked to process this button press before
+the dialog gets a chance to do so. If the input box consumes the button press,
+processing will stop and the dialog will not be notified.
+
+This behavior allows controls to capture input. For example, the input box
+will move the cursor in response to the arrow left/right keys instead of
+allowing the focus to be moved to the control left or right of it.
+
+-------------------------------------------------------------------------------
+Text Input
+-------------------------------------------------------------------------------
+
+Controls into which text can be written need to implement the IWritable
+interface, which will provide them with the necessary data depending on which
+input device is being used.
+
+If the user has focused a control that implements IWritable and presses the
+(A) button on his game pad, the virtual keyboard will come up and let the user
+edit the text of the control.
+
+  +-----------------------------------+
+  | New Game                          |
+  +-----------------------------------+
+  |             ____________________  |
+  | Your Name: [____________________] |
+  |                                   |
+  | (A) Ok                 (B) Cancel |
+  +-----------------------------------+
+
+If the user has focused a control that implements IWritable and enters a
+character using his keyboard or IME overlay, the control will be notified of
+the entered character through IWritable.OnCharacterEntered. It is the
+control's responsibility to provide additional services such as a caret and
+insert/overwrite modes in this case.

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="NUnit"
+>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target
+    name="locate-msbuild"
+    description="Locates MSBuild and initializes the msbuild.path property"
+    unless="${property::exists('msbuild.path')}"
+  >
+
+    <!--
+      If the user explicitly chose an msbuild version, make sure it is available
+    -->
+    <if test="${property::exists('msbuild.version')}">
+      <if test="${msbuild.version == 'net-4.0'}">
+        <fail
+          unless="${framework::exists('net-4.0')}"
+          message="The .NET 4.0 framework is required to compile this project"
+        />
+      </if>
+      <if test="${msbuild.version == 'net-3.5'}">
+        <fail
+          unless="${framework::exists('net-3.5')}"
+          message="The .NET 3.5 framework is required to compile this project"
+        />
+      </if>
+      <if test="${msbuild.version == 'net-2.0'}">
+        <fail
+          unless="${framework::exists('net-2.0')}"
+          message="The .NET 2.0 framework is required to compile this project"
+        />
+      </if>
+    </if>
+
+    <!--
+      If no msbuild version was chosen, try to use the newest one available
+      because projects created with Visual Studio 2008, for example,
+      fail to compile with MSBuild 2.0 even if they target .NET 2.0 whereas
+      compiling older projects with newer MSBuild versions usually works.
+    -->
+    <if test="${not property::exists('msbuild.version')}">
+      <property name="msbuild.version" value="${framework::get-target-framework()}" />
+      <if test="${framework::exists('net-3.5')}">
+        <property name="msbuild.version" value="net-3.5" />
+      </if>
+      <if test="${framework::exists('net-4.0')}">
+        <property name="msbuild.version" value="net-4.0" />
+      </if>
+    </if>
+
+    <!--
+      Check if MSBuild.exe is there.
+    -->
+    <property
+      name="temp"
+      value="${framework::get-framework-directory(msbuild.version)}"
+    />
+    <property name="temp" value="${path::combine(temp, 'MSBuild.exe')}" />
+    <if test="${file::exists(temp)}">
+      <property name="msbuild.path" value="${temp}" />
+    </if>
+    
+    <!--
+      Display what we've found out
+    -->
+    <if test="${property::exists('teamcity.dotnet.nunitlauncher2.0')}">
+      <echo message="Using MSBuild from TeamCity" />
+    </if>
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher2.0')}">
+      <if test="${property::exists('msbuild.path')}">
+        <echo message="MSBuild located in ${msbuild.path}" />
+      </if>
+      <if test="${not property::exists('msbuild.path')}">
+        <echo message="MSBuild not found. Use -D:msbuild.path=... to set path" />
+      </if>
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-msbuild" depends="locate-msbuild">
+
+    <!--
+      TeamCity has its own NUnit version that allows you to select x86 or x64 mode,
+      so we don't require NUnit to be installed separately there.
+    -->
+    <if test="${not property::exists('teamcity.dotnet.nunitlauncher2.0')}">
+
+      <if test="${not property::exists('msbuild.path')}">
+        <fail message="MSBuild is required for this build" />
+      </if>
+      <if test="${not file::exists(msbuild.path)}">
+        <echo message="${msbuild.path}" />
+        <fail message="MSBuild is required for this build" />
+      </if>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Runs MSBuild on a single project
+
+    Inputs:
+      msbuild.project           Project that will be compiled with MSBuild
+      msbuild.platform          Target platform to compile the project for (eg. x86, AnyCPU)
+      msbuild.configuration     Build configuration ("Debug" or "Release")
+      msbuild.unittest          True to enable the UNITTEST constant
+  -->
+  <target name="msbuild" depends="require-msbuild" description="Runs an msbuild script">
+
+    <property name="temp" value="${path::get-file-name-without-extension(msbuild.project)}" />
+    <echo message="===================================================================" />
+    <echo message="Building ${temp} for ${msbuild.platform}" />
+    <echo message="===================================================================" />
+
+    <property name="temp" value="${framework::get-target-framework()}" />
+
+    <if test="${path::get-extension(msbuild.project) == '.vcproj'}">
+      <property
+        name="vcbuild.binary"
+        value="${environment::get-variable('VS90COMNTOOLS')}../../VC/VCPackages/VCBuild.exe"
+      />
+      <exec
+        program="${vcbuild.binary}"
+      >
+        <arg value="/rebuild" />
+        <arg value="${msbuild.project}" />
+        <arg value="${msbuild.configuration}" />
+      </exec>
+    </if>
+    
+    <if test="${not (path::get-extension(msbuild.project) == '.vcproj')}">
+
+      <!--
+        If we're being run by TeamCity, use their NUnit launcher
+      -->
+      <if test="${property::exists('teamcity.dotnet.nunitlauncher2.0')}">
+
+        <!--
+          Currently, TeamCity messes up with .NET 4.0 projects containing resources
+        -->
+        <if test="${msbuild.version == 'net-4.0'}">
+          <exec
+            program="${msbuild.path}"
+            failonerror="true"
+            managed="true"
+          >
+            <arg file="${msbuild.project}" />
+            <arg value="/property:Configuration=${msbuild.configuration}" />
+            <!-- <arg value="/property:Platform=${msbuild.platform}" /> -->
+            <arg value="/property:UNITTEST=true" if="${msbuild.unittest == 'true'}" />
+          </exec>
+        </if>
+        <if test="${not (msbuild.version == 'net-4.0')}">
+          <if test="${msbuild.version == 'net-3.5'}">
+            <property name="teamcity_dotnet_use_msbuild_v35" value="true" />
+          </if>
+
+          <msbuild
+            project="${msbuild.project}"
+            target="Build"
+          >
+            <arg value="/property:Configuration=${msbuild.configuration}" />
+            <!-- <arg value="/property:Platform=${msbuild.platform}" /> -->
+            <arg value="/property:UNITTEST=true" if="${msbuild.unittest == 'true'}" />
+          </msbuild>
+        </if>
+
+      </if>
+
+      <!--
+        If we're not being run by TeamCity, start MSBuild directly
+      -->
+      <if test="${not property::exists('teamcity.dotnet.nunitlauncher2.0')}">
+
+        <exec
+          program="${msbuild.path}"
+          failonerror="true"
+          managed="true"
+        >
+          <arg file="${msbuild.project}" />
+          <arg value="/property:Configuration=${msbuild.configuration}" />
+          <!-- <arg value="/property:Platform=${msbuild.platform}" /> -->
+          <arg value="/property:UNITTEST=true" if="${msbuild.unittest == 'true'}" />
+        </exec>
+        <!--
+        <arg value="/property:TargetFrameworkVersion=v2.0" if="${temp == 'net-2.0'}" />
+        <arg value="/property:TargetFrameworkVersion=v3.5" if="${temp == 'net-3.5'}" />
+        <arg value="/property:TargetFrameworkVersion=v4.0" if="${temp == 'net-4.0'}" />
+        -->
+
+      </if>
+
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>
+

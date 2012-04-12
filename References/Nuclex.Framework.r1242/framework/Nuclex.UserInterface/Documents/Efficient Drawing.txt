@@ -1,0 +1,48 @@
+﻿This document describes how efficient drawing of a 2D GUI can be achieved using
+modern 3D graphics accelerator features
+
+
+Textures
+
+  Any bitmaps used for the GUI should be arranged onto a single large texture.
+  The design can either request this as a precondition from the artist or use
+  a rectangle packing algorithm.
+
+  The special challenge in XNA is that often, text and dialogs are mixed.
+  Remember that polygons have to be drawn in the right order, we can't just
+  draw all geometry first and all texts afterwards
+
+  Option 1: Rely entirely on the SpriteBatch for the drawing of the GUI and
+            accept that a texture switch (= 2 additional draw calls) may be
+            introduced each time a control renders text.
+
+  Option 2: Completely discard the XNA text rendering system and use my own.
+            Nuclex.Fonts is way faster and gives more control over font
+            positioning (eg. an important feature is to be able to align text
+            on its baseline, which ends up in guesswork with the SpriteFont
+            class). However, Nuclex.Fonts would mean one more dependency.
+            
+            Update: The Nuclex Font Importer now uses the SpriteFont format,
+            it is no longer possible to take advantage of the Nuclex.Fonts
+            text rendering system for this purpose (though fonts imported with
+            the Nuclex Font Importer are still centered on their baseline)
+
+  For total freedom of choice, the complete rendering API used by controls has been
+  moved into a neutral interface that enables you 
+  Option 1
+
+Visual Manager (or how it's called in the end)
+
+
+
+
+Control
+  GuiPainter
+    DrawString(SpriteFont font, Vector2 location, string text);
+
+
+
+` 1 2 3 4 5  6    7  8 9 0 [ ]      ~ ! @ # $ % ^ & * ( ) { }
+   ' , . p  y    f  g c r l / =        " < > P Y F G C R L ? +
+    a o e u  i    d  h t n s - \        A O E U I D H T N S _ |
+   \ ; q j k  x    b  m w v z          | : Q J K X B M W V Z

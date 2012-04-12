@@ -163,6 +163,10 @@
       <Project>{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\References\Nuclex.Framework.r1242\framework\Nuclex.Input\Nuclex.Input %28xna-3.1-x86%29.csproj">
+      <Project>{C4FD0A4A-303E-468B-B2B2-790691B11FB5}</Project>
+      <Name>Nuclex.Input %28xna-3.1-x86%29</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

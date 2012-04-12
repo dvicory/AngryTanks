@@ -1,0 +1,10 @@
+# Build Platform Definition
+#
+# This file describes which projects (and which individual project platforms)
+# to build when executing the main build script.
+#
+# The Syntax is
+#   DirectoryName,ProjectPlatform,ProjectName,OutputDirectory
+#
+Nuclex.Support,Xbox 360,Nuclex.Support (xna-4.0-xbox360).csproj,bin/xna-4.0-xbox360/%build.configuration%
+Nuclex.Math,Xbox 360,Nuclex.Math (xna-4.0-xbox360).csproj,bin/xna-4.0-xbox360/%build.configuration%

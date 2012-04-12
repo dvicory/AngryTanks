@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project
+  xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd"
+  name="Subversion"
+>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+      Locates Subversion and initializes the subversion.path property
+  -->
+  <target
+    name="locate-subversion"
+    unless="${property::exists('subversion.path')}"
+  >
+
+    <!--
+      Try to locate Subversion in its default path on x86 systems
+    -->
+    <if test="${not property::exists('subversion.path')}">
+      <if test="${environment::variable-exists('ProgramFiles')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramFiles')}"
+          property="temp"
+        >
+          <property
+            name="temp.foldername"
+            value="${string::to-lower(path::get-file-name(temp))}"
+          />
+          <if test="${string::starts-with(temp.foldername, 'sliksvn')}">
+            <if test="${file::exists(temp + '/bin/svn.exe')}">
+              <property name="subversion.path" value="${temp}/bin/" />
+            </if>
+          </if>
+          <if test="${string::starts-with(temp.foldername, 'collabnet subversion')}">
+            <if test="${file::exists(temp + '/svn.exe')}">
+              <property name="subversion.path" value="${temp}/" />
+            </if>
+          </if>
+          <if test="${string::starts-with(temp.foldername, 'subversion')}">
+            <if test="${file::exists(temp + '/bin/svn.exe')}">
+              <property name="subversion.path" value="${temp}/bin/" />
+            </if>
+          </if>
+        </foreach>
+        
+        <if test="${property::exists('subversion.path')}">
+          <property name="subversion.path" value="${path::get-full-path(subversion.path)}" />
+        </if>
+      </if>
+    </if>
+
+    <!--
+      Try to locate Subversion in its default path on x64 systems
+    -->
+    <if test="${not property::exists('subversion.path')}">
+      <if test="${environment::variable-exists('ProgramW6432')}">
+        <foreach
+          item="Folder"
+          in="${environment::get-variable('ProgramW6432')}"
+          property="temp"
+        >
+          <property
+            name="temp.foldername"
+            value="${string::to-lower(path::get-file-name(temp))}"
+          />
+          <if test="${string::starts-with(temp.foldername, 'sliksvn')}">
+            <property name="subversion.path" value="${temp}/bin/" />
+          </if>
+          <if test="${string::starts-with(temp.foldername, 'collabnet subversion')}">
+            <property name="subversion.path" value="${temp}/" />
+          </if>
+          <if test="${string::starts-with(temp.foldername, 'subversion')}">
+            <property name="subversion.path" value="${temp}/bin/" />
+          </if>
+        </foreach>
+
+        <if test="${property::exists('subversion.path')}">
+          <property name="subversion.path" value="${path::get-full-path(subversion.path)}" />
+        </if>
+      </if>
+    </if>
+
+    <!--
+      Display what we've found out
+    -->
+    <if test="${property::exists('subversion.path')}">
+      <echo message="Subversion located in ${subversion.path}" />
+    </if>
+    <if test="${not property::exists('subversion.path')}">
+      <echo message="Subversion not found. Use -D:subversion.path=... to set path" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="require-subversion" depends="locate-subversion">
+
+    <if test="${not property::exists('subversion.path')}">
+      <fail message="Subversion is required for this build" />
+    </if>
+    <property name="temp" value="${path::combine(subversion.path, 'svn.exe')}" />
+    <if test="${not file::exists(temp)}">
+      <fail message="Subversion is required for this build" />
+    </if>
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Adds files to a working copy
+
+    Inputs:
+      subversion.filename   Name of the file that will be added
+  -->
+  <target name="subversion-add" depends="require-subversion">
+
+    <property
+      name="subversion.commandline"
+      value="add &quot;${subversion.filename}&quot;"
+    />
+    <call target="subversion" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Creates a directory in a working copy
+
+    Inputs:
+      subversion.directory  Name of the directory that will be added
+  -->
+  <target name="subversion-mkdir" depends="require-subversion">
+
+    <property
+      name="subversion.commandline"
+      value="mkdir &quot;${subversion.directory}&quot;"
+    />
+    <call target="subversion" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Removes files from a working copy
+
+    Inputs:
+      subversion.filename   Name of the file that will be removed
+  -->
+  <target name="subversion-remove" depends="require-subversion">
+
+    <property
+      name="subversion.commandline"
+      value="remove &quot;${subversion.filename}&quot; --force"
+    />
+    <call target="subversion" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Commits the changes in a working copy to the repository
+
+    Inputs:
+      subversion.target     Path that will be committed
+      subversion.message    Message describing the changes
+  -->
+  <target name="subversion-commit" depends="require-subversion">
+
+    <property
+      name="subversion.commandline"
+      value="commit &quot;${subversion.target}&quot; --message &quot;${subversion.message}&quot;"
+    />
+    <call target="subversion" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Checks out a working copy from a repository
+
+    Inputs:
+      subversion.url        Repository URL that will be checked out
+      subversion.target     Target directory into which the checkout will be performed
+  -->
+  <target
+    name="subversion-checkout"
+    depends="require-subversion"
+    description="Checks out a working copy"
+  >
+
+    <property
+      name="subversion.commandline"
+      value="checkout ${subversion.url} ${subversion.target}"
+    />
+    <call target="subversion" />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <!--
+    Invokes subversion
+
+    Inputs:
+      subversion.commandline    Command line arguments that will be passed to subversion
+      subversion.username       Optional. User name as whom to log into the repository
+      subversion.password       Optional. Password to use for logging into the repository
+  -->
+  <target name="subversion" depends="require-subversion">
+
+    <!--
+      By omitting the username and password arguments if none were specified we
+      make subversion use the credentials of the logged-in user should someone
+      use the script on the command line manually.
+    -->
+    <property name="temp" value="--non-interactive" />
+    <if test="${property::exists('subversion.username')}">
+      <property
+        name="temp"
+        value="--no-auth-cache ${temp}"
+      />
+      <property
+        name="temp"
+        value="--username ${subversion.username} --password ${subversion.password} ${temp}"
+      />
+    </if>
+
+    <exec
+      program="${subversion.path}svn.exe"
+      workingdir="."
+      commandline="${subversion.commandline} ${temp}"
+    />
+
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+</project>
+

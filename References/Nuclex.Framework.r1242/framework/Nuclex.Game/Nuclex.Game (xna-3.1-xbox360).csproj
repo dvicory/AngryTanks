@@ -1,0 +1,214 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectGuid>{259BE03A-8109-4E03-9A8E-BF80410B6F84}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Game</RootNamespace>
+    <AssemblyName>Nuclex.Game</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaCrossPlatformGroupID>e68368c4-8eda-4776-9c19-1a75181aafb6</XnaCrossPlatformGroupID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-3.1-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-3.1-xbox360\Debug\Nuclex.Game.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-3.1-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;NO_SERIALIZATION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-3.1-xbox360\Release\Nuclex.Game.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LzmaSharp, Version=9.12.0.0, Culture=neutral, PublicKeyToken=96bb577564343f16, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\lzma\xna-3.1-xbox360\LzmaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nuclex.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\foundation\xna-3.1-xbox360\Nuclex.Support.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\UnitTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UnitTestResources.Test.cs">
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Component.cs" />
+    <Compile Include="Source\Component.Test.cs">
+      <DependentUpon>Component.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\SharedGameContentManager.cs" />
+    <Compile Include="Source\Content\SharedGameContentManager.Test.cs">
+      <DependentUpon>SharedGameContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\LzmaContentManager.Test.cs">
+      <DependentUpon>LzmaContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\MemoryContentManager.Test.cs">
+      <DependentUpon>MemoryContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Content\LzmaContentManager.cs" />
+    <Compile Include="Source\DrawableComponent.cs" />
+    <Compile Include="Source\Content\MemoryContentManager.cs" />
+    <Compile Include="Source\Content\ISharedContentService.cs" />
+    <Compile Include="Source\Content\SharedContentManager.cs" />
+    <Compile Include="Source\Content\SharedContentManager.Test.cs">
+      <DependentUpon>SharedContentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\DrawableComponent.Test.cs">
+      <DependentUpon>DrawableComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\GraphicsDeviceDrawableComponent.cs" />
+    <Compile Include="Source\GraphicsDeviceDrawableComponent.Test.cs">
+      <DependentUpon>GraphicsDeviceDrawableComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\ArevaloRectanglePacker.cs" />
+    <Compile Include="Source\Packing\ArevaloRectanglePacker.Test.cs">
+      <DependentUpon>ArevaloRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\CygonRectanglePacker.cs" />
+    <Compile Include="Source\Packing\CygonRectanglePacker.Test.cs">
+      <DependentUpon>CygonRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\OutOfSpaceException.cs" />
+    <Compile Include="Source\Packing\OutOfSpaceException.Test.cs">
+      <DependentUpon>OutOfSpaceException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\RectanglePacker.cs" />
+    <Compile Include="Source\Packing\RectanglePacker.Test.cs">
+      <DependentUpon>RectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Packing\SimpleRectanglePacker.cs" />
+    <Compile Include="Source\Packing\SimpleRectanglePacker.Test.cs">
+      <DependentUpon>SimpleRectanglePacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Serialization\BinarySerializer.cs" />
+    <Compile Include="Source\Serialization\BinarySerializer.Test.cs">
+      <DependentUpon>BinarySerializer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Serialization\IBinarySerializable.cs" />
+    <Compile Include="Source\Space\BoundingRectangle.cs" />
+    <Compile Include="Source\Space\BoundingRectangle.Test.cs">
+      <DependentUpon>BoundingRectangle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\HilbertRectangleTree.cs" />
+    <Compile Include="Source\Space\IBoundingRectangleProvider.cs" />
+    <Compile Include="Source\Space\PolyDimensionalTree.cs" />
+    <Compile Include="Source\Space\PoolFactory.cs" />
+    <Compile Include="Source\Space\PoolFactory.Test.cs">
+      <DependentUpon>PoolFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\PriorityRectangleTree.cs" />
+    <Compile Include="Source\Space\PriorityRectangleTree.Node.cs">
+      <DependentUpon>PriorityRectangleTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.cs" />
+    <Compile Include="Source\Space\QuadTree.Insertion.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Query.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Removal.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\QuadTree.Test.cs">
+      <DependentUpon>QuadTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\RectangleTree.cs" />
+    <Compile Include="Source\Space\RectangleTree.Node.cs">
+      <DependentUpon>RectangleTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Space\RTreeVariants.cs" />
+    <Compile Include="Source\Space\SpatialIndex2.cs" />
+    <Compile Include="Source\Space\SpatialIndex2.Test.cs">
+      <DependentUpon>SpatialIndex2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\GameState.cs" />
+    <Compile Include="Source\States\GameState.Test.cs">
+      <DependentUpon>GameState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\GameStateManager.cs" />
+    <Compile Include="Source\States\GameStateManager.Test.cs">
+      <DependentUpon>GameStateManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\IGameStateService.cs" />
+    <Compile Include="Source\States\ILoadableGameState.cs" />
+    <Compile Include="Source\States\LoadingScreenState.cs" />
+    <Compile Include="Source\States\LoadingScreenState.Test.cs">
+      <DependentUpon>LoadingScreenState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\States\LoadProgressEventArgs.cs" />
+    <Compile Include="Source\States\LoadProgressEventArgs.Test.cs">
+      <DependentUpon>LoadProgressEventArgs.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="EmbeddedContent\EmbeddedContent.contentproj">
+      <Project>ad5e7f05-197b-4ef3-ac1a-eba4deba0300</Project>
+      <Visible>false</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UnitTestResources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nuclex.Graphics\Nuclex.Graphics %28xna-3.1-xbox360%29.csproj">
+      <Project>{70751E23-D7CC-4CF8-AE36-E5D415C72521}</Project>
+      <Name>Nuclex.Graphics %28xna-3.1-xbox360%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

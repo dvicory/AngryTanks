@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<skin
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../skin.xsd"
+  name="Suave"
+>
+
+  <!--
+    Resources used to draw GUI elements using this skin
+  -->
+  <resources>
+    <font name="default" contentPath="UnitTestFont" />
+  </resources>
+
+  <!--
+    Frames that are used as building blocks for GUI elements
+  -->
+  <frames>
+
+    <!--
+      Frame used to draw a normal window
+    -->
+    <frame name="test">
+      <text font="default" hplacement="left" vplacement="invalid" />
+    </frame>
+
+  </frames>
+
+</skin>

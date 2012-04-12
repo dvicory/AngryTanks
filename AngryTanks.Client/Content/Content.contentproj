@@ -36,6 +36,14 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter, Version=4.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\References\Nuclex.Framework.r1242\framework\References\truetypeimporter\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.5.10112, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\References\Nuclex.Framework.r1242\framework\References\nunit\net-2.0\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="audio\bz\boom.wav">
@@ -275,10 +283,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fonts\ConsoleFont10.spritefont">
-      <Name>ConsoleFont10</Name>
+    <Compile Include="fonts\ConsoleFont12.spritefont">
+      <Name>ConsoleFont12</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>NuclexSpriteFontDescriptionProcessor</Processor>
     </Compile>
     <None Include="maps\ducati_style_random.bzw">
       <Name>ducati_style_random</Name>

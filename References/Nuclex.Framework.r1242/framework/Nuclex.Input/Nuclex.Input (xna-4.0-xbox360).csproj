@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{FC4FEB04-C520-4E83-B0BB-7C9B226B7427}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nuclex.Input</RootNamespace>
+    <AssemblyName>Nuclex.Input</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Xbox 360</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>bf4331a2-33ab-4ed8-b037-9de9245605f5</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XBOX;XBOX360;NO_DIRECTINPUT;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Debug\Nuclex.Input.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\xna-4.0-xbox360\Release\</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;NO_DIRECTINPUT;XNA_4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>true</XnaCompressContent>
+    <DocumentationFile>bin\xna-4.0-xbox360\Release\Nuclex.Input.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Source\Devices\BufferedMouse.cs" />
+    <Compile Include="Source\ControllerEventArgs.cs" />
+    <Compile Include="Source\ControllerEventArgs.Test.cs">
+      <DependentUpon>ControllerEventArgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\ControllerDetector.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\CollectionHelper.cs" />
+    <Compile Include="Source\CollectionHelper.Test.cs">
+      <DependentUpon>CollectionHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\ControllerDetector.Test.cs">
+      <DependentUpon>ControllerDetector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\BufferedKeyboard.Test.cs">
+      <DependentUpon>BufferedKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\BufferedMouse.Test.cs">
+      <DependentUpon>BufferedMouse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\DirectInputGamePad.cs" />
+    <Compile Include="Source\Devices\DirectInputGamePad.Test.cs">
+      <DependentUpon>DirectInputGamePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\BufferedKeyboard.cs" />
+    <Compile Include="Source\Devices\GamePad.cs" />
+    <Compile Include="Source\Devices\GamePad.Test.cs">
+      <DependentUpon>GamePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\GamePadConverter.Converters.cs">
+      <DependentUpon>GamePadConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\GamePadConverter.cs" />
+    <Compile Include="Source\Devices\GamePadConverter.Test.cs">
+      <DependentUpon>GamePadConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\IGamePad.cs" />
+    <Compile Include="Source\Devices\IInputDevice.cs" />
+    <Compile Include="Source\Devices\IKeyboard.cs" />
+    <Compile Include="Source\Devices\IMouse.cs" />
+    <Compile Include="Source\Devices\IMouseMessageSource.cs" />
+    <Compile Include="Source\Devices\MockedGamePad.cs" />
+    <Compile Include="Source\Devices\MockedGamePad.Test.cs">
+      <DependentUpon>MockedGamePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\MockedKeyboard.cs" />
+    <Compile Include="Source\Devices\MockedKeyboard.KeyMap.cs">
+      <DependentUpon>MockedKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\MockedKeyboard.Test.cs">
+      <DependentUpon>MockedKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\MockedMouse.cs" />
+    <Compile Include="Source\Devices\MockedMouse.Test.cs">
+      <DependentUpon>MockedMouse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\ModifiableKeyboardState.Test.cs">
+      <DependentUpon>ModifiableKeyboardState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\NoGamePad.cs" />
+    <Compile Include="Source\Devices\NoGamePad.Test.cs">
+      <DependentUpon>NoGamePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\NoKeyboard.cs" />
+    <Compile Include="Source\Devices\NoKeyboard.Test.cs">
+      <DependentUpon>NoKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\NoMouse.cs" />
+    <Compile Include="Source\Devices\NoMouse.Test.cs">
+      <DependentUpon>NoMouse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\WindowMessageKeyboard.cs" />
+    <Compile Include="Source\Devices\WindowMessageKeyboard.Test.cs">
+      <DependentUpon>WindowMessageKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\WindowMessageMouse.cs" />
+    <Compile Include="Source\Devices\WindowMessageMouse.Test.cs">
+      <DependentUpon>WindowMessageMouse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\XnaGamePad.cs" />
+    <Compile Include="Source\Devices\XnaGamePad.Test.cs">
+      <DependentUpon>XnaGamePad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\XnaKeyboard.CharacterMap.cs">
+      <DependentUpon>XnaKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Devices\XnaKeyboard.cs" />
+    <Compile Include="Source\Devices\XnaKeyboard.Test.cs">
+      <DependentUpon>XnaKeyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\DirectInputManager.cs" />
+    <Compile Include="Source\DirectInputManager.Test.cs">
+      <DependentUpon>DirectInputManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\ExtendedPlayerIndex.cs" />
+    <Compile Include="Source\GamePadButtonsHelper.cs" />
+    <Compile Include="Source\GamePadButtonsHelper.Test.cs">
+      <DependentUpon>GamePadButtonsHelper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IInputService.cs" />
+    <Compile Include="Source\Devices\IKeyboardMessageSource.cs" />
+    <Compile Include="Source\InputManager.cs" />
+    <Compile Include="Source\Devices\ModifiableKeyboardState.cs" />
+    <Compile Include="Source\InputManager.Test.cs">
+      <DependentUpon>InputManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MockInputManager.cs" />
+    <Compile Include="Source\MockInputManager.Test.cs">
+      <DependentUpon>MockInputManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MouseButtons.cs" />
+    <Compile Include="Source\WindowMessageInterceptor.cs" />
+    <Compile Include="Source\UnsafeNativeMethods.cs" />
+    <Compile Include="Source\WindowMessageInterceptor.Test.cs">
+      <DependentUpon>WindowMessageInterceptor.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Features.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documents\Overview.uml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>
