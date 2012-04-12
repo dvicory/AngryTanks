@@ -105,7 +105,7 @@ namespace AngryTanks.Client
         public NetServerLinkStatus ServerLinkStatus
         {
             get { return serverLinkStatus; }
-            set
+            private set
             {
                 // TODO fire event
                 serverLinkStatus = value;
@@ -138,11 +138,13 @@ namespace AngryTanks.Client
         {
             NetOutgoingMessage hailMessage = Client.CreateMessage();
 
+            Random rand = new Random();
+
             // TODO be able to change callsign/tag
             hailMessage.Write((Byte)MessageType.MsgEnter);
             hailMessage.Write(ProtocolInformation.ProtocolVersion);
             hailMessage.Write((Byte)TeamType.RogueTeam);
-            hailMessage.Write("Player Callsign");
+            hailMessage.Write("Player Callsign " + rand.Next(1000));
             hailMessage.Write("Player Tag");
 
             // we are now initiating the connect, so change status

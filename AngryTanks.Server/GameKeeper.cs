@@ -64,14 +64,15 @@ namespace AngryTanks.Server
 
         public static void AddPlayer(NetConnection connection, PlayerInformation playerInfo)
         {
-            Byte slot = FindSlot();
+            String denyReason;
+            Byte slot = AllocateSlot(playerInfo, out denyReason);
 
-            // game is full if FindSlot returns dummy slot (255)
+            // could not allocate the player if AllocateSlot returns DummySlot
             if (slot == ProtocolInformation.DummySlot)
             {
-                Log.InfoFormat("Player \"{0}\" from {1} tried to join, but the game was full.",
-                               playerInfo.Callsign, connection);
-                connection.Deny("the game is currently full");
+                Log.InfoFormat("Player \"{0}\" from {1} tried to join, but was rejected ({2}).",
+                               playerInfo.Callsign, connection, denyReason);
+                connection.Deny(denyReason);
                 return;
             }
 
@@ -83,15 +84,6 @@ namespace AngryTanks.Server
 
             // and tell everyone else about this awesome new player
             Log.DebugFormat("Sending MsgAddPlayer to everyone else about player #{0}", slot);
-
-            /*
-            NetOutgoingMessage msgAddPlayer = Program.Server.CreateMessage();
-            msgAddPlayer.Write((Byte)MessageType.MsgAddPlayer);
-            msgAddPlayer.Write(slot);
-            msgAddPlayer.Write((Byte)playerInfo.Team);
-            msgAddPlayer.Write(playerInfo.Callsign);
-            msgAddPlayer.Write(playerInfo.Tag);
-            */
 
             NetOutgoingMessage packet = Program.Server.CreateMessage();
 
@@ -115,13 +107,6 @@ namespace AngryTanks.Server
             players.Remove(player.Slot);
 
             // now let's tell all the other players the dude left
-            /*
-            NetOutgoingMessage msgRemovePlayer = Program.Server.CreateMessage();
-            msgRemovePlayer.Write((Byte)MessageType.MsgRemovePlayer);
-            msgRemovePlayer.Write(player.Slot);
-            msgRemovePlayer.Write(reason);
-            */
-
             NetOutgoingMessage packet = Program.Server.CreateMessage();
 
             MsgRemovePlayerPacket message =
@@ -138,36 +123,41 @@ namespace AngryTanks.Server
                 player.Connection.Disconnect(reason);
         }
 
-        private static Byte FindSlot()
+        private static Byte AllocateSlot(PlayerInformation playerAdding, out String denyReason)
         {
-            // TODO check for duplicate callsigns
-            Int16 lastSlot;
-            Int16 curSlot    = -1;
-            Int16 playerSlot = -1;
+            Player player;
+            Byte earliestSlot = ProtocolInformation.DummySlot;
 
-            foreach (KeyValuePair<Byte, Player> entry in players)
+            for (Byte i = 0; i < ProtocolInformation.MaxPlayers; ++i)
             {
-                lastSlot = curSlot;
-                curSlot  = (Int16)entry.Key;
-
-                // did we hit the max? 
-                if (curSlot >= ProtocolInformation.MaxPlayers)
-                    return ProtocolInformation.DummySlot;
-
-                // there was a gap between this current slot and the last slot
-                if ((curSlot - lastSlot) > 1)
+                // we found a player at this slot
+                if (players.TryGetValue(i, out player))
                 {
-                    // we now know that last Slot + 1 must be free
-                    playerSlot = (Byte)(lastSlot + 1);
-                    return (Byte)playerSlot;
+                    // check if they're the same callsign
+                    if (playerAdding.Callsign == player.Callsign)
+                    {
+                        // found a duplicate callsign, no good
+                        denyReason = "callsign is already in use";
+                        return ProtocolInformation.DummySlot;
+                    }
+                }
+                else
+                {
+                    // we didn't find a player at i, so let's save this slot in case we make it out of this loop
+                    if (i < earliestSlot)
+                        earliestSlot = i;
                 }
             }
 
-            // if curSlot never made it up to the max, then we know we can add a slot in at curSlot + 1
-            if (curSlot < ProtocolInformation.MaxPlayers)
-                playerSlot = (Byte)(curSlot + 1);
+            // we didn't find an open slot since it's still at dummy slot...
+            if (earliestSlot == ProtocolInformation.DummySlot)
+            {
+                denyReason = "the game is full";
+                return ProtocolInformation.DummySlot;
+            }
 
-            return (Byte)playerSlot;
+            denyReason = null;
+            return earliestSlot;
         }
 
         public static Player GetPlayerBySlot(Byte Slot)
