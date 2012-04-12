@@ -117,22 +117,26 @@ namespace AngryTanks.Common
             }
 
             public readonly PlayerInformation Player;
+            public readonly bool AddMyself;
 
-            public MsgAddPlayerPacket(PlayerInformation player)
+            public MsgAddPlayerPacket(PlayerInformation player, bool addMyself)
             {
                 this.Player = player;
+                this.AddMyself = addMyself;
             }
 
             public static MsgAddPlayerPacket Read(NetIncomingMessage packet)
             {
                 PlayerInformation player = PlayerInformation.Read(packet);
+                bool addMyself = packet.ReadBoolean();
 
-                return new MsgAddPlayerPacket(player);
+                return new MsgAddPlayerPacket(player, addMyself);
             }
 
             public void Write(NetOutgoingMessage packet)
             {
                 Player.Write(packet);
+                packet.Write(AddMyself);
             }
         }
 

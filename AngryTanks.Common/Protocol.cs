@@ -9,7 +9,7 @@ namespace AngryTanks.Common
     {
         public static class ProtocolInformation
         {
-            public static readonly UInt16 ProtocolVersion = 5;
+            public static readonly UInt16 ProtocolVersion = 6;
             public static readonly Byte MaxPlayers = 100;
             public static readonly Byte DummySlot = 255;
         }
@@ -21,7 +21,6 @@ namespace AngryTanks.Common
             MsgAddPlayer,
             MsgRemovePlayer,
             MsgWorld,
-            MsgPlayerUpdate,       // soon obsolete
             MsgPlayerClientUpdate, // from client to server
             MsgPlayerServerUpdate  // from server to client
         }
@@ -40,6 +39,7 @@ namespace AngryTanks.Common
 
         public enum PlayerState
         {
+            None,
             Joining,
             Leaving,
             Dead,

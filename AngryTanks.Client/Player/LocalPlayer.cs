@@ -35,7 +35,7 @@ namespace AngryTanks.Client
             this.maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
         }
 
-        public override void Update(GameTime gameTime, List<Sprite> collisionObjects)
+        public override void Update(GameTime gameTime)
         {
             kb = Keyboard.GetState();
 
@@ -102,7 +102,7 @@ namespace AngryTanks.Client
             Single overlap;
             Vector2 collisionProjection;
 
-            if (FindNearestCollision(collisionObjects, out overlap, out collisionProjection))
+            if (FindNearestCollision(World.WorldObjects, out overlap, out collisionProjection))
             {
                 // move our position back to old position
                 newPosition += overlap * collisionProjection;
@@ -114,6 +114,11 @@ namespace AngryTanks.Client
             Rotation = newRotation;
 
             base.Update(gameTime);
+        }
+
+        protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
+        {
+            base.HandleReceivedMessage(sender, message);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

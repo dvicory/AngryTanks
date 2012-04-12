@@ -87,7 +87,7 @@ namespace AngryTanks.Server
 
             NetOutgoingMessage packet = Program.Server.CreateMessage();
 
-            MsgAddPlayerPacket message = new MsgAddPlayerPacket(players[slot].PlayerInfo);
+            MsgAddPlayerPacket message = new MsgAddPlayerPacket(players[slot].PlayerInfo, false);
 
             packet.Write((Byte)message.MsgType);
             message.Write(packet);
@@ -95,7 +95,7 @@ namespace AngryTanks.Server
             Log.DebugFormat("MsgAddPlayer Compiled ({0} bytes) and being sent to {1} recipients",
                             packet.LengthBytes, players.Count - 1);
 
-            // send to everyone except our new player
+            // send to everyone except our new player, we let Player itself decide when to send the state to the new guy
             Program.Server.SendToAll(packet, connection, NetDeliveryMethod.ReliableOrdered, 0);
         }
 

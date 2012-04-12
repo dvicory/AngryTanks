@@ -80,6 +80,25 @@ namespace AngryTanks.Client
             get { return content; }
         }
 
+        private ServerLink serverLink;
+
+        public ServerLink ServerLink
+        {
+            get { return serverLink; }
+        }
+
+        public List<Sprite> WorldObjects
+        {
+            get
+            {
+                List<Sprite> worldObjects = new List<Sprite>();
+                worldObjects.AddRange(stretched.ToList());
+                worldObjects.AddRange(tiled.ToList());
+
+                return worldObjects;
+            }
+        }
+
         #endregion
 
         private GraphicsDevice graphicsDevice;
@@ -99,18 +118,24 @@ namespace AngryTanks.Client
         // List of all Dynamic Sprites (tanks and flags), always drawn stretched.
         private List<Sprite> dynamicObjects = new List<Sprite>();
 
-        private LocalPlayer localPlayer;
+        private PlayerManager playerManager;
+
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
-        public World(Game game)
+        public World(Game game, ServerLink serverLink)
             : base(game)
         {
+            this.serverLink = serverLink;
+
             this.tiled = new List<Sprite>();
             this.stretched = new List<Sprite>();
 
             // initialize variable database
             // TODO need to get variables from server and stick them in this structure
             this.varDB = new VariableDatabase();
+
+            // initialize player manager
+            this.playerManager = new PlayerManager(this);
         }
 
         protected override void Dispose(bool disposing)
@@ -121,13 +146,11 @@ namespace AngryTanks.Client
                 tiled.Clear();
                 stretched.Clear();
 
-                localPlayer = null;
-
                 spriteBatch.Dispose();
                 content.Unload();
 
                 graphicsDevice.DeviceReset -= GraphicsDeviceReset;
-                AngryTanks.ServerLink.MessageReceivedEvent -= ReceiveMessage;
+                ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
             }
 
             base.Dispose(disposing);
@@ -153,7 +176,7 @@ namespace AngryTanks.Client
             camera.LookAt(Vector2.Zero);
 
             graphicsDevice.DeviceReset += GraphicsDeviceReset;
-            AngryTanks.ServerLink.MessageReceivedEvent += ReceiveMessage;
+            ServerLink.MessageReceivedEvent += HandleReceivedMessage;
 
             base.Initialize();
         }
@@ -186,27 +209,26 @@ namespace AngryTanks.Client
             // 2.8 width and 6 length are bzflag defaults
             // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
             //localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
-            localPlayer = new LocalPlayer(this, new PlayerInformation(0, "test", "test", TeamType.RogueTeam));
+            //localPlayer = new LocalPlayer(this, new PlayerInformation(0, "test", "test", TeamType.RogueTeam));
 
             base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
+            // handle any keys currently pressed
             HandleKeyDown(Keyboard.GetState());
 
-            // update collidable objects
-            List<Sprite> collisionObjects = new List<Sprite>();
-            collisionObjects.AddRange(stretched.ToList());
-            collisionObjects.AddRange(tiled.ToList());
-
-            // update the local player
-            lastPlayerPosition = localPlayer.Position;
-            localPlayer.Update(gameTime, collisionObjects);
+            // update the players
+            playerManager.Update(gameTime);
 
             // now finally track the tank (disregards any panning)
             // smoothstep helps smooth the camera if player gets stuck
-            camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, localPlayer.Position, 0.5f)));
+            if (playerManager.LocalPlayer != null)
+            {
+                lastPlayerPosition = playerManager.LocalPlayer.Position;
+                camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, playerManager.LocalPlayer.Position, 0.5f)));
+            }
 
             base.Update(gameTime);
         }
@@ -315,14 +337,14 @@ namespace AngryTanks.Client
             foreach (Sprite sprite in dynamicObjects)
                 sprite.Draw(gameTime, spriteBatch);
 
-            localPlayer.Draw(gameTime, spriteBatch);
+            playerManager.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        private void ReceiveMessage(object sender, ServerLinkMessageEvent message)
+        private void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
             switch (message.MessageType)
             {

@@ -12,8 +12,11 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using NDesk.Options;
 using Nuclex.Input;
 using log4net;
+
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
@@ -63,6 +66,8 @@ namespace AngryTanks.Client
             Components.Add(Input);
             Input.UpdateOrder = 100;
 
+            Input.GetKeyboard().KeyPressed += HandleKeyPress;
+
             // instantiate game console
             gameConsole = new GameConsole(this, new Vector2(0, 400), new Vector2(800, 200),
                                           new Vector2(10, 10), new Vector2(10, 10), new Color(255, 255, 255, 100));
@@ -70,8 +75,10 @@ namespace AngryTanks.Client
             gameConsole.UpdateOrder = 1000;
             gameConsole.DrawOrder = 1000;
 
+            gameConsole.PromptReceivedInput += HandlePromptInput;
+
             // instantiate the world
-            world = new World(this);
+            world = new World(this, serverLink);
             Components.Add(world);
             world.UpdateOrder = 100;
             world.DrawOrder = 100;
@@ -97,7 +104,7 @@ namespace AngryTanks.Client
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
+            //world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
 
             base.LoadContent();
         }
@@ -122,77 +129,12 @@ namespace AngryTanks.Client
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            KeyboardState kb = Keyboard.GetState();
-
-            // TODO these keys are temporary
-
-            if (kb.IsKeyDown(Keys.F1))
-            {
-                if (!fullscreen)
-                {
-                    graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
-                    graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-                    graphics.IsFullScreen = true;
-                    graphics.ApplyChanges();
-
-                    fullscreen = !fullscreen;
-                }
-                else
-                {
-                    graphics.PreferredBackBufferWidth = 800;
-                    graphics.PreferredBackBufferHeight = 600;
-                    graphics.IsFullScreen = false;
-                    graphics.ApplyChanges();
-
-                    fullscreen = !fullscreen;
-                }
-            }
-
-            // connect to the server when you press C
-            if (kb.IsKeyDown(Keys.C)
-                && (serverLink.ServerLinkStatus == NetServerLinkStatus.None
-                    || serverLink.ServerLinkStatus == NetServerLinkStatus.Disconnected))
-            {
-                if (world != null)
-                {
-                    world.Dispose();
-                    world = null;
-                }
-
-                world = new World(this);
-                Components.Add(world);
-                world.UpdateOrder = 100;
-                world.DrawOrder = 100;
-
-                Console.WriteLine("Connecting to server...");
-                serverLink.Connect("localhost", 5150);
-            }
-
-            //  disconnect when you press X
-            if (kb.IsKeyDown(Keys.X)
-                && serverLink.ServerLinkStatus == NetServerLinkStatus.Connected)
-            {
-                if (world != null)
-                {
-                    world.Dispose();
-                    world = null;
-                }
-
-                world = new World(this);
-                Components.Add(world);
-                world.UpdateOrder = 100;
-                world.DrawOrder = 100;
-
-                Console.WriteLine("Disconnecting from server.");
-                serverLink.Disconnect("player disconnected");
-            }
-
             serverLink.Update();
 
             // TODO should probably have console do more advanced positioning that accounts for this...
-            // do we need to change console's position and size?
             Viewport viewport = GraphicsDevice.Viewport;
 
+            // do we need to change console's position and size?
             if ((viewport.Width != lastViewport.Width) || (viewport.Height != lastViewport.Height))
             {
                 gameConsole.Position = new Vector2(0, viewport.Height - 200);
@@ -202,7 +144,6 @@ namespace AngryTanks.Client
             lastViewport = viewport;
 
             base.Update(gameTime);
-
         }
 
         /// <summary>
@@ -214,6 +155,171 @@ namespace AngryTanks.Client
             GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
+        }
+
+        private void HandleKeyPress(Keys key)
+        {
+            switch (key)
+            {
+                case Keys.F1:
+                    {
+                        if (!fullscreen)
+                        {
+                            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+                            graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+                            graphics.IsFullScreen = true;
+                            graphics.ApplyChanges();
+
+                            fullscreen = !fullscreen;
+                        }
+                        else
+                        {
+                            graphics.PreferredBackBufferWidth = 800;
+                            graphics.PreferredBackBufferHeight = 600;
+                            graphics.IsFullScreen = false;
+                            graphics.ApplyChanges();
+
+                            fullscreen = !fullscreen;
+                        }
+
+                        break;
+                    }
+
+                case Keys.C:
+                    {
+                        if (gameConsole.PromptActive)
+                            break;
+
+                        if (serverLink.ServerLinkStatus == NetServerLinkStatus.None
+                            || serverLink.ServerLinkStatus == NetServerLinkStatus.Disconnected)
+                        {
+                            Random rand = new Random();
+                            Connect("localhost", null, String.Format("Random Callsign {0}", rand.Next(10000)), null, TeamType.RogueTeam);
+                        }
+
+                        break;
+                    }
+
+                case Keys.X:
+                    {
+                        if (gameConsole.PromptActive)
+                            break;
+                        
+                        Disconnect("player disconnected");
+
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+        }
+
+        private void WriteConsoleLines(StringWriter input)
+        {
+            StringReader output = new StringReader(input.ToString());
+
+            String line;
+            while ((line = output.ReadLine()) != null)
+            {
+                gameConsole.WriteLine(line);
+            }
+        }
+
+        private void HandlePromptInput(object sender, PromptInputEvent inputEvent)
+        {
+            String[] args = inputEvent.SplitCommandLine().ToArray();
+
+            if (args[0].ToLower().Equals("/connect", StringComparison.OrdinalIgnoreCase))
+            {
+                String host = null, callsign = null, tag = null;
+                UInt16 port = 5150;
+
+                OptionSet p = new OptionSet() {
+                { "h=|host=",
+                    "host of server to connect to",
+                    (String v) => host = v
+                    },
+                { "p=|port=",
+                    "port of server to connect to",
+                    (UInt16 v) => port = v
+                    },
+                { "c=|callsign=",
+                    "callsign to use",
+                    (String v) => callsign = v
+                    },
+                { "t|tag=",
+                    "tag to use",
+                    (String v) => tag = v
+                    },
+                };
+
+                List<String> extra;
+                try
+                {
+                    extra = p.Parse(args);
+                }
+                catch (OptionException e)
+                {
+                    gameConsole.WriteLine(e.Message);
+
+                    StringWriter descriptions = new StringWriter();
+                    p.WriteOptionDescriptions(descriptions);
+                    WriteConsoleLines(descriptions);
+
+                    return;
+                }
+
+                if (host == null || callsign == null)
+                {
+                    gameConsole.WriteLine("Host and callsign are required.");
+
+                    StringWriter descriptions = new StringWriter();
+                    p.WriteOptionDescriptions(descriptions);
+                    WriteConsoleLines(descriptions);
+
+                    return;
+                }
+
+                Connect(host, port, callsign, tag, TeamType.RogueTeam);
+            }
+        }
+
+        private void Connect(String host, UInt16? port, String callsign, String tag, TeamType team)
+        {
+            Disconnect("player disconnected");
+
+            if (world != null)
+            {
+                world.Dispose();
+                world = null;
+            }
+
+            world = new World(this, serverLink);
+            Components.Add(world);
+            world.UpdateOrder = 100;
+            world.DrawOrder = 100;
+
+            Console.WriteLine("Connecting to server.");
+            serverLink.Connect(host, port, callsign, tag, team);
+        }
+
+        private void Disconnect(String reason)
+        {
+            if (world != null)
+            {
+                world.Dispose();
+                world = null;
+            }
+
+            world = new World(this, serverLink);
+            //world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
+            Components.Add(world);
+            world.UpdateOrder = 100;
+            world.DrawOrder = 100;
+
+            Console.WriteLine("Disconnecting from server.");
+            serverLink.Disconnect(reason);
         }
     }
 }

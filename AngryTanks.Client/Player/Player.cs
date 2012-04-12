@@ -19,13 +19,13 @@ using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
-    public class Player : DynamicSprite
+    public abstract class Player : DynamicSprite, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Player Properties
 
-        private PlayerInformation playerInfo;
+        protected PlayerInformation playerInfo;
 
         public PlayerInformation PlayerInfo
         {
@@ -52,17 +52,45 @@ namespace AngryTanks.Client
             get { return PlayerInfo.Team; }
         }
 
+        protected PlayerState state = PlayerState.None;
+
+        public PlayerState State
+        {
+            get { return state; }
+        }
+
         #endregion
 
         public Player(World world, PlayerInformation playerInfo)
             : base(world, GetTexture(world, playerInfo), Vector2.Zero, GetTankSize(world, playerInfo), 0)
         {
             this.playerInfo = playerInfo;
+
+            World.ServerLink.MessageReceivedEvent += HandleReceivedMessage;
+        }
+
+        ~Player()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
+
+            World.ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
         }
 
         protected static Texture2D GetTexture(World world, PlayerInformation playerInfo)
         {
-            // TODO get the correct texture
+            // TODO get the correct texture depending on team
             return world.Content.Load<Texture2D>("textures/tank_white");
         }
 
@@ -72,9 +100,9 @@ namespace AngryTanks.Client
             return new Vector2(4.86f, 6);
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite> collisionObjects)
+        protected virtual void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
-            base.Update(gameTime);
+            return;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

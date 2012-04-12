@@ -10,9 +10,35 @@ using Nuclex.Input;
 using log4net;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Extensions.StringExtensions;
 
 namespace AngryTanks.Client
 {
+    public class PromptInputEvent : EventArgs
+    {
+        public readonly String Input;
+
+        public PromptInputEvent(String input)
+        {
+            this.Input = input;
+        }
+
+        public IEnumerable<String> SplitCommandLine()
+        {
+            bool inQuotes = false;
+
+            return this.Input.Split(c =>
+            {
+                if (c == '\"')
+                    inQuotes = !inQuotes;
+
+                return !inQuotes && c == ' ';
+            })
+                .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
+                .Where(arg => !string.IsNullOrEmpty(arg));
+        }
+    }
+
     public struct ConsoleMessagePart
     {
         public readonly String Message;
@@ -64,6 +90,8 @@ namespace AngryTanks.Client
 
     public interface IGameConsole
     {
+        event EventHandler<PromptInputEvent> PromptReceivedInput;
+
         #region Properties
 
         bool Opened
@@ -144,6 +172,8 @@ namespace AngryTanks.Client
     public class GameConsole : DrawableGameComponent, IGameConsole
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public event EventHandler<PromptInputEvent> PromptReceivedInput;
 
         #region GameConsole Properties
 
@@ -359,7 +389,8 @@ namespace AngryTanks.Client
 
                 // submits contents of prompt
                 case Keys.Enter:
-                    // TODO handle submitting prompt
+                    FireInputEvent(currentPromptInput);
+
                     PromptActive = false;
                     currentPromptInput = "";
 
@@ -476,6 +507,19 @@ namespace AngryTanks.Client
         public void WriteLine(ConsoleMessageLine consoleMessage)
         {
             lines.AddFirst(consoleMessage);
+        }
+
+        private void FireInputEvent(String input)
+        {
+            EventHandler<PromptInputEvent> handler = PromptReceivedInput;
+
+            // prevent race condition
+            if (handler != null)
+            {
+                // notify delegates attached to event
+                PromptInputEvent e = new PromptInputEvent(input);
+                handler(this, e);
+            }
         }
     }
 }

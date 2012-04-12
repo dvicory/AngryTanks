@@ -55,11 +55,11 @@ namespace AngryTanks.Client
         Disconnected
     }
 
-    public class ServerLinkStateChangedEvent<T> : EventArgs
+    public class ServerLinkStateChangedEvent : EventArgs
     {
-        public readonly T OldValue, NewValue;
+        public readonly NetServerLinkStatus OldValue, NewValue;
 
-        public ServerLinkStateChangedEvent(T oldValue, T newValue)
+        public ServerLinkStateChangedEvent(NetServerLinkStatus oldValue, NetServerLinkStatus newValue)
         {
             OldValue = oldValue;
             NewValue = newValue;
@@ -85,6 +85,16 @@ namespace AngryTanks.Client
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
+        /// Event hook to receive messages
+        /// </summary>
+        public event EventHandler<ServerLinkMessageEvent> MessageReceivedEvent;
+
+        /// <summary>
+        /// Event hook to receive changes to <see cref="ServerLinkState"/>
+        /// </summary>
+        public event EventHandler<ServerLinkStateChangedEvent> ServerLinkStateChanged;
+
+        /// <summary>
         /// Configuration for <see cref="NetClient"/>
         /// </summary>
         private static NetPeerConfiguration Config;
@@ -107,15 +117,19 @@ namespace AngryTanks.Client
             get { return serverLinkStatus; }
             private set
             {
-                // TODO fire event
+                EventHandler<ServerLinkStateChangedEvent> handler = ServerLinkStateChanged;
+
+                // prevent race condition
+                if (handler != null)
+                {
+                    // notify delegates attached to event
+                    ServerLinkStateChangedEvent e = new ServerLinkStateChangedEvent(serverLinkStatus, value);
+                    handler(this, e);
+                }
+
                 serverLinkStatus = value;
             }
         }
-
-        /// <summary>
-        /// Event hook to receive messages
-        /// </summary>
-        public event EventHandler<ServerLinkMessageEvent> MessageReceivedEvent;
 
         public ServerLink()
         {
@@ -134,23 +148,23 @@ namespace AngryTanks.Client
             return Config;
         }
 
-        public NetConnection Connect(string host, UInt16 port)
+        public NetConnection Connect(String host, UInt16? port, String callsign, String tag, TeamType team)
         {
             NetOutgoingMessage hailMessage = Client.CreateMessage();
 
-            Random rand = new Random();
-
-            // TODO be able to change callsign/tag
             hailMessage.Write((Byte)MessageType.MsgEnter);
             hailMessage.Write(ProtocolInformation.ProtocolVersion);
-            hailMessage.Write((Byte)TeamType.RogueTeam);
-            hailMessage.Write("Player Callsign " + rand.Next(1000));
-            hailMessage.Write("Player Tag");
+            hailMessage.Write((Byte)team);
+            hailMessage.Write(callsign);
+            hailMessage.Write((tag != null ? tag : ""));
 
             // we are now initiating the connect, so change status
             ServerLinkStatus = NetServerLinkStatus.Connecting;
-            
-            return Client.Connect(host, port, hailMessage);
+
+            if (!port.HasValue)
+                port = 5150;
+
+            return Client.Connect(host, port.Value, hailMessage);
         }
 
         public void Disconnect(string byeMessage)
@@ -159,6 +173,16 @@ namespace AngryTanks.Client
 
             // in the processing of disconnecting... now
             ServerLinkStatus = NetServerLinkStatus.Disconnecting;
+        }
+
+        public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method)
+        {
+            return Client.SendMessage(msg, method);
+        }
+
+        public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method, int sequenceChannel)
+        {
+            return Client.SendMessage(msg, method, sequenceChannel);
         }
 
         public void Update()
@@ -257,7 +281,7 @@ namespace AngryTanks.Client
 
                         MsgAddPlayerPacket message = MsgAddPlayerPacket.Read(msg);
 
-                        FireEvent(message);
+                        FireMessageEvent(message);
 
                         break;
                     }
@@ -268,7 +292,7 @@ namespace AngryTanks.Client
 
                         MsgRemovePlayerPacket message = MsgRemovePlayerPacket.Read(msg);
 
-                        FireEvent(message);
+                        FireMessageEvent(message);
 
                         break;
                     }
@@ -286,7 +310,7 @@ namespace AngryTanks.Client
 
                         MsgWorldPacket msgWorldEventData = new MsgWorldPacket(mapLength, sr);
 
-                        FireEvent(msgWorldEventData);
+                        FireMessageEvent(msgWorldEventData);
 
                         break;
                     }
@@ -299,7 +323,7 @@ namespace AngryTanks.Client
             }
         }
 
-        private void FireEvent(MsgBasePacket msgData)
+        private void FireMessageEvent(MsgBasePacket msgData)
         {
             EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
 

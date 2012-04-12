@@ -27,7 +27,7 @@ namespace AngryTanks.Client
         {
         }
 
-        public override void Update(GameTime gameTime, List<Sprite> collisionObjects)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
         }

@@ -84,16 +84,18 @@ namespace AngryTanks.Server
             // tell him about everyone else
             Log.DebugFormat("Sending MsgAddPlayer for each player to #{0}", Slot);
 
+            NetOutgoingMessage addPlayerMessage;
+            MsgAddPlayerPacket addPlayerPacket;
+
             foreach (Player otherPlayer in GameKeeper.Players)
             {
-                // don't want to tell our player about himself...
+                // don't want to tell our player about himself just yet...
                 if (otherPlayer.Slot == this.Slot)
                     continue;
 
-                NetOutgoingMessage addPlayerMessage = Program.Server.CreateMessage();
+                addPlayerMessage = Program.Server.CreateMessage();
 
-                MsgAddPlayerPacket addPlayerPacket =
-                    new MsgAddPlayerPacket(new PlayerInformation(otherPlayer.Slot, otherPlayer.Callsign, otherPlayer.Tag, otherPlayer.Team));
+                addPlayerPacket = new MsgAddPlayerPacket(otherPlayer.PlayerInfo, false);
 
                 addPlayerMessage.Write((Byte)addPlayerPacket.MsgType);
                 addPlayerPacket.Write(addPlayerMessage);
@@ -115,6 +117,16 @@ namespace AngryTanks.Server
             statePacket.Write(stateMessage);
 
             SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // send back one last MsgAddPlayer with their full information (which could be changed!)
+            addPlayerMessage = Program.Server.CreateMessage();
+
+            addPlayerPacket = new MsgAddPlayerPacket(PlayerInfo, true);
+
+            addPlayerMessage.Write((Byte)MessageType.MsgAddPlayer);
+            addPlayerPacket.Write(addPlayerMessage);
+
+            SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
             // we're now ready to move to the spawn state
             this.playerState = PlayerState.Spawning;

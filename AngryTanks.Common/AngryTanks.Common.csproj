@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Projection.cs" />
