@@ -11,16 +11,21 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Lidgren.Network;
 using log4net;
 
 using AngryTanks.Common;
 using AngryTanks.Common.Messages;
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
     public class LocalPlayer : Player
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private TimeSpan lastMsgUpdate = new TimeSpan();
+        private TimeSpan msgUpdateFrequency;
 
         private KeyboardState kb;
 
@@ -30,6 +35,9 @@ namespace AngryTanks.Client
         public LocalPlayer(World world, PlayerInformation playerInfo)
             : base(world, playerInfo)
         {
+            // 60 MsgPlayerClientUpdates per second
+            this.msgUpdateFrequency = new TimeSpan(0, 0, 0, 0, (int)(1000 / 60));
+
             // TODO support if these variables change
             this.maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
             this.maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
@@ -113,17 +121,27 @@ namespace AngryTanks.Client
             Position = newPosition;
             Rotation = newRotation;
 
+            // now see if we should send out a MsgPlayerClientUpdate
+            if ((lastMsgUpdate + msgUpdateFrequency) < gameTime.TotalGameTime)
+            {
+                lastMsgUpdate = gameTime.TotalGameTime;
+
+                NetOutgoingMessage playerClientUpdateMessage = World.ServerLink.CreateMessage();
+
+                MsgPlayerClientUpdatePacket playerClientUpdatePacket = new MsgPlayerClientUpdatePacket(Position, Velocity, Rotation);
+
+                playerClientUpdateMessage.Write((Byte)MessageType.MsgPlayerClientUpdate);
+                playerClientUpdatePacket.Write(playerClientUpdateMessage);
+
+                World.ServerLink.SendMessage(playerClientUpdateMessage, NetDeliveryMethod.UnreliableSequenced, 0);
+            }
+
             base.Update(gameTime);
         }
 
         protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
             base.HandleReceivedMessage(sender, message);
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            DrawStretched(gameTime, spriteBatch);
         }
     }
 }

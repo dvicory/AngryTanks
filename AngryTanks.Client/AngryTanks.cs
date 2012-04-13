@@ -58,6 +58,10 @@ namespace AngryTanks.Client
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            // increase update rate to 120 Hz
+            IsFixedTimeStep = true;
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, (int)(1000 / 120));
+
             // instantiate server link
             serverLink = new ServerLink();
 
@@ -229,6 +233,9 @@ namespace AngryTanks.Client
         private void HandlePromptInput(object sender, PromptInputEvent inputEvent)
         {
             String[] args = inputEvent.SplitCommandLine().ToArray();
+
+            if (args.Length == 0)
+                return;
 
             if (args[0].ToLower().Equals("/connect", StringComparison.OrdinalIgnoreCase))
             {

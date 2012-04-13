@@ -15,6 +15,7 @@ using log4net;
 
 using AngryTanks.Common;
 using AngryTanks.Common.Messages;
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
@@ -27,14 +28,31 @@ namespace AngryTanks.Client
         {
         }
 
-        public override void Update(GameTime gameTime)
+        protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
-            base.Update(gameTime);
-        }
+            switch (message.MessageType)
+            {
+                case MessageType.MsgPlayerServerUpdate:
+                    {
+                        MsgPlayerServerUpdatePacket packet = (MsgPlayerServerUpdatePacket)message.MessageData;
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            DrawStretched(gameTime, spriteBatch);
+                        // we are only interested if it is an update about this remote player
+                        if (packet.Slot != Slot)
+                            break;
+
+                        // if not, set our new location
+                        Position = packet.Position;
+                        Velocity = packet.Velocity;
+                        Rotation = packet.Rotation;
+
+                        break;
+                    }
+                    
+                default:
+                    break;
+            }
+
+            base.HandleReceivedMessage(sender, message);
         }
     }
 }

@@ -62,6 +62,10 @@ namespace AngryTanks.Server
                     SendState();
                     break;
 
+                case MessageType.MsgPlayerClientUpdate:
+                    BroadcastUpdate(incomingMsg);
+                    break;
+
                 default:
                     break;
             }
@@ -130,6 +134,29 @@ namespace AngryTanks.Server
 
             // we're now ready to move to the spawn state
             this.playerState = PlayerState.Spawning;
+        }
+
+        private void BroadcastUpdate(NetIncomingMessage msg)
+        {
+            MsgPlayerClientUpdatePacket clientUpdatePacket = MsgPlayerClientUpdatePacket.Read(msg);
+
+            NetOutgoingMessage serverUpdateMessage;
+            MsgPlayerServerUpdatePacket serverUpdatePacket;
+
+            foreach (Player otherPlayer in GameKeeper.Players)
+            {
+                // don't want to tell our player an update about himself
+                if (otherPlayer.Slot == this.Slot)
+                    continue;
+
+                serverUpdateMessage = Program.Server.CreateMessage();
+                serverUpdatePacket = new MsgPlayerServerUpdatePacket(this.Slot, clientUpdatePacket);
+
+                serverUpdateMessage.Write((Byte)MessageType.MsgPlayerServerUpdate);
+                serverUpdatePacket.Write(serverUpdateMessage);
+
+                otherPlayer.SendMessage(serverUpdateMessage, NetDeliveryMethod.UnreliableSequenced, 0);
+            }
         }
 
         #region Connection Helpers

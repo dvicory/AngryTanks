@@ -268,6 +268,12 @@ namespace AngryTanks.Common
                 this.Slot = slot;
             }
 
+            public MsgPlayerServerUpdatePacket(Byte slot, MsgPlayerClientUpdatePacket clientUpdate)
+                : base(clientUpdate.Position, clientUpdate.Velocity, clientUpdate.Rotation)
+            {
+                this.Slot = slot;
+            }
+
             public static MsgPlayerServerUpdatePacket Read(NetIncomingMessage packet)
             {
                 Byte slot = packet.ReadByte();

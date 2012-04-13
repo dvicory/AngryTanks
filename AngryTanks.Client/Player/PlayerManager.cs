@@ -132,8 +132,13 @@ namespace AngryTanks.Client
 
         public void RemovePlayer(Byte slot)
         {
+            RemotePlayer remotePlayer = remotePlayers[slot];
+
             // nuke player from the dictionary
             remotePlayers.Remove(slot);
+
+            // dispose of remote player
+            remotePlayer.Dispose();
         }
 
         public Player GetPlayerBySlot(Byte slot)

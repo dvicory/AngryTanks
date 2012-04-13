@@ -185,6 +185,11 @@ namespace AngryTanks.Client
             return Client.SendMessage(msg, method, sequenceChannel);
         }
 
+        public NetOutgoingMessage CreateMessage()
+        {
+            return Client.CreateMessage();
+        }
+
         public void Update()
         {
             NetIncomingMessage msg;
@@ -279,9 +284,9 @@ namespace AngryTanks.Client
                     {
                         Log.DebugFormat("Got MsgAddPlayer ({0} bytes)", msg.LengthBytes);
 
-                        MsgAddPlayerPacket message = MsgAddPlayerPacket.Read(msg);
+                        MsgAddPlayerPacket packet = MsgAddPlayerPacket.Read(msg);
 
-                        FireMessageEvent(message);
+                        FireMessageEvent(packet);
 
                         break;
                     }
@@ -290,9 +295,9 @@ namespace AngryTanks.Client
                     {
                         Log.DebugFormat("Got MsgRemovePlayer ({0} bytes)", msg.LengthBytes);
 
-                        MsgRemovePlayerPacket message = MsgRemovePlayerPacket.Read(msg);
+                        MsgRemovePlayerPacket packet = MsgRemovePlayerPacket.Read(msg);
 
-                        FireMessageEvent(message);
+                        FireMessageEvent(packet);
 
                         break;
                     }
@@ -311,6 +316,15 @@ namespace AngryTanks.Client
                         MsgWorldPacket msgWorldEventData = new MsgWorldPacket(mapLength, sr);
 
                         FireMessageEvent(msgWorldEventData);
+
+                        break;
+                    }
+
+                case MessageType.MsgPlayerServerUpdate:
+                    {
+                        MsgPlayerServerUpdatePacket packet = MsgPlayerServerUpdatePacket.Read(msg);
+
+                        FireMessageEvent(packet);
 
                         break;
                     }
