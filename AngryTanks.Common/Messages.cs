@@ -211,13 +211,12 @@ namespace AngryTanks.Common
 
         public abstract class MsgPlayerUpdatePacket : MsgBasePacket
         {
-            public readonly Vector2 Position, Velocity;
+            public readonly Vector2 Position;
             public readonly Single Rotation;
 
-            public MsgPlayerUpdatePacket(Vector2 position, Vector2 velocity, Single rotation)
+            public MsgPlayerUpdatePacket(Vector2 position, Single rotation)
             {
                 this.Position = position;
-                this.Velocity = velocity;
                 this.Rotation = rotation;
             }
 
@@ -225,8 +224,6 @@ namespace AngryTanks.Common
             {
                 packet.Write(Position.X);
                 packet.Write(Position.Y);
-                packet.Write(Velocity.X);
-                packet.Write(Velocity.Y);
                 packet.Write(Rotation);
             }
         }
@@ -238,18 +235,17 @@ namespace AngryTanks.Common
                 get { return MessageType.MsgPlayerClientUpdate; }
             }
 
-            public MsgPlayerClientUpdatePacket(Vector2 position, Vector2 velocity, Single rotation)
-                : base(position, velocity, rotation)
+            public MsgPlayerClientUpdatePacket(Vector2 position, Single rotation)
+                : base(position, rotation)
             {
             }
 
             public static MsgPlayerClientUpdatePacket Read(NetIncomingMessage packet)
             {
                 Vector2 position = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
-                Vector2 velocity = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
                 Single rotation = packet.ReadSingle();
 
-                return new MsgPlayerClientUpdatePacket(position, velocity, rotation);
+                return new MsgPlayerClientUpdatePacket(position, rotation);
             }
         }
 
@@ -262,14 +258,14 @@ namespace AngryTanks.Common
 
             public readonly Byte Slot;
 
-            public MsgPlayerServerUpdatePacket(Byte slot, Vector2 position, Vector2 velocity, Single rotation)
-                : base(position, velocity, rotation)
+            public MsgPlayerServerUpdatePacket(Byte slot, Vector2 position, Single rotation)
+                : base(position, rotation)
             {
                 this.Slot = slot;
             }
 
             public MsgPlayerServerUpdatePacket(Byte slot, MsgPlayerClientUpdatePacket clientUpdate)
-                : base(clientUpdate.Position, clientUpdate.Velocity, clientUpdate.Rotation)
+                : base(clientUpdate.Position, clientUpdate.Rotation)
             {
                 this.Slot = slot;
             }
@@ -278,10 +274,9 @@ namespace AngryTanks.Common
             {
                 Byte slot = packet.ReadByte();
                 Vector2 position = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
-                Vector2 velocity = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
                 Single rotation = packet.ReadSingle();
 
-                return new MsgPlayerServerUpdatePacket(slot, position, velocity, rotation);
+                return new MsgPlayerServerUpdatePacket(slot, position, rotation);
             }
 
             public override void Write(NetOutgoingMessage packet)

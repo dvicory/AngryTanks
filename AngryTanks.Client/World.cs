@@ -142,6 +142,9 @@ namespace AngryTanks.Client
         {
             if (disposing)
             {
+                playerManager.Dispose();
+                playerManager = null;
+
                 mapObjects.Clear();
                 tiled.Clear();
                 stretched.Clear();
@@ -220,14 +223,15 @@ namespace AngryTanks.Client
             HandleKeyDown(Keyboard.GetState());
 
             // update the players
-            playerManager.Update(gameTime);
+            if (playerManager != null)
+                playerManager.Update(gameTime);
 
             // now finally track the tank (disregards any panning)
             // smoothstep helps smooth the camera if player gets stuck
-            if (playerManager.LocalPlayer != null)
+            if (playerManager != null && playerManager.LocalPlayer != null)
             {
                 lastPlayerPosition = playerManager.LocalPlayer.Position;
-                camera.LookAt(WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, playerManager.LocalPlayer.Position, 0.5f)));
+                camera.LookAt(World.WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, playerManager.LocalPlayer.Position, 0.5f)));
             }
 
             base.Update(gameTime);
@@ -348,29 +352,6 @@ namespace AngryTanks.Client
         {
             switch (message.MessageType)
             {
-                case MessageType.MsgAddPlayer:
-                    {
-                        MsgAddPlayerPacket packet = (MsgAddPlayerPacket)message.MessageData;
-
-                        if (message.ServerLinkStatus == NetServerLinkStatus.Connected)
-                            console.WriteLine(String.Format("{0} has joined the {1}",
-                                                  packet.Player.Callsign, packet.Player.Team));
-                        else if (message.ServerLinkStatus == NetServerLinkStatus.GettingState)
-                            console.WriteLine(String.Format("{0} is on the {1}",
-                                                  packet.Player.Callsign, packet.Player.Team));
-
-                        break;
-                    }
-
-                case MessageType.MsgRemovePlayer:
-                    {
-                        MsgRemovePlayerPacket packet = (MsgRemovePlayerPacket)message.MessageData;
-
-                        console.WriteLine(String.Format("Player {0} has left the server ({1})", packet.Slot, packet.Reason));
-
-                        break;
-                    }
-
                 case MessageType.MsgWorld:
                     console.WriteLine("Loading map...");
 

@@ -153,6 +153,8 @@ namespace AngryTanks.Common
                         "Speed of the tank", 25, typeof(Single));
             AddVariable("tankWidth",
                         "Width of the tank", 4.86f, typeof(Single));
+            AddVariable("updatesPerSecond",
+                        "Number of network updates per second", 45, typeof(UInt16));
         }
 
         public VariableStore AddVariable(String name, String description, Object defaultValue, Type type)

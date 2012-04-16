@@ -133,7 +133,7 @@ namespace AngryTanks.Client
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            serverLink.Update();
+            serverLink.Update(gameTime);
 
             // TODO should probably have console do more advanced positioning that accounts for this...
             Viewport viewport = GraphicsDevice.Viewport;
@@ -193,13 +193,9 @@ namespace AngryTanks.Client
                     {
                         if (gameConsole.PromptActive)
                             break;
-
-                        if (serverLink.ServerLinkStatus == NetServerLinkStatus.None
-                            || serverLink.ServerLinkStatus == NetServerLinkStatus.Disconnected)
-                        {
-                            Random rand = new Random();
-                            Connect("localhost", null, String.Format("Random Callsign {0}", rand.Next(10000)), null, TeamType.RogueTeam);
-                        }
+                        
+                        Random rand = new Random();
+                        Connect("localhost", null, String.Format("Random Callsign {0}", rand.Next(10000)), null, TeamType.RogueTeam);
 
                         break;
                     }
@@ -320,13 +316,14 @@ namespace AngryTanks.Client
             }
 
             world = new World(this, serverLink);
-            //world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
             Components.Add(world);
             world.UpdateOrder = 100;
             world.DrawOrder = 100;
 
             Console.WriteLine("Disconnecting from server.");
             serverLink.Disconnect(reason);
+
+            world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
         }
     }
 }

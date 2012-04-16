@@ -35,8 +35,8 @@ namespace AngryTanks.Client
         public LocalPlayer(World world, PlayerInformation playerInfo)
             : base(world, playerInfo)
         {
-            // 60 MsgPlayerClientUpdates per second
-            this.msgUpdateFrequency = new TimeSpan(0, 0, 0, 0, (int)(1000 / 60));
+            // set our update frequency
+            this.msgUpdateFrequency = new TimeSpan(0, 0, 0, 0, (int)(1000 / (UInt16)World.VarDB["updatesPerSecond"].Value));
 
             // TODO support if these variables change
             this.maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
@@ -128,7 +128,7 @@ namespace AngryTanks.Client
 
                 NetOutgoingMessage playerClientUpdateMessage = World.ServerLink.CreateMessage();
 
-                MsgPlayerClientUpdatePacket playerClientUpdatePacket = new MsgPlayerClientUpdatePacket(Position, Velocity, Rotation);
+                MsgPlayerClientUpdatePacket playerClientUpdatePacket = new MsgPlayerClientUpdatePacket(Position, Rotation);
 
                 playerClientUpdateMessage.Write((Byte)MessageType.MsgPlayerClientUpdate);
                 playerClientUpdatePacket.Write(playerClientUpdateMessage);

@@ -71,12 +71,14 @@ namespace AngryTanks.Client
         public readonly MessageType MessageType;
         public readonly MsgBasePacket MessageData;
         public readonly NetServerLinkStatus ServerLinkStatus;
+        public readonly GameTime Time;
 
-        public ServerLinkMessageEvent(MessageType messageType, MsgBasePacket messageData, NetServerLinkStatus serverLinkStatus)
+        public ServerLinkMessageEvent(MessageType messageType, MsgBasePacket messageData, NetServerLinkStatus serverLinkStatus, GameTime gameTime)
         {
-            MessageType      = messageType;
-            MessageData      = messageData;
-            ServerLinkStatus = serverLinkStatus;
+            this.MessageType = messageType;
+            this.MessageData = messageData;
+            this.ServerLinkStatus = serverLinkStatus;
+            this.Time = gameTime;
         }
     }
 
@@ -171,8 +173,11 @@ namespace AngryTanks.Client
         {
             Client.Disconnect(byeMessage);
 
-            // in the processing of disconnecting... now
-            ServerLinkStatus = NetServerLinkStatus.Disconnecting;
+            // we don't want to change our status to disconnecting if we know we can't get out of it
+            if (ServerLinkStatus != NetServerLinkStatus.None
+                && ServerLinkStatus != NetServerLinkStatus.Disconnecting
+                && ServerLinkStatus != NetServerLinkStatus.Disconnected)
+                ServerLinkStatus = NetServerLinkStatus.Disconnecting;
         }
 
         public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method)
@@ -190,7 +195,7 @@ namespace AngryTanks.Client
             return Client.CreateMessage();
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             NetIncomingMessage msg;
 
@@ -238,7 +243,7 @@ namespace AngryTanks.Client
                         break;
 
                     case NetIncomingMessageType.Data:
-                        HandleData(msg);
+                        HandleData(gameTime, msg);
                         break;
 
                     default:
@@ -264,7 +269,7 @@ namespace AngryTanks.Client
             }
         }
 
-        private void HandleData(NetIncomingMessage msg)
+        private void HandleData(GameTime gameTime, NetIncomingMessage msg)
         {
             MessageType messageType = (MessageType)msg.ReadByte();
 
@@ -286,7 +291,7 @@ namespace AngryTanks.Client
 
                         MsgAddPlayerPacket packet = MsgAddPlayerPacket.Read(msg);
 
-                        FireMessageEvent(packet);
+                        FireMessageEvent(gameTime, packet);
 
                         break;
                     }
@@ -297,7 +302,7 @@ namespace AngryTanks.Client
 
                         MsgRemovePlayerPacket packet = MsgRemovePlayerPacket.Read(msg);
 
-                        FireMessageEvent(packet);
+                        FireMessageEvent(gameTime, packet);
 
                         break;
                     }
@@ -315,7 +320,7 @@ namespace AngryTanks.Client
 
                         MsgWorldPacket msgWorldEventData = new MsgWorldPacket(mapLength, sr);
 
-                        FireMessageEvent(msgWorldEventData);
+                        FireMessageEvent(gameTime, msgWorldEventData);
 
                         break;
                     }
@@ -324,7 +329,7 @@ namespace AngryTanks.Client
                     {
                         MsgPlayerServerUpdatePacket packet = MsgPlayerServerUpdatePacket.Read(msg);
 
-                        FireMessageEvent(packet);
+                        FireMessageEvent(gameTime, packet);
 
                         break;
                     }
@@ -337,7 +342,7 @@ namespace AngryTanks.Client
             }
         }
 
-        private void FireMessageEvent(MsgBasePacket msgData)
+        private void FireMessageEvent(GameTime gameTime, MsgBasePacket msgData)
         {
             EventHandler<ServerLinkMessageEvent> handler = MessageReceivedEvent;
 
@@ -345,7 +350,7 @@ namespace AngryTanks.Client
             if (handler != null)
             {
                 // notify delegates attached to event
-                ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData, ServerLinkStatus);
+                ServerLinkMessageEvent e = new ServerLinkMessageEvent(msgData.MsgType, msgData, ServerLinkStatus, gameTime);
                 handler(this, e);
             }
         }

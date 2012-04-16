@@ -34,7 +34,12 @@ namespace AngryTanks.Client
         {
             get
             {
-                return (Byte)remotePlayers.Count;
+                Byte count = (Byte)remotePlayers.Count;
+
+                if (localPlayer != null)
+                    count++;
+
+                return count;
             }
         }
 
@@ -70,9 +75,14 @@ namespace AngryTanks.Client
             world.ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
 
             foreach (RemotePlayer remotePlayer in remotePlayers.Values)
-            {
-                remotePlayers.Remove(remotePlayer.Slot);
                 remotePlayer.Dispose();
+
+            remotePlayers.Clear();
+
+            if (localPlayer != null)
+            {
+                localPlayer.Dispose();
+                localPlayer = null;
             }
         }
 
@@ -102,6 +112,13 @@ namespace AngryTanks.Client
                     {
                         MsgAddPlayerPacket packet = (MsgAddPlayerPacket)message.MessageData;
 
+                        if (message.ServerLinkStatus == NetServerLinkStatus.Connected)
+                            world.Console.WriteLine(String.Format("{0} has joined the {1}",
+                                                  packet.Player.Callsign, packet.Player.Team));
+                        else if (message.ServerLinkStatus == NetServerLinkStatus.GettingState)
+                            world.Console.WriteLine(String.Format("{0} is on the {1}",
+                                                  packet.Player.Callsign, packet.Player.Team));
+
                         if (!packet.AddMyself)
                             AddPlayer(packet.Player);
                         else
@@ -114,6 +131,8 @@ namespace AngryTanks.Client
                     {
                         MsgRemovePlayerPacket packet = (MsgRemovePlayerPacket)message.MessageData;
 
+                        world.Console.WriteLine(String.Format("{0} has left the server ({1})", GetPlayerBySlot(packet.Slot).Callsign, packet.Reason));
+
                         RemovePlayer(packet.Slot);
 
                         break;
@@ -124,12 +143,20 @@ namespace AngryTanks.Client
             }            
         }
 
+        /// <summary>
+        /// Adds a new remote player.
+        /// </summary>
+        /// <param name="playerInfo"></param>
         public void AddPlayer(PlayerInformation playerInfo)
         {
             // add player to our list
             remotePlayers[playerInfo.Slot] = new RemotePlayer(world, playerInfo);
         }
 
+        /// <summary>
+        /// Removes and disposes a remote player.
+        /// </summary>
+        /// <param name="slot"></param>
         public void RemovePlayer(Byte slot)
         {
             RemotePlayer remotePlayer = remotePlayers[slot];

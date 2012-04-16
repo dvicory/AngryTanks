@@ -23,9 +23,33 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private TimeSpan lastMsgUpdate;
+        private TimeSpan msgUpdateFrequency;
+
         public RemotePlayer(World world, PlayerInformation playerInfo)
             : base(world, playerInfo)
         {
+            this.lastMsgUpdate = new TimeSpan();
+
+            // set our update frequency
+            this.msgUpdateFrequency = new TimeSpan(0, 0, 0, 0, (int)(1000 / (UInt16)World.VarDB["updatesPerSecond"].Value));
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Double factor = (gameTime.TotalGameTime.TotalMilliseconds - lastMsgUpdate.TotalMilliseconds) / msgUpdateFrequency.TotalMilliseconds;
+
+            Position = Vector2.SmoothStep(oldPosition, newPosition, MathHelper.Clamp((Single)factor, 0, 1));
+            
+            // if the difference in the two rotations is greater than PI/4, then the angle was probably just wrapped
+            // smoothstep goes crazy when angles are wrapped
+            // TODO see if we can fix this
+            if (Math.Abs(newRotation - oldRotation) > MathHelper.PiOver4)
+                Rotation = newRotation;
+            else
+                Rotation = MathHelper.SmoothStep(oldRotation, newRotation, MathHelper.Clamp((Single)factor, 0, 1));
+
+            base.Update(gameTime);
         }
 
         protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
@@ -40,10 +64,16 @@ namespace AngryTanks.Client
                         if (packet.Slot != Slot)
                             break;
 
-                        // if not, set our new location
-                        Position = packet.Position;
-                        Velocity = packet.Velocity;
-                        Rotation = packet.Rotation;
+                        // save our old stuff
+                        oldPosition = Position;
+                        oldRotation = Rotation;
+
+                        // and set our new location
+                        newPosition = packet.Position;
+                        newRotation = packet.Rotation;
+
+                        // and set our last update
+                        lastMsgUpdate = message.Time.TotalGameTime;
 
                         break;
                     }
