@@ -231,6 +231,12 @@ namespace AngryTanks.Client
             set;
         }
 
+        public String PromptCursor
+        {
+            get;
+            set;
+        }
+
         public RectangleF Bounds
         {
             get
@@ -260,6 +266,7 @@ namespace AngryTanks.Client
         private bool promptBlinking;
 
         private String currentPromptInput = "";
+        private int promptInputPointer = 0;
         private bool promptJustOpened = false;
 
         private LinkedList<ConsoleMessageLine> lines = new LinkedList<ConsoleMessageLine>();
@@ -276,7 +283,9 @@ namespace AngryTanks.Client
             this.Opened = true;
             this.PromptPrefix = new ConsoleMessagePart("# ", Color.Yellow);
             this.PromptActive = false;
-            this.PromptBlinkRate = 200; // 200 ms prompt blink rate
+            this.PromptBlinkRate = 300; // 300 ms prompt blink rate
+
+            this.PromptCursor = "|";
 
             // register ourselves as a service
             if (Game.Services != null)
@@ -354,6 +363,7 @@ namespace AngryTanks.Client
                     {
                         PromptActive = false;
                         currentPromptInput = "";
+                        promptInputPointer = 0;
                     }
 
                     break;
@@ -366,17 +376,44 @@ namespace AngryTanks.Client
 
                     if (!PromptActive)
                     {
-                        currentPromptInput = "";
                         PromptActive = true;
+                        currentPromptInput = "";
+                        promptInputPointer = 0;
                         promptJustOpened = true;
                     }
 
                     break;
 
-                // backspaces prompt
+                // move the cursor backwards
+                case Keys.Left:
+                    if (promptInputPointer > 0)
+                        promptInputPointer--;
+
+                    break;
+
+                // move the cursor forwards
+                case Keys.Right:
+                    if (promptInputPointer < currentPromptInput.Length)
+                        promptInputPointer++;
+
+                    break;
+
+                // backspaces character behind cursor
                 case Keys.Back:
-                    if (currentPromptInput.Length > 0)
-                        currentPromptInput = currentPromptInput.Substring(0, currentPromptInput.Length - 1);
+                    if (promptInputPointer > 0 && promptInputPointer <= currentPromptInput.Length)
+                    {
+                        currentPromptInput = currentPromptInput.Remove(promptInputPointer - 1, 1);
+                        promptInputPointer--;
+                    }
+
+                    break;
+
+                // deletes character in front of cursor
+                case Keys.Delete:
+                    if (promptInputPointer >= 0 && promptInputPointer < currentPromptInput.Length)
+                    {
+                        currentPromptInput = currentPromptInput.Remove(promptInputPointer, 1);
+                    }
 
                     break;
 
@@ -384,6 +421,7 @@ namespace AngryTanks.Client
                 case Keys.Escape:
                     PromptActive = false;
                     currentPromptInput = "";
+                    promptInputPointer = 0;
 
                     break;
 
@@ -393,6 +431,7 @@ namespace AngryTanks.Client
 
                     PromptActive = false;
                     currentPromptInput = "";
+                    promptInputPointer = 0;
 
                     break;
 
@@ -410,8 +449,17 @@ namespace AngryTanks.Client
                 return;
             }
 
-            if (PromptActive && c >= (char)32 && c <= (char)126 && c != '\\')
-                currentPromptInput += c;
+            // just to make sure we don't royally screw up the insertion...
+            if (promptInputPointer < 0)
+                promptInputPointer = 0;
+            else if (promptInputPointer > currentPromptInput.Length)
+                promptInputPointer = currentPromptInput.Length;
+
+            if (PromptActive && c >= (char)32 && c <= (char)126)
+            {
+                currentPromptInput = currentPromptInput.Insert(promptInputPointer, new String(c, 1));
+                promptInputPointer++;
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -491,7 +539,28 @@ namespace AngryTanks.Client
             promptLine.Parts.AddLast(new ConsoleMessagePart(currentPromptInput == null ? "" : currentPromptInput,
                                                             Color.White));
 
+            DrawCursor(gameTime, position);
+
             return DrawLine(gameTime, promptLine, position);
+        }
+
+        public virtual void DrawCursor(GameTime gameTime, Vector2 position)
+        {
+            if (!PromptActive)
+                return;
+
+            Single cursorPosition = InnerBounds.X +
+                                    consoleFont.MeasureString(PromptPrefix.Message).X +
+                                    ((consoleFont.MeasureString(PromptCursor).X) * promptInputPointer) -
+                                    (consoleFont.MeasureString(PromptCursor).X / 2);
+
+            if (!promptBlinking)
+                spriteBatch.DrawString(consoleFont,
+                       PromptCursor,
+                       new Vector2(cursorPosition, position.Y - (consoleFont.MeasureString(PromptCursor).Y / 2)),
+                       Color.White, 0,
+                       Vector2.Zero,
+                       1, SpriteEffects.None, 1);
         }
 
         public void WriteLine(String message)
