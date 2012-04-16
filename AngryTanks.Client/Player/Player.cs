@@ -105,8 +105,34 @@ namespace AngryTanks.Client
             return;
         }
 
+        /// <summary>
+        /// Draws the callsign behind the <see cref="Player"/>.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
+        public virtual void DrawCallsign(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            SpriteFont font = World.Content.Load<SpriteFont>("fonts/ConsoleFont14");
+            Vector2 side = RectangleBounds.UpperRight - RectangleBounds.LowerRight;
+            Vector2 position = Position - side;
+
+            Vector2 pixelPosition = World.WorldUnitsToPixels(position);
+
+            SpriteEffects flip = SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally;
+
+            if (Rotation > (-Math.PI / 2) && Rotation < (Math.PI / 2))
+                flip = SpriteEffects.None;
+
+            spriteBatch.DrawString(font, Callsign, pixelPosition,
+                                   Color.White, Rotation,
+                                   font.MeasureString(Callsign) / 2,
+                                   MathHelper.Clamp(1 / World.Camera.Zoom, 1, 8), flip, 1);
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawCallsign(gameTime, spriteBatch);
+
             DrawStretched(gameTime, spriteBatch);
         }
     }

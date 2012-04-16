@@ -288,6 +288,11 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexSpriteFontDescriptionProcessor</Processor>
     </Compile>
+    <Compile Include="fonts\ConsoleFont14.spritefont">
+      <Name>ConsoleFont14</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <None Include="maps\ducati_style_random.bzw">
       <Name>ducati_style_random</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
