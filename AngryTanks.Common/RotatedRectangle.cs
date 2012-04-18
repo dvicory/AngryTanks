@@ -97,6 +97,18 @@ namespace AngryTanks.Common
         }
 
         /// <summary>
+        /// Checks to see if two <see cref="RotatedRectangle"/>s have collided.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <returns></returns>
+        public bool Intersects(RotatedRectangle rectangle)
+        {
+            Single overlap;
+            Vector2 collisionProjection;
+            return Intersects(rectangle, out overlap, out collisionProjection);
+        }
+
+        /// <summary>
         /// Check to see if two <see cref="RotatedRectangle"/>s have collided.
         /// </summary>
         /// <param name="rectangle"></param>

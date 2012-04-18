@@ -6,223 +6,211 @@ using Microsoft.Xna.Framework;
 
 namespace AngryTanks.Common
 {
-    class Grid
+    /// <summary>
+    /// Structure that represents one grid block whose position coordinates
+    /// are measured from the center of the world (in world units).
+    /// </summary>
+    struct GridLocation
     {
         #region Properties
+
+        // world unit coords of grid cell
+        public readonly UInt16 X, Y;
+
+        // TODO GridLocation probably shouldn't care about its size, keep it lean
+        public readonly Single Width, Height;
+        public readonly RotatedRectangle Bounds;
+
         #endregion
 
-        private List<IWorldObject> all_objects = new List<IWorldObject>(); 
-        private Dictionary<GridLocation, List<IWorldObject>> grid 
-                = new Dictionary<GridLocation, List<IWorldObject>>();
-         
-        private int min_world_x = -400;
-        private int max_world_x =  400;
-        private int min_world_y = -400;
-        private int max_world_y =  400;
-        private int cell_width =  50;
-        private int cell_height = 50;
+        public GridLocation(UInt16 X, UInt16 Y, Single cellWidth, Single cellHeight)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.Width = cellWidth;
+            this.Height = cellHeight;
+            this.Bounds = new RotatedRectangle(X, Y, Width, Height, 0);
+        }
 
-        public Grid(int world_height, int world_width, List<IWorldObject> all_objects)
+        public bool Equals(GridLocation g)
         {
-            this.all_objects = all_objects;
-            this.min_world_y = -world_height / 2;
-            this.min_world_x = -world_width / 2;
-            this.max_world_y =  world_height / 2;
-            this.max_world_x =  world_width / 2;
-            cutIntoGrid();
-            
+            if (this.X == g.X && this.Y == g.Y)
+                return true;
+
+            return false;
         }
-        public Grid(int world_height,
-                    int world_width,
-                    List<IWorldObject> all_objects,
-                    int cell_height, 
-                    int cell_width)
+    }
+
+    class Grid
+    {
+        private List<IWorldObject> allObjects = new List<IWorldObject>();
+        private Dictionary<GridLocation, List<IWorldObject>> grid
+                = new Dictionary<GridLocation, List<IWorldObject>>();
+
+        // TODO store as a RectangleF instead?
+        private Vector2 minWorld = new Vector2(-400, -400);
+        private Vector2 maxWorld = new Vector2(400, 400);
+        private Vector2 cellSize = new Vector2(50, 50);
+
+        // TODO configurable grid size, ie 16x16, 8x8, etc
+        public Grid(Single worldHeight, Single worldWidth, List<IWorldObject> allObjects)
         {
-            this.all_objects = all_objects;
-            this.min_world_y = -world_height / 2;
-            this.min_world_x = -world_width / 2;
-            this.max_world_y =  world_height / 2;
-            this.max_world_x =  world_width / 2;
-            this.cell_height = cell_height;
-            this.cell_width = cell_width;
-            cutIntoGrid();
+            this.allObjects = allObjects;
+            this.minWorld.X = -worldWidth  / 2;
+            this.minWorld.Y = -worldHeight / 2;
+            this.maxWorld.X =  worldWidth  / 2;
+            this.maxWorld.Y =  worldHeight / 2;
+
+            CutIntoGrid();
         }
-        /* getCollidableObjects()
-         * 
-         * Requests the Grid to return a list of all objects which share a
-         * GridLocation with the given object.
-         * 
-         */
-        public List<IWorldObject> getCollidableObjects(IWorldObject w)
+
+        /// <summary>
+        /// Requests the <see cref="Grid"/> to return a list of all <see cref="IWorldObject"/>s
+        /// which share a GridLocation with the given object.
+        /// </summary>
+        /// <param name="worldObject"></param>
+        /// <returns></returns>
+        public List<IWorldObject> getCollidableObjects(IWorldObject worldObject)
         {
             List<IWorldObject> collidables = new List<IWorldObject>();
 
-            foreach (GridLocation g in Intersects(w)) //Find all Grid Locations that contain the object
+            // find all grid locations that contain the object
+            foreach (GridLocation gridLocation in Intersects(worldObject))
             {
-                //Compile a list of all objects contained in the found Grid Locations
-                collidables.AddRange(getLocationObjectsOf(g)); 
+                // compile a list of all objects contained in the found Grid Locations
+                collidables.AddRange(getLocationObjectsOf(gridLocation));
             }
+
             return collidables;
         }
 
-        /* getLocationObjectOf()
-         * 
-         * returns the objects associated with a given Grid Location
-         * 
-         */
-        public List<IWorldObjects> getLocationObjectsOf(GridLocation g)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gridLocation"></param>
+        /// <returns><see cref="IWorldObject"/>s associated with a given <paramref name="gridLocation"/></returns>
+        public List<IWorldObject> getLocationObjectsOf(GridLocation gridLocation)
         {
-            return grid[g];
+            return grid[gridLocation];
         }
 
-        /* cutIntoGrid()
-         * 
-         * Cuts the world up into GridLocations and associates objects with cells.
-         */
-        private void cutIntoGrid()
+        /// <summary>
+        /// Cuts the world up into <see cref="GridLocation"/>s and associates
+        /// <see cref="IWorldObject"/>s with cells.
+        /// </summary>
+        private void CutIntoGrid()
         {
-            int X, Y; //Current grid coords
+            // current grid coords
+            UInt16 X, Y;
 
-            //Start in the upper left corner
-            X = min_world_x;
-            Y = min_world_y;
+            // start in the upper left corner
+            X = (UInt16)minWorld.X;
+            Y = (UInt16)minWorld.Y;
 
-            //Make appropriate number of grid locations
-            //initialize Dictionary
-            while (X + cell_width < max_world_x)
+            // make appropriate number of grid locations
+            // initialize Dictionary
+            while (X + cellSize.X < maxWorld.X)
             {
-                while (Y + cell_height < max_world_y)
+                while (Y + cellSize.Y < maxWorld.Y)
                 {
-                    grid.Add(new GridLocation(X, Y, cell_width, cell_height), new List<IWorldObject>());
-                    Y += cell_height;
+                    grid.Add(new GridLocation(X, Y, cellSize.X, cellSize.Y), new List<IWorldObject>());
+                    Y += (UInt16)cellSize.Y;
                 }
-                //when finished with one column, reset Y and increment X
-                Y = min_world_y;
-                X += cell_width;
+
+                // when finished with one column, reset Y and increment X
+                Y = (UInt16)minWorld.Y;
+                X += (UInt16)cellSize.X;
             }
 
-            //Associate objects with their GridLocations
-            foreach (IWorldObject o in all_objects)
+            // associate objects with their GridLocations
+            foreach (IWorldObject worldObject in allObjects)
             {
-                foreach(GridLocation g in Intersects(o))
+                foreach(GridLocation gridLocation in Intersects(worldObject))
                 {
-                    grid[g].Add(o);
+                    grid[gridLocation].Add(worldObject);
                 }
             }
 
 
         }
 
-        /* Intersects()
-         * 
-         * Returns a list of all grid loactions containing the IWorldObject 
-         */
-        public List<GridLocation> Intersects(IWorldObject o)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worldObject"></param>
+        /// <returns>A list of all <see cref="GridLocation"/>s containing the <see cref="IWorldObject"/></returns>
+        public List<GridLocation> Intersects(IWorldObject worldObject)
         {
             List<GridLocation> found = new List<GridLocation>();
             //List<GridLocation> missed = new List<GridLocation>();  - i forgot why we need this
-            HashSet<GridLocation> to_be_tested = new HashSet<GridLocation>();
+            HashSet<GridLocation> toTest = new HashSet<GridLocation>();
 
-            //Determine the Grid Location of the object's center
-            GridLocation has_center = new GridLocation((o.Position.X / cell_width) * cell_width,
-                                                       (o.Position.Y / cell_height)* cell_height,
-                                                                      cell_width, 
-                                                                      cell_height);
-            found.Add(has_center);//Add it to the found list.
+            // determine the GridLocation of the object's center
+            GridLocation hasCenter = new GridLocation((UInt16)((worldObject.Position.X / cellSize.X) * cellSize.X),
+                                                      (UInt16)((worldObject.Position.Y / cellSize.Y) * cellSize.Y),
+                                                      cellSize.X, cellSize.Y);
 
-            //Determine all surrounding GridLocation that contain the object
-            to_be_tested.UnionWith(getSurrounding(has_center));
+            // add it to the found list
+            found.Add(hasCenter);
 
-            while (to_be_tested.Count != 0)
+            // determine all surrounding GridLocations that contain the object
+            toTest.UnionWith(GetSurrounding(hasCenter));
+
+            while (toTest.Count != 0)
             {
-                foreach (GridLocation g in to_be_tested)
+                foreach (GridLocation gridLocation in toTest)
                 {
-                    //Not sure what to do with these variables sent back from Intersects()
-                    Single overlap;
-                    Vector2 collisionProjection;
-
-                    if (o.RectangleBounds.Intersects(g.RectangleBounds, out overlap, out collisionProjection))
+                    if (worldObject.Bounds.Intersects(gridLocation.Bounds))
                     {
-                        found.Add(g);
-                        to_be_tested.UnionWith(getSurrounding(g));
-                        to_be_tested.Remove(g);
+                        found.Add(gridLocation);
+                        toTest.UnionWith(GetSurrounding(gridLocation));
+                        toTest.Remove(gridLocation);
                     }
                     else
                     {
-                        //missed.Add(g) Why do we need this?
+                        // missed.Add(g) Why do we need this?
                     }
                 }
             }
+
             return found;
         }
 
-        /* getSurrounding()
-         * 
-         * Returns a list of the surrounding Grid Locations so long as they
-         * exist in the world.
-         */
-        private List<GridLocation> getSurrounding(GridLocation g)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gridLocation"></param>
+        /// <returns>
+        /// A list of the <see cref="GridLocation"/>s surrounding
+        /// <paramref name="gridLocation"/> so long as they exist in the world.
+        /// </returns>
+        private List<GridLocation> GetSurrounding(GridLocation gridLocation)
         {
+            GridLocation g = gridLocation;
+
             List<GridLocation> surrounding = new List<GridLocation>();
 
-            surrounding.Add(new GridLocation(g.X - g.width, g.Y - g.height, g.width, g.height));
-            surrounding.Add(new GridLocation(g.X - g.width, g.Y           , g.width, g.height));
-            surrounding.Add(new GridLocation(g.X - g.width, g.Y + g.height, g.width, g.height));
-            surrounding.Add(new GridLocation(g.X          , g.Y - g.height, g.width, g.height));
-          //surrounding.Add(new GridLocation(g.X          , g.Y           , g.width, g.height)); - the cell itself
-            surrounding.Add(new GridLocation(g.X          , g.Y + g.height, g.width, g.height));
-            surrounding.Add(new GridLocation(g.X + g.width, g.Y - g.height, g.width, g.height));
-            surrounding.Add(new GridLocation(g.X + g.width, g.Y           , g.width, g.height));
-            surrounding.Add(new GridLocation(g.X + g.width, g.Y + g.height, g.width, g.height));
+            surrounding.Add(new GridLocation((UInt16)(g.X - g.Width), (UInt16)(g.Y - g.Height), g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)(g.X - g.Width), (UInt16)g.Y             , g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)(g.X - g.Width), (UInt16)(g.Y + g.Height), g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)g.X            , (UInt16)(g.Y - g.Height), g.Width, g.Height));
+            //surrounding.Add(new GridLocation((UInt16)g.X          , (UInt16)g.Y             , g.Width, g.Height)); - the cell itself
+            surrounding.Add(new GridLocation((UInt16)g.X            , (UInt16)(g.Y + g.Height), g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)(g.X + g.Width), (UInt16)(g.Y - g.Height), g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)(g.X + g.Width), (UInt16)g.Y             , g.Width, g.Height));
+            surrounding.Add(new GridLocation((UInt16)(g.X + g.Width), (UInt16)(g.Y + g.Height), g.Width, g.Height));
 
-            //Check to make sure the surrounding cells are inside the world
+            // check to make sure the surrounding cells are inside the world
             foreach (GridLocation s in surrounding)
             {                
-                if (s.X < min_world_x && s.X > max_world_x &&
-                    s.Y < min_world_y && s.Y > max_world_y)
+                if (s.X < minWorld.X && s.X > maxWorld.X &&
+                    s.Y < minWorld.Y && s.Y > maxWorld.Y)
                 {
                     surrounding.Remove(s);
                 }
             }
 
             return surrounding;
-        }       
-        
-    }
-    
-    
-    /* struct GridLocation
-     * 
-     * This structure represents one Grid block whose position coords
-     * are measured from the center of the world in world units. 
-     */
-    private struct GridLocation
-    {
-        #region Properties
-
-        //World unit coords of grid cell
-        public readonly int X, Y, width, height;
-        public readonly RotatedRectangle RectangleBounds;
-
-        #endregion
-
-        public GridLocation(int X, int Y, int cell_width, int cell_height)
-        {
-            this.X = X;
-            this.Y = Y;
-            width = cell_width;
-            height = cell_height;
-            RectangleBounds = new RotatedRectangle((float)X, (float)Y, (float)width, (float)height, 0.0f);    
         }
-
-        public bool Equals(GridLocation g)
-        {
-            if(this.X == g.X && this.Y == g.Y)
-                return true;
-            return false;
-
-        }
-
     }
 }
-

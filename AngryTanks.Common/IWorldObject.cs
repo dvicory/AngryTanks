@@ -2,35 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AngryTanks.Client;
+using Microsoft.Xna.Framework;
 
 namespace AngryTanks.Common
 {
-    interface IWorldObject
+    public interface IWorldObject
     {
         #region Properties
 
-        public virtual Vector2 Position
+        /// <summary>
+        /// 
+        /// </summary>
+        Vector2 Position
         {
             get;
             set;
         }
 
-        public virtual Vector2 Size
+        /// <summary>
+        /// 
+        /// </summary>
+        Vector2 Size
         {
             get;
             set;
         }
 
-        public virtual Single Rotation
+        /// <summary>
+        /// 
+        /// </summary>
+        Single Rotation
         {
             get;
             set;
         }
-        public virtual RotatedRectangle RectangleBounds
+
+        /// <summary>
+        /// 
+        /// </summary>
+        RotatedRectangle Bounds
         {
             get;
-            protected set;
         }
 
         #endregion
