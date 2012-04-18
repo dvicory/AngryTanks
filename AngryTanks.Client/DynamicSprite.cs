@@ -176,13 +176,13 @@ namespace AngryTanks.Client
             // TODO implement changing position and velocity
 
             // update rectangle bounds
-            RectangleBounds.X = Position.X - Size.X / 2;
-            RectangleBounds.Y = Position.Y - Size.Y / 2;
-            RectangleBounds.Rotation = Rotation;
+            Bounds.X = Position.X - Size.X / 2;
+            Bounds.Y = Position.Y - Size.Y / 2;
+            Bounds.Rotation = Rotation;
 
             // size doesn't *normally* change, but...
-            RectangleBounds.Width  = Size.X;
-            RectangleBounds.Height = Size.Y;
+            Bounds.Width = Size.X;
+            Bounds.Height = Size.Y;
         }
     }
 }

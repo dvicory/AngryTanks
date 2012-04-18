@@ -113,7 +113,7 @@ namespace AngryTanks.Client
         public virtual void DrawCallsign(GameTime gameTime, SpriteBatch spriteBatch)
         {
             SpriteFont font = World.Content.Load<SpriteFont>("fonts/ConsoleFont14");
-            Vector2 side = RectangleBounds.UpperRight - RectangleBounds.LowerRight;
+            Vector2 side = Bounds.UpperRight - Bounds.LowerRight;
             Vector2 position = Position - side;
 
             Vector2 pixelPosition = World.WorldUnitsToPixels(position);

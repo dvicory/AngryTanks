@@ -8,43 +8,50 @@ using AngryTanks.Common;
 
 namespace AngryTanks.Client
 {
-    public abstract class Sprite
+    public abstract class Sprite : IWorldObject
     {
         #region Properties
 
         protected World World
         {
-            get; set;
+            get;
+            set;
         }
 
         protected virtual Texture2D Texture
         {
-            get; set;
+            get;
+            set;
         }
 
         public virtual Vector2 Position
         {
-            get; set;
+            get;
+            set;
         }
 
         public virtual Vector2 Size
         {
-            get; set;
+            get;
+            set;
         }
 
         public virtual Single Rotation
         {
-            get; set;
+            get;
+            set;
         }
 
         public virtual Color Color
         {
-            get; set;
+            get;
+            set;
         }
 
-        public virtual RotatedRectangle RectangleBounds
+        public virtual RotatedRectangle Bounds
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         #endregion
@@ -58,8 +65,7 @@ namespace AngryTanks.Client
             this.Rotation = rotation;
             this.Color    = Color.White;
 
-            this.RectangleBounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
-                                                        this.Rotation);
+            this.Bounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size), this.Rotation);
         }
 
         public Sprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Color color)
@@ -71,20 +77,19 @@ namespace AngryTanks.Client
             this.Rotation = rotation;
             this.Color    = color;
 
-            this.RectangleBounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
-                                                        this.Rotation);
+            this.Bounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size), this.Rotation);
         }
 
         public virtual bool Intersects(Sprite sprite)
         {
             Single overlap;
             Vector2 collisionProjection;
-            return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap, out collisionProjection);
+            return Bounds.Intersects(sprite.Bounds, out overlap, out collisionProjection);
         }
 
         public virtual bool Intersects(Sprite sprite, out Single overlap, out Vector2 collisionProjection)
         {
-            return RectangleBounds.Intersects(sprite.RectangleBounds, out overlap, out collisionProjection);
+            return Bounds.Intersects(sprite.Bounds, out overlap, out collisionProjection);
         }
 
         public virtual bool FindNearestCollision(List<Sprite> collisionObjects, out Single overlap, out Vector2 collisionProjection)
