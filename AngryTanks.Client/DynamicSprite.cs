@@ -124,8 +124,8 @@ namespace AngryTanks.Client
             get { return rotation; }
             set
             {
-                FireChangeEvent<Single>(RotationChangedEvent, Rotation, value);
-                rotation = value;
+                FireChangeEvent<Single>(RotationChangedEvent, Rotation, MathHelper.WrapAngle(value));
+                rotation = MathHelper.WrapAngle(value);
             }
         }
 
