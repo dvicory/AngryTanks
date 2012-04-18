@@ -140,23 +140,14 @@ namespace AngryTanks.Server
         {
             MsgPlayerClientUpdatePacket clientUpdatePacket = MsgPlayerClientUpdatePacket.Read(msg);
 
-            NetOutgoingMessage serverUpdateMessage;
-            MsgPlayerServerUpdatePacket serverUpdatePacket;
+            NetOutgoingMessage serverUpdateMessage = Program.Server.CreateMessage();
+            MsgPlayerServerUpdatePacket serverUpdatePacket = new MsgPlayerServerUpdatePacket(this.Slot, clientUpdatePacket);
 
-            foreach (Player otherPlayer in GameKeeper.Players)
-            {
-                // don't want to tell our player an update about himself
-                if (otherPlayer.Slot == this.Slot)
-                    continue;
+            serverUpdateMessage.Write((Byte)MessageType.MsgPlayerServerUpdate);
+            serverUpdatePacket.Write(serverUpdateMessage);
 
-                serverUpdateMessage = Program.Server.CreateMessage();
-                serverUpdatePacket = new MsgPlayerServerUpdatePacket(this.Slot, clientUpdatePacket);
-
-                serverUpdateMessage.Write((Byte)MessageType.MsgPlayerServerUpdate);
-                serverUpdatePacket.Write(serverUpdateMessage);
-
-                otherPlayer.SendMessage(serverUpdateMessage, NetDeliveryMethod.UnreliableSequenced, 0);
-            }
+            // send to everyone but us
+            Program.Server.SendToAll(serverUpdateMessage, this.Connection, NetDeliveryMethod.UnreliableSequenced, 0);
         }
 
         #region Connection Helpers
