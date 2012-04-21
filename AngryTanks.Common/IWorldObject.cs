@@ -43,8 +43,10 @@ namespace AngryTanks.Common
         RotatedRectangle Bounds
         {
             get;
+            
         }
 
         #endregion
     }
+    
 }
