@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\LidgrenExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="IWorldObject.cs" />
