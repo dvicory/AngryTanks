@@ -7,7 +7,7 @@ namespace AngryTanks.Common
 {
     public class VariableStore
     {
-        public readonly Type   Type;
+        public readonly TypeCode TypeCode;
         public readonly String Name, Description;
 
         private Object defaultValue;
@@ -15,7 +15,7 @@ namespace AngryTanks.Common
         {
             get
             {
-                return Convert.ChangeType(defaultValue, Type); ;
+                return Convert.ChangeType(defaultValue, TypeCode);
             }
             set
             {
@@ -29,7 +29,7 @@ namespace AngryTanks.Common
             get
             {
                 if (value != null)
-                    return Convert.ChangeType(value, Type);
+                    return Convert.ChangeType(value, TypeCode);
                 else
                     return DefaultValue;
             }
@@ -50,14 +50,14 @@ namespace AngryTanks.Common
             }
         }
 
-        public VariableStore(String name, String description, Object defaultValue, Type type)
+        public VariableStore(String name, String description, Object defaultValue, TypeCode typeCode)
         {
             if (defaultValue == null)
                 throw new ArgumentNullException("defaultValue", "Default value can not be null");
 
             this.Name         = name;
             this.Description  = description;
-            this.Type         = type;
+            this.TypeCode     = typeCode;
             this.defaultValue = defaultValue;
         }
 
@@ -107,7 +107,7 @@ namespace AngryTanks.Common
             }
             set
             {
-                SetVariable(name, value);
+                variables[name] = value;
             }
         }
 
@@ -134,23 +134,23 @@ namespace AngryTanks.Common
         private void AddDefaultVariables()
         {
             AddVariable("explodeTime",
-                        "Time (in seconds) to respawn after being killed", 5, typeof(Single));
+                        "Time (in seconds) to respawn after being killed", 5f, typeof(Single));
             AddVariable("flagRadius",
                         "Determines how close a tank must be to a flag to pick it up", 2.5f, typeof(Single));
             AddVariable("reloadTime",
                         "Time (in seconds) between shot reloads", 3.5f, typeof(Single));
             AddVariable("shotRange",
-                        "Range of shots", 350, typeof(Single));
+                        "Range of shots", 350f, typeof(Single));
             AddVariable("shotSlots",
                         "Number of shot slots", 5, typeof(UInt16));
             AddVariable("shotSpeed",
-                        "Speed of shots", 100, typeof(Single));
+                        "Speed of shots", 100f, typeof(Single));
             AddVariable("tankAngVel",
                         "Angular speed (radians/sec) of the tank", (Single)Math.PI / 2, typeof(Single));
             AddVariable("tankLength",
                         "Length of the tank", 6f, typeof(Single));
             AddVariable("tankSpeed",
-                        "Speed of the tank", 25, typeof(Single));
+                        "Speed of the tank", 25f, typeof(Single));
             AddVariable("tankWidth",
                         "Width of the tank", 4.86f, typeof(Single));
             AddVariable("updatesPerSecond",
@@ -159,19 +159,9 @@ namespace AngryTanks.Common
 
         public VariableStore AddVariable(String name, String description, Object defaultValue, Type type)
         {
-            VariableStore variable = new VariableStore(name, description, defaultValue, type);
+            VariableStore variable = new VariableStore(name, description, defaultValue, Type.GetTypeCode(type));
             variables.Add(name, variable);
             return variable;
-        }
-
-        public void SetVariable(String name, Object value)
-        {
-            variables[name].Value = value;
-        }
-
-        public VariableStore GetVariable(String name)
-        {
-            return variables[name];
         }
 
         public void ResetAllVariables()
