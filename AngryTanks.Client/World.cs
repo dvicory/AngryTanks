@@ -87,7 +87,7 @@ namespace AngryTanks.Client
             get { return serverLink; }
         }
 
-        public List<Sprite> WorldObjects
+        public List<IWorldObject> WorldObjects
         {
             get
             {
@@ -95,7 +95,7 @@ namespace AngryTanks.Client
                 worldObjects.AddRange(stretched.ToList());
                 worldObjects.AddRange(tiled.ToList());
 
-                return worldObjects;
+                return worldObjects.Cast<IWorldObject>().ToList();
             }
         }
 

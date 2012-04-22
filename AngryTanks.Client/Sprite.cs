@@ -80,19 +80,38 @@ namespace AngryTanks.Client
             this.Bounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size), this.Rotation);
         }
 
-        public virtual bool Intersects(Sprite sprite)
+        /// <summary>
+        /// Tests for an intersection with <paramref name="sprite"/>.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <returns></returns>
+        public virtual bool Intersects(IWorldObject sprite)
         {
             Single overlap;
             Vector2 collisionProjection;
             return Bounds.Intersects(sprite.Bounds, out overlap, out collisionProjection);
         }
 
-        public virtual bool Intersects(Sprite sprite, out Single overlap, out Vector2 collisionProjection)
+        /// <summary>
+        /// Tests for an intersection with <paramref name="sprite"/>.
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="overlap"></param>
+        /// <param name="collisionProjection"></param>
+        /// <returns></returns>
+        public virtual bool Intersects(IWorldObject sprite, out Single overlap, out Vector2 collisionProjection)
         {
             return Bounds.Intersects(sprite.Bounds, out overlap, out collisionProjection);
         }
 
-        public virtual bool FindNearestCollision(List<Sprite> collisionObjects, out Single overlap, out Vector2 collisionProjection)
+        /// <summary>
+        /// Finds the nearest collision out of <paramref name="collisionObjects"/>.
+        /// </summary>
+        /// <param name="collisionObjects">List of objects to test against.</param>
+        /// <param name="overlap"></param>
+        /// <param name="collisionProjection"></param>
+        /// <returns></returns>
+        public virtual bool FindNearestCollision(List<IWorldObject> collisionObjects, out Single overlap, out Vector2 collisionProjection)
         {
             Single largestOverlap = 0;
             Vector2 largestCollisionProjection = Vector2.Zero;
@@ -129,11 +148,11 @@ namespace AngryTanks.Client
             // TODO actually draw, revisit parameters
         }
 
-        /* 
-         * drawStretched()
-         * 
-         * Call this function to draw sprites that should be stretched.           
-         */
+        /// <summary>
+        /// Draws <see cref="Sprite"/>'s Texture at the current Position and Size in stretched mode.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public void DrawStretched(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Vector2 pixelPosition = World.WorldUnitsToPixels(Position);
@@ -150,11 +169,11 @@ namespace AngryTanks.Client
                              SpriteEffects.None, 0);
         }
 
-        /* 
-         * drawTiled()
-         * 
-         * Call this function to draw sprites that should be tiled.           
-         */
+        /// <summary>
+        /// Draws <see cref="Sprite"/>'s Texture at the current Position and Size in tiled mode.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public void DrawTiled(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Vector2 pixelPosition = World.WorldUnitsToPixels(Position);
@@ -163,7 +182,7 @@ namespace AngryTanks.Client
             spriteBatch.Draw(Texture,
                              (Rectangle)new RectangleF(pixelPosition, pixelSize),
                              // for TILE MODE, set source relative to the Size's dimensions
-                             new Rectangle(0, 0, (int)pixelSize.X, (int)pixelSize.Y),
+                             (Rectangle)new RectangleF(Vector2.Zero, pixelSize),
                              Color,
                              Rotation,
                              // for TILE MODE, set the origin relative to the Size's dimensions
