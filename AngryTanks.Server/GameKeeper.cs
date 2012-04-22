@@ -18,12 +18,12 @@ namespace AngryTanks.Server
 
         #region GameKeeper Properties
 
-        public static List<Player> Players
+        public List<Player> Players
         {
             get { return players.Values.ToList(); }
         }
 
-        public static Int16 PlayerCount
+        public Int16 PlayerCount
         {
             get
             {
@@ -33,9 +33,31 @@ namespace AngryTanks.Server
 
         #endregion
 
-        private static Dictionary<Byte, Player> players = new Dictionary<Byte, Player>();
+        private readonly NetServer server;
 
-        public static void HandleIncomingData(NetIncomingMessage incomingMessage)
+        public NetServer Server
+        {
+            get { return server; }
+        }
+
+        private readonly Byte[] rawWorld;
+
+        public Byte[] RawWorld
+        {
+            get { return rawWorld; }
+        }
+
+        private Dictionary<Byte, Player> players = new Dictionary<Byte, Player>();
+
+        private VariableDatabase VarDB = new VariableDatabase();
+
+        public GameKeeper(NetServer server, Byte[] rawWorld)
+        {
+            this.server = server;
+            this.rawWorld = rawWorld;
+        }
+
+        public void HandleIncomingData(NetIncomingMessage incomingMessage)
         {
             Player player = GetPlayerByConnection(incomingMessage.SenderConnection);
 
@@ -43,7 +65,7 @@ namespace AngryTanks.Server
                 player.HandleData(incomingMessage);
         }
 
-        public static void HandleStatusChange(NetIncomingMessage incomingMessage)
+        public void HandleStatusChange(NetIncomingMessage incomingMessage)
         {
             NetConnectionStatus status = (NetConnectionStatus)incomingMessage.ReadByte();
 
@@ -62,7 +84,7 @@ namespace AngryTanks.Server
             }
         }
 
-        public static void AddPlayer(NetConnection connection, PlayerInformation playerInfo)
+        public void AddPlayer(NetConnection connection, PlayerInformation playerInfo)
         {
             String denyReason;
             Byte slot = AllocateSlot(playerInfo, out denyReason);
@@ -80,12 +102,12 @@ namespace AngryTanks.Server
             connection.Approve();
 
             // add player to our list
-            players[slot] = new Player(slot, connection, playerInfo);
+            players[slot] = new Player(this, slot, connection, playerInfo);
 
             // and tell everyone else about this awesome new player
             Log.DebugFormat("Sending MsgAddPlayer to everyone else about player #{0}", slot);
 
-            NetOutgoingMessage packet = Program.Server.CreateMessage();
+            NetOutgoingMessage packet = Server.CreateMessage();
 
             MsgAddPlayerPacket message = new MsgAddPlayerPacket(players[slot].PlayerInfo, false);
 
@@ -96,10 +118,10 @@ namespace AngryTanks.Server
                             packet.LengthBytes, players.Count - 1);
 
             // send to everyone except our new player, we let Player itself decide when to send the state to the new guy
-            Program.Server.SendToAll(packet, connection, NetDeliveryMethod.ReliableOrdered, 0);
+            Server.SendToAll(packet, connection, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
-        public static void RemovePlayer(Player player, String reason)
+        public void RemovePlayer(Player player, String reason)
         {
             Log.InfoFormat("Removing player #{0} ({1})", player.Slot, reason);
 
@@ -107,7 +129,7 @@ namespace AngryTanks.Server
             players.Remove(player.Slot);
 
             // now let's tell all the other players the dude left
-            NetOutgoingMessage packet = Program.Server.CreateMessage();
+            NetOutgoingMessage packet = Server.CreateMessage();
 
             MsgRemovePlayerPacket message =
                 new MsgRemovePlayerPacket(player.Slot, reason);
@@ -116,7 +138,7 @@ namespace AngryTanks.Server
             message.Write(packet);
 
             // send to all
-            Program.Server.SendToAll(packet, null, NetDeliveryMethod.ReliableOrdered, 0);
+            Server.SendToAll(packet, null, NetDeliveryMethod.ReliableOrdered, 0);
             
             // disposing of player would be a good idea
             if (player.Connection != null)
@@ -128,7 +150,7 @@ namespace AngryTanks.Server
         /// </summary>
         /// <param name="connection"></param>
         /// <returns><see cref="Player"/>, if one found, otherwise null.</returns>
-        public static Player GetPlayerByConnection(NetConnection connection)
+        public Player GetPlayerByConnection(NetConnection connection)
         {
             try
             {
@@ -149,7 +171,7 @@ namespace AngryTanks.Server
         /// <param name="playerAdding"><see cref="PlayerInformation"/> about the player being added.</param>
         /// <param name="denyReason"><see cref="String"/> to be populated with a reason if a slot can not be allocated.</param>
         /// <returns><see cref="ProtocolInformation.DummySlot"/> if a slot can't be allocated, otherwise the slot.</returns>
-        private static Byte AllocateSlot(PlayerInformation playerAdding, out String denyReason)
+        private Byte AllocateSlot(PlayerInformation playerAdding, out String denyReason)
         {
             Player player;
             Byte earliestSlot = ProtocolInformation.DummySlot;

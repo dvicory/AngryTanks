@@ -19,41 +19,54 @@ namespace AngryTanks.Server
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        // TODO fixme
-        public static NetServer Server;
-        public static byte[] rawWorld;
+        private static NetServer server;
+        private static GameKeeper gameKeeper;
+        private static Byte[] rawWorld;
 
-        static void Main(string[] args)
+        static void Main(String[] args)
         {
             UInt16 port = 5150;
             int verbosity = 0;
             bool showHelp = false;
-            string worldFilePath = "";
+            String worldFilePath = null;
+            Dictionary<String, String> variables = new Dictionary<String, String>();
 
             OptionSet p = new OptionSet()
             {
-                { "p|port",
+                {
+                    "p|port=",
                     "sets the port to run the server on",
                     (UInt16 v) => port = v
-                    },
-                { "w|world=",
+                },
+                {
+                    "w|world=",
                     "sets the world file to serve",
-                    v => worldFilePath = v
-                    },
-                { "v",
+                    (String v) => worldFilePath = v
+                },
+                {
+                    "s|set=",
+                    "sets a variable",
+                    (String k, String v) => { variables[k] = v; }
+                },
+                {
+                    "v",
                     "increases verbosity level",
                     v => { if (v != null) ++verbosity; }
-                    },
-                { "h|?|help",
+                },
+                {
+                    "h|?|help",
                     "shows this message and exits",
                     v => showHelp = v != null
-                    },
+                },
             };
 
-            List<string> extra;
+            List<String> extra;
             try
             {
                 extra = p.Parse(args);
+
+                if (worldFilePath == null)
+                    throw new OptionException("Missing required world option", "-w|--world");
             }
             catch (OptionException e)
             {
@@ -83,16 +96,7 @@ namespace AngryTanks.Server
                 return;
             }
 
-            // do we have a world file?
-            if (worldFilePath.Length == 0)
-            {
-                Log.Fatal("A world file is required");
-                ShowHelp(p, args);
-                return;
-            }
-
-            // and is it valid?
-            // TODO actually check if a valid world file?
+            // and does it exist?
             if (!File.Exists(worldFilePath))
             {
                 Log.FatalFormat("A world file does not exist at '{0}'", worldFilePath);
@@ -102,6 +106,8 @@ namespace AngryTanks.Server
 
             // let's read the world now and save it
             rawWorld = ReadWorld(worldFilePath);
+
+            // TODO parse world, also checks if valid
 
             NetPeerConfiguration config = new NetPeerConfiguration("AngryTanks");
 
@@ -113,14 +119,17 @@ namespace AngryTanks.Server
             config.Port = port;
 
             // start server
-            Server = new NetServer(config);
-            Server.Start();
+            server = new NetServer(config);
+            server.Start();
+
+            // let's start game keeper
+            gameKeeper = new GameKeeper(server, rawWorld);
 
             // go to main loop
             AppLoop();
         }
 
-        private static void ShowHelp(OptionSet p, string[] args)
+        public static void ShowHelp(OptionSet p, string[] args)
         {
             Console.WriteLine("Usage: " + System.AppDomain.CurrentDomain.FriendlyName + " [OPTIONS]");
             Console.WriteLine("The Angry Tanks server, implementing protocol version " + ProtocolInformation.ProtocolVersion);
@@ -129,11 +138,11 @@ namespace AngryTanks.Server
             p.WriteOptionDescriptions(Console.Out);
         }
 
-        private static byte[] ReadWorld(string worldPath)
+        private static Byte[] ReadWorld(String worldPath)
         {
             FileStream worldStream = new FileStream(worldPath, FileMode.Open, FileAccess.Read);
 
-            byte[] bytes = new byte[worldStream.Length];
+            Byte[] bytes = new Byte[(int)worldStream.Length];
 
             int bytesToRead = (int)worldStream.Length;
             int bytesAlreadyRead = 0;
@@ -159,7 +168,7 @@ namespace AngryTanks.Server
             
             while (true)
             {
-                if ((msg = Server.ReadMessage()) != null)
+                if ((msg = server.ReadMessage()) != null)
                 {
                     switch (msg.MessageType)
                     {
@@ -184,7 +193,7 @@ namespace AngryTanks.Server
                                 if (msg.SenderConnection == null)
                                     break;
 
-                                GameKeeper.HandleStatusChange(msg);
+                                gameKeeper.HandleStatusChange(msg);
 
                                 break;
                             }
@@ -219,13 +228,13 @@ namespace AngryTanks.Server
 
                                 PlayerInformation playerInfo = new PlayerInformation(ProtocolInformation.DummySlot, callsign, tag, team);
 
-                                GameKeeper.AddPlayer(msg.SenderConnection, playerInfo);
+                                gameKeeper.AddPlayer(msg.SenderConnection, playerInfo);
 
                                 break;
                             }
 
                         case NetIncomingMessageType.Data:
-                            GameKeeper.HandleIncomingData(msg);
+                            gameKeeper.HandleIncomingData(msg);
                             break;
 
                         default:
@@ -234,7 +243,7 @@ namespace AngryTanks.Server
                     }
 
                     // reduce GC pressure by recycling
-                    Server.Recycle(msg);
+                    server.Recycle(msg);
                 }
 
                 // we must sleep otherwise we will lock everything up

@@ -39,13 +39,17 @@ namespace AngryTanks.Server
 
         #endregion
 
-        public Player(Byte slot, NetConnection connection, PlayerInformation playerInfo)
+        private GameKeeper gameKeeper;
+
+        public Player(GameKeeper gameKeeper, Byte slot, NetConnection connection, PlayerInformation playerInfo)
         {
             this.Slot       = slot;
             this.Connection = connection;
             this.Team       = playerInfo.Team;
             this.Callsign   = playerInfo.Callsign;
             this.Tag        = playerInfo.Tag;
+
+            this.gameKeeper = gameKeeper;
 
             this.playerState = PlayerState.Joining;
 
@@ -77,10 +81,10 @@ namespace AngryTanks.Server
 
             // TODO we should clamp world size to no more than UInt16.MaxValue bytes large
             // first send the world
-            NetOutgoingMessage worldMsg = Program.Server.CreateMessage(1 + 2 + (UInt16)Program.rawWorld.Length);
+            NetOutgoingMessage worldMsg = gameKeeper.Server.CreateMessage(1 + 2 + (UInt16)gameKeeper.RawWorld.Length);
             worldMsg.Write((Byte)MessageType.MsgWorld);
-            worldMsg.Write((UInt16)Program.rawWorld.Length);
-            worldMsg.Write(Program.rawWorld);
+            worldMsg.Write((UInt16)gameKeeper.RawWorld.Length);
+            worldMsg.Write(gameKeeper.RawWorld);
             SendMessage(worldMsg, NetDeliveryMethod.ReliableOrdered, 0);
 
             // TODO send other state information... like flags
@@ -91,13 +95,13 @@ namespace AngryTanks.Server
             NetOutgoingMessage addPlayerMessage;
             MsgAddPlayerPacket addPlayerPacket;
 
-            foreach (Player otherPlayer in GameKeeper.Players)
+            foreach (Player otherPlayer in gameKeeper.Players)
             {
                 // don't want to tell our player about himself just yet...
                 if (otherPlayer.Slot == this.Slot)
                     continue;
 
-                addPlayerMessage = Program.Server.CreateMessage();
+                addPlayerMessage = gameKeeper.Server.CreateMessage();
 
                 addPlayerPacket = new MsgAddPlayerPacket(otherPlayer.PlayerInfo, false);
 
@@ -113,7 +117,7 @@ namespace AngryTanks.Server
             // TODO send scores and such...
 
             // let them know we're ready to move on, and give him his slot
-            NetOutgoingMessage stateMessage = Program.Server.CreateMessage();
+            NetOutgoingMessage stateMessage = gameKeeper.Server.CreateMessage();
 
             MsgStatePacket statePacket = new MsgStatePacket(Slot);
 
@@ -123,7 +127,7 @@ namespace AngryTanks.Server
             SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
             // send back one last MsgAddPlayer with their full information (which could be changed!)
-            addPlayerMessage = Program.Server.CreateMessage();
+            addPlayerMessage = gameKeeper.Server.CreateMessage();
 
             addPlayerPacket = new MsgAddPlayerPacket(PlayerInfo, true);
 
@@ -140,26 +144,26 @@ namespace AngryTanks.Server
         {
             MsgPlayerClientUpdatePacket clientUpdatePacket = MsgPlayerClientUpdatePacket.Read(msg);
 
-            NetOutgoingMessage serverUpdateMessage = Program.Server.CreateMessage();
+            NetOutgoingMessage serverUpdateMessage = gameKeeper.Server.CreateMessage();
             MsgPlayerServerUpdatePacket serverUpdatePacket = new MsgPlayerServerUpdatePacket(this.Slot, clientUpdatePacket);
 
             serverUpdateMessage.Write((Byte)MessageType.MsgPlayerServerUpdate);
             serverUpdatePacket.Write(serverUpdateMessage);
 
             // send to everyone but us
-            Program.Server.SendToAll(serverUpdateMessage, this.Connection, NetDeliveryMethod.UnreliableSequenced, 0);
+            gameKeeper.Server.SendToAll(serverUpdateMessage, this.Connection, NetDeliveryMethod.UnreliableSequenced, 0);
         }
 
         #region Connection Helpers
 
         public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method)
         {
-            return Program.Server.SendMessage(msg, Connection, method);
+            return gameKeeper.Server.SendMessage(msg, Connection, method);
         }
 
         public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method, int sequenceChannel)
         {
-            return Program.Server.SendMessage(msg, Connection, method, sequenceChannel);
+            return gameKeeper.Server.SendMessage(msg, Connection, method, sequenceChannel);
         }
 
         #endregion
