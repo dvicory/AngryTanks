@@ -23,18 +23,18 @@ namespace AngryTanks.Server
         public readonly String        Callsign, Tag;
         public readonly TeamType      Team;
 
-        private PlayerState playerState;
-        public PlayerState State
-        {
-            get { return playerState; }
-        }
-
         public PlayerInformation PlayerInfo
         {
             get
             {
                 return new PlayerInformation(Slot, Callsign, Tag, Team);
             }
+        }
+
+        private PlayerState state;
+        public PlayerState State
+        {
+            get { return state; }
         }
 
         #endregion
@@ -51,11 +51,24 @@ namespace AngryTanks.Server
 
             this.gameKeeper = gameKeeper;
 
-            this.playerState = PlayerState.Joining;
+            this.state = PlayerState.Joining;
 
             Log.InfoFormat("Player #{0} \"{1}\" <{2}> created and joined to {3}", Slot, Callsign, Tag, Team);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lastUpdate"></param>
+        public void Update(DateTime lastUpdate)
+        {
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="incomingMsg"></param>
         public void HandleData(NetIncomingMessage incomingMsg)
         {
             MessageType messageType = (MessageType)incomingMsg.ReadByte();
@@ -75,6 +88,9 @@ namespace AngryTanks.Server
             }
         }
 
+        /// <summary>
+        /// Sends initial state to this <see cref="Player"/>.
+        /// </summary>
         private void SendState()
         {
             Log.DebugFormat("Sending state to #{0}...", Slot);
@@ -137,9 +153,14 @@ namespace AngryTanks.Server
             SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
             // we're now ready to move to the spawn state
-            this.playerState = PlayerState.Spawning;
+            this.state = PlayerState.Spawning;
         }
 
+        /// <summary>
+        /// Broadcasts a <see cref="MsgPlayerServerUpdatePacket"/> to all other
+        /// <see cref="Player"/>s after receiving a <see cref="MsgPlayerClientUpdatePacket"/>.
+        /// </summary>
+        /// <param name="msg"></param>
         private void BroadcastUpdate(NetIncomingMessage msg)
         {
             MsgPlayerClientUpdatePacket clientUpdatePacket = MsgPlayerClientUpdatePacket.Read(msg);

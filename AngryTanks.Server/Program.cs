@@ -23,6 +23,9 @@ namespace AngryTanks.Server
         private static GameKeeper gameKeeper;
         private static Byte[] rawWorld;
 
+        private static TimeSpan updateInterval = new TimeSpan(0, 0, 0, 0, 10);
+        private static DateTime lastUpdate = DateTime.MinValue;
+
         static void Main(String[] args)
         {
             UInt16 port = 5150;
@@ -244,6 +247,13 @@ namespace AngryTanks.Server
 
                     // reduce GC pressure by recycling
                     server.Recycle(msg);
+                }
+
+                // see if we need to run an update pass
+                if ((lastUpdate + updateInterval) <= DateTime.Now)
+                {
+                    lastUpdate = DateTime.Now;
+                    gameKeeper.Update(lastUpdate);
                 }
 
                 // we must sleep otherwise we will lock everything up

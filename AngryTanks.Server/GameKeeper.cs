@@ -57,6 +57,20 @@ namespace AngryTanks.Server
             this.rawWorld = rawWorld;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lastUpdate"></param>
+        public void Update(DateTime lastUpdate)
+        {
+            foreach (Player player in Players)
+                player.Update(lastUpdate);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="incomingMessage"></param>
         public void HandleIncomingData(NetIncomingMessage incomingMessage)
         {
             Player player = GetPlayerByConnection(incomingMessage.SenderConnection);
@@ -65,6 +79,10 @@ namespace AngryTanks.Server
                 player.HandleData(incomingMessage);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="incomingMessage"></param>
         public void HandleStatusChange(NetIncomingMessage incomingMessage)
         {
             NetConnectionStatus status = (NetConnectionStatus)incomingMessage.ReadByte();
@@ -84,6 +102,11 @@ namespace AngryTanks.Server
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="playerInfo"></param>
         public void AddPlayer(NetConnection connection, PlayerInformation playerInfo)
         {
             String denyReason;
@@ -121,6 +144,11 @@ namespace AngryTanks.Server
             Server.SendToAll(packet, connection, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="reason"></param>
         public void RemovePlayer(Player player, String reason)
         {
             Log.InfoFormat("Removing player #{0} ({1})", player.Slot, reason);
