@@ -47,4 +47,49 @@ namespace AngryTanks.Common
 
         #endregion
     }
+
+    public class WorldObject : IWorldObject
+    {
+        #region Properties
+
+        public Vector2 Position
+        {
+            get;
+            set;
+        }
+
+        public Vector2 Size
+        {
+            get;
+            set;
+        }
+
+        public Single Rotation
+        {
+            get;
+            set;
+        }
+        public RotatedRectangle Bounds
+        {
+            get;
+            set;
+        }
+
+        #endregion
+
+        public WorldObject(Vector2 position, Vector2 size, Single rotation)
+        {
+            this.Position = position;
+            this.Size = size;
+            this.Rotation = rotation;
+            this.Bounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
+                                                        this.Rotation);
+        }
+
+        public void ReCalcBounds()
+        {
+            this.Bounds = new RotatedRectangle(new RectangleF(this.Position - this.Size / 2, this.Size),
+                                                        this.Rotation);
+        }
+    }
 }
