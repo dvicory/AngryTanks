@@ -17,12 +17,22 @@ namespace AngryTanks.Common
         public enum MessageType
         {
             MsgEnter,
+            MsgGameInformation,
             MsgState,
+            MsgSetVariable,
             MsgAddPlayer,
             MsgRemovePlayer,
             MsgWorld,
             MsgPlayerClientUpdate, // from client to server
-            MsgPlayerServerUpdate  // from server to client
+            MsgPlayerServerUpdate, // from server to client
+            MsgSpawn
+        }
+
+        public enum GamePlayType
+        {
+            FreeForAll,
+            CaptureTheFlag,
+            RabbitHunt
         }
 
         public enum TeamType

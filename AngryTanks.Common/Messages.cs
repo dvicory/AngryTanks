@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 using Lidgren.Network;
 
+using AngryTanks.Common.Extensions.LidgrenExtensions;
+using AngryTanks.Common.Protocol;
+
 namespace AngryTanks.Common
 {
     using MessageType = Protocol.MessageType;
@@ -14,6 +17,9 @@ namespace AngryTanks.Common
 
     namespace Messages
     {
+        /// <summary>
+        /// Core information tied to a player.
+        /// </summary>
         public class PlayerInformation
         {
             public readonly Byte Slot;
@@ -40,13 +46,16 @@ namespace AngryTanks.Common
 
             public void Write(NetOutgoingMessage packet)
             {
-                packet.Write(Slot);
-                packet.Write((Byte)Team);
-                packet.Write(Callsign);
-                packet.Write(Tag);
+                packet.Write(this.Slot);
+                packet.Write((Byte)this.Team);
+                packet.Write(this.Callsign);
+                packet.Write(this.Tag);
             }
         }
 
+        /// <summary>
+        /// Abstract base class for all messages.
+        /// </summary>
         public abstract class MsgBasePacket
         {
             public abstract MessageType MsgType
@@ -55,33 +64,9 @@ namespace AngryTanks.Common
             }
         }
 
-        public class MsgStatePacket : MsgBasePacket
-        {
-            public override MessageType MsgType
-            {
-                get { return MessageType.MsgState; }
-            }
-
-            public readonly Byte Slot;
-
-            public MsgStatePacket(Byte slot)
-            {
-                this.Slot = slot;
-            }
-
-            public static MsgStatePacket Read(NetIncomingMessage packet)
-            {
-                Byte slot = packet.ReadByte();
-
-                return new MsgStatePacket(slot);
-            }
-
-            public void Write(NetOutgoingMessage packet)
-            {
-                packet.Write(Slot);
-            }
-        }
-
+        /// <summary>
+        /// Sent by the client upon connecting to server with desired <see cref="PlayerInformation"/>.
+        /// </summary>
         public class MsgEnterPacket : MsgBasePacket
         {
             public override MessageType MsgType
@@ -105,10 +90,274 @@ namespace AngryTanks.Common
 
             public void Write(NetOutgoingMessage packet)
             {
-                Player.Write(packet);
+                this.Player.Write(packet);
             }
         }
 
+        /// <summary>
+        /// Sent by the server containing basic game information.
+        /// </summary>
+        public class MsgGameInformationPacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgGameInformation; }
+            }
+
+            public readonly GamePlayType GamePlayType;
+
+            public MsgGameInformationPacket(GamePlayType gamePlayType)
+            {
+                this.GamePlayType = gamePlayType;
+            }
+
+            public static MsgGameInformationPacket Read(NetIncomingMessage packet)
+            {
+                GamePlayType gamePlayType = (GamePlayType)packet.ReadByte();
+
+                return new MsgGameInformationPacket(gamePlayType);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write((Byte)this.GamePlayType);
+            }
+        }
+
+        /// <summary>
+        /// Sent by the client to indicate it is ready to receive initial state.
+        /// Sent by the server to indicate initial state is fully sent.
+        /// </summary>
+        public class MsgStatePacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgState; }
+            }
+
+            public readonly Byte Slot;
+
+            public MsgStatePacket(Byte slot)
+            {
+                this.Slot = slot;
+            }
+
+            public static MsgStatePacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+
+                return new MsgStatePacket(slot);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+            }
+        }
+
+        /// <summary>
+        /// Sent by the server to set a variable in the <see cref="VariableDatabase"/>.
+        /// </summary>
+        public class MsgSetVariablePacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgSetVariable; }
+            }
+
+            public readonly TypeCode TypeCode;
+            public readonly String Name;
+            public readonly Object Value;
+
+            public MsgSetVariablePacket(String name, Object value, TypeCode typeCode)
+            {
+                this.Name = name;
+                this.Value = value;
+                this.TypeCode = typeCode;
+            }
+
+            public MsgSetVariablePacket(VariableStore variable)
+            {
+                this.TypeCode = variable.TypeCode;
+                this.Name = variable.Name;
+                this.Value = variable.Value;
+            }
+
+            public static MsgSetVariablePacket Read(NetIncomingMessage packet)
+            {
+                TypeCode typeCode = (TypeCode)packet.ReadByte();
+                String name = packet.ReadString();
+                String description = packet.ReadString();
+                Object value = ReadValue(packet, typeCode);
+
+                return new MsgSetVariablePacket(name, value, typeCode);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write((Byte)this.TypeCode);
+                packet.Write(this.Name);
+                WriteValue(packet, this.Value, this.TypeCode);
+            }
+
+            private static Object ReadValue(NetIncomingMessage packet, TypeCode typeCode)
+            {
+                Object value;
+
+                switch (typeCode)
+                {
+                    case TypeCode.Empty:
+                        throw new NotSupportedException("Empty is not a supported type for variables");
+
+                    case TypeCode.Object:
+                        throw new NotSupportedException("Object is not a supported type for variables");
+
+                    case TypeCode.DBNull:
+                        throw new NotSupportedException("DBNull is not a supported type for variables");
+
+                    case TypeCode.Boolean:
+                        value = packet.ReadBoolean();
+                        break;
+
+                    case TypeCode.Char:
+                        throw new NotSupportedException("Char is not a supported type for variables");
+
+                    case TypeCode.SByte:
+                        value = packet.ReadSByte();
+                        break;
+
+                    case TypeCode.Byte:
+                        value = packet.ReadByte();
+                        break;
+
+                    case TypeCode.Int16:
+                        value = packet.ReadInt16();
+                        break;
+
+                    case TypeCode.UInt16:
+                        value = packet.ReadUInt16();
+                        break;
+
+                    case TypeCode.Int32:
+                        value = packet.ReadInt32();
+                        break;
+
+                    case TypeCode.UInt32:
+                        value = packet.ReadUInt32();
+                        break;
+
+                    case TypeCode.Int64:
+                        value = packet.ReadInt64();
+                        break;
+
+                    case TypeCode.UInt64:
+                        value = packet.ReadUInt64();
+                        break;
+
+                    case TypeCode.Single:
+                        value = packet.ReadSingle();
+                        break;
+
+                    case TypeCode.Double:
+                        value = packet.ReadDouble();
+                        break;
+
+                    case TypeCode.Decimal:
+                        throw new NotSupportedException("Decimal is not a supported type for variables");
+
+                    case TypeCode.DateTime:
+                        throw new NotSupportedException("DateTime is not a supported type for variables");
+
+                    case TypeCode.String:
+                        value = packet.ReadString();
+                        break;
+
+                    default:
+                        throw new NotSupportedException(String.Format("Unknown type {0} is not a supported type for variables", typeCode));
+                }
+
+                return value;
+            }
+
+            private static void WriteValue(NetOutgoingMessage packet, Object value, TypeCode typeCode)
+            {
+                switch (typeCode)
+                {
+                    case TypeCode.Empty:
+                        throw new NotSupportedException("Empty is not a supported type for variables");
+
+                    case TypeCode.Object:
+                        throw new NotSupportedException("Object is not a supported type for variables");
+
+                    case TypeCode.DBNull:
+                        throw new NotSupportedException("DBNull is not a supported type for variables");
+
+                    case TypeCode.Boolean:
+                        packet.Write((Boolean)Convert.ChangeType(value, typeof(Boolean)));
+                        break;
+
+                    case TypeCode.Char:
+                        throw new NotSupportedException("Char is not a supported type for variables");
+
+                    case TypeCode.SByte:
+                        packet.Write((SByte)Convert.ChangeType(value, typeof(SByte)));
+                        break;
+
+                    case TypeCode.Byte:
+                        packet.Write((Byte)Convert.ChangeType(value, typeof(Byte)));
+                        break;
+
+                    case TypeCode.Int16:
+                        packet.Write((Int16)Convert.ChangeType(value, typeof(Int16)));
+                        break;
+
+                    case TypeCode.UInt16:
+                        packet.Write((UInt16)Convert.ChangeType(value, typeof(UInt16)));
+                        break;
+
+                    case TypeCode.Int32:
+                        packet.Write((Int32)Convert.ChangeType(value, typeof(Int32)));
+                        break;
+
+                    case TypeCode.UInt32:
+                        packet.Write((UInt32)Convert.ChangeType(value, typeof(UInt32)));
+                        break;
+
+                    case TypeCode.Int64:
+                        packet.Write((Int64)Convert.ChangeType(value, typeof(Int64)));
+                        break;
+
+                    case TypeCode.UInt64:
+                        packet.Write((UInt64)Convert.ChangeType(value, typeof(UInt64)));
+                        break;
+
+                    case TypeCode.Single:
+                        packet.Write((Single)Convert.ChangeType(value, typeof(Single)));
+                        break;
+
+                    case TypeCode.Double:
+                        packet.Write((Double)Convert.ChangeType(value, typeof(Double)));
+                        break;
+
+                    case TypeCode.Decimal:
+                        throw new NotSupportedException("Decimal is not a supported type for variables");
+
+                    case TypeCode.DateTime:
+                        throw new NotSupportedException("DateTime is not a supported type for variables");
+
+                    case TypeCode.String:
+                        packet.Write((String)Convert.ChangeType(value, typeof(String)));
+                        break;
+
+                    default:
+                        throw new NotSupportedException(String.Format("Unknown type {0} is not a supported type for variables", typeCode));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sent by the server to add a player.
+        /// </summary>
         public class MsgAddPlayerPacket : MsgBasePacket
         {
             public override MessageType MsgType
@@ -135,11 +384,14 @@ namespace AngryTanks.Common
 
             public void Write(NetOutgoingMessage packet)
             {
-                Player.Write(packet);
-                packet.Write(AddMyself);
+                this.Player.Write(packet);
+                packet.Write(this.AddMyself);
             }
         }
 
+        /// <summary>
+        /// Sent by the server to remove a player.
+        /// </summary>
         public class MsgRemovePlayerPacket : MsgBasePacket
         {
             public override MessageType MsgType
@@ -166,11 +418,14 @@ namespace AngryTanks.Common
 
             public void Write(NetOutgoingMessage packet)
             {
-                packet.Write(Slot);
-                packet.Write(Reason);
+                packet.Write(this.Slot);
+                packet.Write(this.Reason);
             }
         }
 
+        /// <summary>
+        /// Sent by the server to give the client the map.
+        /// </summary>
         public class MsgWorldPacket : MsgBasePacket
         {
             public override MessageType MsgType
@@ -209,6 +464,9 @@ namespace AngryTanks.Common
             }
         }
 
+        /// <summary>
+        /// Abstract base class for player updates.
+        /// </summary>
         public abstract class MsgPlayerUpdatePacket : MsgBasePacket
         {
             public readonly Vector2 Position;
@@ -222,12 +480,14 @@ namespace AngryTanks.Common
 
             public virtual void Write(NetOutgoingMessage packet)
             {
-                packet.Write(Position.X);
-                packet.Write(Position.Y);
-                packet.Write(Rotation);
+                packet.Write(this.Position);
+                packet.Write(this.Rotation);
             }
         }
 
+        /// <summary>
+        /// Player update sent by the client.
+        /// </summary>
         public class MsgPlayerClientUpdatePacket : MsgPlayerUpdatePacket
         {
             public override MessageType MsgType
@@ -242,13 +502,16 @@ namespace AngryTanks.Common
 
             public static MsgPlayerClientUpdatePacket Read(NetIncomingMessage packet)
             {
-                Vector2 position = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
+                Vector2 position = packet.ReadVector2();
                 Single rotation = packet.ReadSingle();
 
                 return new MsgPlayerClientUpdatePacket(position, rotation);
             }
         }
 
+        /// <summary>
+        /// Player update sent by the server.
+        /// </summary>
         public class MsgPlayerServerUpdatePacket : MsgPlayerUpdatePacket
         {
             public override MessageType MsgType
@@ -273,7 +536,7 @@ namespace AngryTanks.Common
             public static MsgPlayerServerUpdatePacket Read(NetIncomingMessage packet)
             {
                 Byte slot = packet.ReadByte();
-                Vector2 position = new Vector2 { X = packet.ReadSingle(), Y = packet.ReadSingle() };
+                Vector2 position = packet.ReadVector2();
                 Single rotation = packet.ReadSingle();
 
                 return new MsgPlayerServerUpdatePacket(slot, position, rotation);
@@ -281,8 +544,60 @@ namespace AngryTanks.Common
 
             public override void Write(NetOutgoingMessage packet)
             {
-                packet.Write(Slot);
+                packet.Write(this.Slot);
                 base.Write(packet);
+            }
+        }
+
+        /// <summary>
+        /// Sent by the client to request a spawn.
+        /// Sent by the server to spawn a player.
+        /// </summary>
+        public class MsgSpawnPacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgSpawn; }
+            }
+
+            public readonly Byte Slot;
+            public readonly Vector2 Position;
+            public readonly Single Rotation;
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgSpawnPacket"/> on the client to request a spawn.
+            /// </summary>
+            public MsgSpawnPacket()
+            {
+                this.Slot = ProtocolInformation.DummySlot;
+                this.Position = Vector2.Zero;
+                this.Rotation = 0;
+            }
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgSpawnPacket"/> on the server to inform about a spawn.
+            /// </summary>
+            public MsgSpawnPacket(Byte slot, Vector2 position, Single rotation)
+            {
+                this.Slot = slot;
+                this.Position = position;
+                this.Rotation = rotation;
+            }
+
+            public static MsgSpawnPacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+                Vector2 position = packet.ReadVector2();
+                Single rotation = packet.ReadSingle();
+
+                return new MsgSpawnPacket(slot, position, rotation);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+                packet.Write(this.Position);
+                packet.Write(this.Rotation);
             }
         }
     }
