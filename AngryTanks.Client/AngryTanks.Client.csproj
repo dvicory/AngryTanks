@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioManager.cs" />
     <Compile Include="Box.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Player\PlayerManager.cs" />
