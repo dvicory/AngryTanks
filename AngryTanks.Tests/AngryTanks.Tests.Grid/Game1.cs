@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using AngryTanks.Common;
+using AngryTanks.Client;
 
 
 namespace AngryTanks.Tests.GridTesting
@@ -123,7 +124,7 @@ namespace AngryTanks.Tests.GridTesting
             nonCollidables.Clear();
             foreach (WorldObject w in allObjects)
             {
-                nonCollidables.Add(w);
+                nonCollidables.Add(w);                
             }
             foreach (WorldObject w in collidables)
             {
@@ -167,7 +168,7 @@ namespace AngryTanks.Tests.GridTesting
 
             //Draw Collidables
             foreach (WorldObject w in collidables)
-            {
+            {                
                 spriteBatch.Draw(RectangleTexture, new Rectangle((int)(w.Position.X - w.Size.X / 2),
                                                                  (int)(w.Position.Y - w.Size.Y / 2),
                                                                  (int)w.Size.X,
