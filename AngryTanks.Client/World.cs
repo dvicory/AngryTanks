@@ -122,6 +122,8 @@ namespace AngryTanks.Client
 
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
+        private AudioManager audiomanager;
+
         public World(Game game, ServerLink serverLink)
             : base(game)
         {
@@ -136,6 +138,7 @@ namespace AngryTanks.Client
 
             // initialize player manager
             this.playerManager = new PlayerManager(this);
+            
         }
 
         protected override void Dispose(bool disposing)
@@ -180,6 +183,9 @@ namespace AngryTanks.Client
 
             graphicsDevice.DeviceReset += GraphicsDeviceReset;
             ServerLink.MessageReceivedEvent += HandleReceivedMessage;
+
+            //setup audio manager
+            audiomanager = new AudioManager(this);
 
             base.Initialize();
         }
@@ -273,6 +279,20 @@ namespace AngryTanks.Client
                 camera.Rotation += 0.01f;
             if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
+
+            // Audio Test key (testing only)
+            if (ks.IsKeyDown(Keys.B))
+                AudioManager.playBoom();
+            if (ks.IsKeyDown(Keys.E))
+                AudioManager.playExplosion();
+            if (ks.IsKeyDown(Keys.F))
+                AudioManager.playFire();
+            if (ks.IsKeyDown(Keys.F4))
+                AudioManager.playFlagAlert();
+            if (ks.IsKeyDown(Keys.F2))
+                AudioManager.playFlagDrop();
+            if (ks.IsKeyDown(Keys.F3))
+                AudioManager.playFlagLost();
         }
 
         public override void Draw(GameTime gameTime)

@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace AngryTanks.Client
 {
-    class AudioManager
+    public class AudioManager
     {
-        ContentManager content;
+        private World world;
         private static SoundEffect boom;
         private static SoundEffect explosion;
         private static SoundEffect fire;
@@ -27,25 +27,25 @@ namespace AngryTanks.Client
 
         public AudioManager(World world)
         {
-            content = world.Content;
+            this.world = world;            
             LoadContent();
         }
 
         private void LoadContent()
         {
-            boom = content.Load<SoundEffect>("audio/bz/boom");
-            explosion = content.Load<SoundEffect>("audio/bz/explosion");
-            fire = content.Load<SoundEffect>("audio/bz/fire");
-            flag_alert = content.Load<SoundEffect>("audio/bz/flag_alert");
-            flag_drop = content.Load<SoundEffect>("audio/bz/flag_drop");
-            flag_grab = content.Load<SoundEffect>("audio/bz/flag_grab");
-            flag_lost = content.Load<SoundEffect>("audio/bz/flag_lost");
-            flag_won = content.Load<SoundEffect>("audio/bz/flag_won");
-            killteam = content.Load<SoundEffect>("audio/bz/killteam");
-            laser = content.Load<SoundEffect>("audio/bz/laser");
-            shock = content.Load<SoundEffect>("audio/bz/shock");
-            steamroller = content.Load<SoundEffect>("audio/bz/steamroller");
-            teamgrab = content.Load<SoundEffect>("audio/bz/teamgrab");
+            boom = world.Content.Load<SoundEffect>("audio/bz/boom");
+            explosion = world.Content.Load<SoundEffect>("audio/bz/explosion");
+            fire = world.Content.Load<SoundEffect>("audio/bz/fire");
+            flag_alert = world.Content.Load<SoundEffect>("audio/bz/flag_alert");
+            flag_drop = world.Content.Load<SoundEffect>("audio/bz/flag_drop");
+            flag_grab = world.Content.Load<SoundEffect>("audio/bz/flag_grab");
+            flag_lost = world.Content.Load<SoundEffect>("audio/bz/flag_lost");
+            flag_won = world.Content.Load<SoundEffect>("audio/bz/flag_won");
+            killteam = world.Content.Load<SoundEffect>("audio/bz/killteam");
+            laser = world.Content.Load<SoundEffect>("audio/bz/laser");
+            shock = world.Content.Load<SoundEffect>("audio/bz/shock");
+            steamroller = world.Content.Load<SoundEffect>("audio/bz/steamroller");
+            teamgrab = world.Content.Load<SoundEffect>("audio/bz/teamgrab");
         }
 
         public static void playBoom()
@@ -56,7 +56,7 @@ namespace AngryTanks.Client
         {
             explosion.Play();
         }
-        public static void playfire()
+        public static void playFire()
         {
             fire.Play();
         }
