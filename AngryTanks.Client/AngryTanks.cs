@@ -53,6 +53,8 @@ namespace AngryTanks.Client
         private bool fullscreen = false;
         private Viewport lastViewport;
 
+        private AudioManager audioManager;
+
         public AngryTanks()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -81,6 +83,9 @@ namespace AngryTanks.Client
 
             gameConsole.PromptReceivedInput += HandlePromptInput;
 
+            // instantiate  AudioManager 
+            audioManager = new AudioManager(this);
+
             // instantiate the world
             world = new World(this, serverLink);
             Components.Add(world);
@@ -106,8 +111,8 @@ namespace AngryTanks.Client
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+            spriteBatch = new SpriteBatch(GraphicsDevice);            
+
             //world.LoadMap(new StreamReader("Content/maps/ducati_style_random.bzw"));
 
             base.LoadContent();

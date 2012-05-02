@@ -120,6 +120,8 @@ namespace AngryTanks.Client
 
         private PlayerManager playerManager;
 
+        private IAudioManager audioManager;
+
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
         public World(Game game, ServerLink serverLink)
@@ -172,6 +174,9 @@ namespace AngryTanks.Client
 
             // get the game console
             console = (IGameConsole)Game.Services.GetService(typeof(IGameConsole));
+
+            // get the audioManager
+            audioManager = (IAudioManager)Game.Services.GetService(typeof(IAudioManager));
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
@@ -273,6 +278,12 @@ namespace AngryTanks.Client
                 camera.Rotation += 0.01f;
             if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
+
+            //audio (testing only)
+            if (ks.IsKeyDown(Keys.B))
+            {
+                audioManager.play("boom");
+            }
         }
 
         public override void Draw(GameTime gameTime)
