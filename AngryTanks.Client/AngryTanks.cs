@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using NDesk.Options;
+using Nuclex.Game.States;
 using Nuclex.Input;
 using log4net;
 
@@ -27,20 +28,13 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        GraphicsDeviceManager graphics;
-        public static InputManager Input;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
         private static ServerLink serverLink;
         public static ServerLink ServerLink
         {
             get { return serverLink; }
-        }
-
-        private static World world;
-        public static World World
-        {
-            get { return world; }
         }
 
         private static GameConsole gameConsole;
@@ -49,6 +43,14 @@ namespace AngryTanks.Client
             get { return gameConsole; }
         }
 
+        private static World world;
+        public static World World
+        {
+            get { return world; }
+        }
+
+        private InputManager input;
+        private GameStateManager gameStateManager;
 
         private bool fullscreen = false;
         private Viewport lastViewport;
@@ -65,12 +67,24 @@ namespace AngryTanks.Client
             // instantiate server link
             serverLink = new ServerLink();
 
-            // down with xna's input!
-            Input = new InputManager(Services, Window.Handle);
-            Components.Add(Input);
-            Input.UpdateOrder = 100;
+            // get GameStateManager up and running
+            gameStateManager = new GameStateManager(Services);
+            Components.Add(gameStateManager);
+            gameStateManager.UpdateOrder = 200;
+            gameStateManager.DrawOrder = 200;
 
-            Input.GetKeyboard().KeyPressed += HandleKeyPress;
+            // down with xna's input!
+            input = new InputManager(Services, Window.Handle);
+            Components.Add(input);
+            input.UpdateOrder = 100;
+
+            input.GetKeyboard().KeyPressed += HandleKeyPress;
+
+            // instantiate world
+            world = new World(Services, serverLink);
+            world.UpdateOrder = 500;
+            world.DrawOrder = 500;
+            Components.Add(world);
 
             // instantiate game console
             gameConsole = new GameConsole(this, new Vector2(0, 400), new Vector2(800, 200),
@@ -80,12 +94,6 @@ namespace AngryTanks.Client
             gameConsole.DrawOrder = 1000;
 
             gameConsole.PromptReceivedInput += HandlePromptInput;
-
-            // instantiate the world
-            world = new World(this, serverLink);
-            Components.Add(world);
-            world.UpdateOrder = 100;
-            world.DrawOrder = 100;
         }
 
         /// <summary>
@@ -294,14 +302,15 @@ namespace AngryTanks.Client
 
             if (world != null)
             {
+                Components.Remove(world);
                 world.Dispose();
                 world = null;
             }
 
-            world = new World(this, serverLink);
+            world = new World(Services, serverLink);
+            world.UpdateOrder = 500;
+            world.DrawOrder = 500;
             Components.Add(world);
-            world.UpdateOrder = 100;
-            world.DrawOrder = 100;
 
             Console.WriteLine("Connecting to server.");
             serverLink.Connect(host, port, callsign, tag, team);
@@ -311,14 +320,15 @@ namespace AngryTanks.Client
         {
             if (world != null)
             {
+                Components.Remove(world);
                 world.Dispose();
                 world = null;
             }
 
-            world = new World(this, serverLink);
+            world = new World(Services, serverLink);
+            world.UpdateOrder = 500;
+            world.DrawOrder = 500;
             Components.Add(world);
-            world.UpdateOrder = 100;
-            world.DrawOrder = 100;
 
             Console.WriteLine("Disconnecting from server.");
             serverLink.Disconnect(reason);

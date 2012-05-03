@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using log4net;
+using Nuclex.Game;
 
 using AngryTanks.Common;
 using AngryTanks.Common.Messages;
@@ -20,7 +21,7 @@ using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
-    public class World : DrawableGameComponent
+    public class World : GraphicsDeviceDrawableComponent
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -101,7 +102,7 @@ namespace AngryTanks.Client
 
         #endregion
 
-        private GraphicsDevice graphicsDevice;
+        private IServiceProvider IService;
         private SpriteBatch spriteBatch;
 
         // textures
@@ -122,9 +123,11 @@ namespace AngryTanks.Client
 
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
-        public World(Game game, ServerLink serverLink)
-            : base(game)
+        public World(IServiceProvider iservice, ServerLink serverLink)
+            : base(iservice)
         {
+            this.IService = iservice;
+
             this.serverLink = serverLink;
 
             this.tiled = new List<Sprite>();
@@ -136,42 +139,46 @@ namespace AngryTanks.Client
 
             // initialize player manager
             this.playerManager = new PlayerManager(this);
+
+            ServerLink.MessageReceivedEvent += HandleReceivedMessage;
         }
 
-        protected override void Dispose(bool disposing)
+        public override void Dispose()
         {
-            if (disposing)
-            {
-                playerManager.Dispose();
-                playerManager = null;
+            playerManager.Dispose();
+            playerManager = null;
 
-                mapObjects.Clear();
-                tiled.Clear();
-                stretched.Clear();
+            mapObjects.Clear();
+            tiled.Clear();
+            stretched.Clear();
 
-                spriteBatch.Dispose();
-                content.Unload();
+            spriteBatch.Dispose();
+            content.Unload();
 
-                graphicsDevice.DeviceReset -= GraphicsDeviceReset;
-                ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
-            }
+            GraphicsDevice.DeviceReset -= GraphicsDeviceReset;
+            ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
 
-            base.Dispose(disposing);
+            base.Dispose();
+        }
+
+        private void GraphicsDeviceReset(object sender, EventArgs e)
+        {
+            camera.Viewport = GraphicsDevice.Viewport;
         }
 
         public override void Initialize()
         {
-            // get our graphics device
-            graphicsDevice = Game.GraphicsDevice;
-
             // create our content manager
-            content = new ContentManager(Game.Services, Game.Content.RootDirectory);
+            content = new ContentManager(IService, "Content");
+
+            IGraphicsDeviceService graphicsDeviceService = (IGraphicsDeviceService)IService.GetService(typeof(IGraphicsDeviceService));
+            GraphicsDevice graphicsDevice = graphicsDeviceService.GraphicsDevice;
 
             // create our spritebatch
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // get the game console
-            console = (IGameConsole)Game.Services.GetService(typeof(IGameConsole));
+            console = (IGameConsole)IService.GetService(typeof(IGameConsole));
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
@@ -179,14 +186,8 @@ namespace AngryTanks.Client
             camera.LookAt(Vector2.Zero);
 
             graphicsDevice.DeviceReset += GraphicsDeviceReset;
-            ServerLink.MessageReceivedEvent += HandleReceivedMessage;
 
             base.Initialize();
-        }
-
-        private void GraphicsDeviceReset(object sender, EventArgs e)
-        {
-            camera.Viewport = graphicsDevice.Viewport;
         }
 
         protected override void LoadContent()
@@ -284,11 +285,11 @@ namespace AngryTanks.Client
                               camera.GetViewMatrix());
 
             // magic to tile
-            graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
             RectangleF bgRect = new RectangleF(camera.CameraPosition,
-                                               new Vector2(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
+                                               new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
 
             Single resizeByX = Math.Abs(camera.Origin.X / camera.Zoom);
             Single resizeByY = Math.Abs(camera.Origin.Y / camera.Zoom);
@@ -323,8 +324,8 @@ namespace AngryTanks.Client
                               camera.GetViewMatrix());
 
             // using wrapping
-            graphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            graphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
             mapObjects.TryGetValue("tiled", out tiled);
             foreach (Sprite mapObject in tiled)

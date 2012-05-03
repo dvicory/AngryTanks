@@ -166,6 +166,10 @@
       <Project>{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\References\Nuclex.Framework.r1242\framework\Nuclex.Game\Nuclex.Game %28xna-3.1-x86%29.csproj">
+      <Project>{B073F1E8-7873-48AC-A52F-09FF77CB034F}</Project>
+      <Name>Nuclex.Game %28xna-3.1-x86%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\References\Nuclex.Framework.r1242\framework\Nuclex.Input\Nuclex.Input %28xna-3.1-x86%29.csproj">
       <Project>{C4FD0A4A-303E-468B-B2B2-790691B11FB5}</Project>
       <Name>Nuclex.Input %28xna-3.1-x86%29</Name>
