@@ -102,7 +102,7 @@ namespace AngryTanks.Client
 
         #endregion
 
-        private IServiceProvider IService;
+        public IServiceProvider IService;
         private SpriteBatch spriteBatch;
 
         // textures

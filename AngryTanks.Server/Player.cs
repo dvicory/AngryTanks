@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 using log4net;
 using Lidgren.Network;
@@ -62,6 +63,10 @@ namespace AngryTanks.Server
         /// <param name="lastUpdate"></param>
         public void Update(DateTime lastUpdate)
         {
+            // TODO wait to spawn until explodeTime has elapsed
+            if (State == PlayerState.Dead)
+                Spawn();
+
             return;
         }
 
@@ -81,6 +86,10 @@ namespace AngryTanks.Server
 
                 case MessageType.MsgPlayerClientUpdate:
                     BroadcastUpdate(incomingMsg);
+                    break;
+
+                case MessageType.MsgDeath:
+                    Die(incomingMsg);
                     break;
 
                 default:
@@ -132,16 +141,6 @@ namespace AngryTanks.Server
             
             // TODO send scores and such...
 
-            // let them know we're ready to move on, and give him his slot
-            NetOutgoingMessage stateMessage = gameKeeper.Server.CreateMessage();
-
-            MsgStatePacket statePacket = new MsgStatePacket(Slot);
-
-            stateMessage.Write((Byte)MessageType.MsgState);
-            statePacket.Write(stateMessage);
-
-            SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
-
             // send back one last MsgAddPlayer with their full information (which could be changed!)
             addPlayerMessage = gameKeeper.Server.CreateMessage();
 
@@ -152,8 +151,20 @@ namespace AngryTanks.Server
 
             SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
-            // we're now ready to move to the spawn state
+            // let them know we're ready to move on, and give him his slot
+            NetOutgoingMessage stateMessage = gameKeeper.Server.CreateMessage();
+
+            MsgStatePacket statePacket = new MsgStatePacket(Slot);
+
+            stateMessage.Write((Byte)MessageType.MsgState);
+            statePacket.Write(stateMessage);
+
+            SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // we're now ready to move to the spawn state and spawn
             this.state = PlayerState.Spawning;
+
+            this.Spawn();
         }
 
         /// <summary>
@@ -173,6 +184,51 @@ namespace AngryTanks.Server
 
             // send to everyone but us
             gameKeeper.Server.SendToAll(serverUpdateMessage, this.Connection, NetDeliveryMethod.UnreliableSequenced, 0);
+        }
+
+        /// <summary>
+        /// Spawns the <see cref="Player"/> and notifies all other <see cref="Player"/>s about it.
+        /// </summary>
+        public void Spawn()
+        {
+            // create our spawn message and packet
+            NetOutgoingMessage spawnMessage = gameKeeper.Server.CreateMessage();
+
+            MsgSpawnPacket spawnPacket = new MsgSpawnPacket(this.Slot, Vector2.Zero, 0);
+
+            // write to the message
+            spawnMessage.Write((Byte)MessageType.MsgSpawn);
+            spawnPacket.Write(spawnMessage);
+
+            // send the spawn message to everyone
+            gameKeeper.Server.SendToAll(spawnMessage, null, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // they're now alive as far as we're concerned
+            state = PlayerState.Alive;
+        }
+
+        /// <summary>
+        /// Handles death reports by players and broadcasts that to all other <see cref="Player"/>s.
+        /// </summary>
+        /// <param name="incomingMessage"></param>
+        public void Die(NetIncomingMessage incomingMessage)
+        {
+            MsgDeathPacket incomingDeathPacket = MsgDeathPacket.Read(incomingMessage);
+
+            // create our death message and packet
+            NetOutgoingMessage deathMessage = gameKeeper.Server.CreateMessage();
+
+            MsgDeathPacket deathPacket = new MsgDeathPacket(this.Slot, incomingDeathPacket.Killer);
+
+            // write to the message
+            deathMessage.Write((Byte)MessageType.MsgDeath);
+            deathPacket.Write(deathMessage);
+
+            // send the death message to everyone except the player who reported it
+            gameKeeper.Server.SendToAll(deathMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // they're now dead as far as we're concerned
+            state = PlayerState.Dead;
         }
 
         #region Connection Helpers

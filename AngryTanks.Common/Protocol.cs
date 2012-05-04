@@ -9,9 +9,11 @@ namespace AngryTanks.Common
     {
         public static class ProtocolInformation
         {
-            public static readonly UInt16 ProtocolVersion = 7;
+            public static readonly UInt16 ProtocolVersion = 8;
             public static readonly Byte MaxPlayers = 100;
             public static readonly Byte DummySlot = 255;
+            public static readonly Byte MaxShots = 100;
+            public static readonly Byte DummyShot = Byte.MaxValue;
         }
 
         public enum MessageType
@@ -25,6 +27,7 @@ namespace AngryTanks.Common
             MsgWorld,
             MsgPlayerClientUpdate, // from client to server
             MsgPlayerServerUpdate, // from server to client
+            MsgDeath,
             MsgSpawn
         }
 
@@ -52,9 +55,10 @@ namespace AngryTanks.Common
             None,
             Joining,
             Leaving,
+            Exploding,
             Dead,
             Alive,
-            Spawning,
+            Spawning
         }
 
         public static class ProtocolHelpers

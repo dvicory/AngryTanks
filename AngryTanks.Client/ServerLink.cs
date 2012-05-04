@@ -307,6 +307,28 @@ namespace AngryTanks.Client
                         break;
                     }
 
+                case MessageType.MsgDeath:
+                    {
+                        Log.DebugFormat("Got MsgDeath ({0} bytes)", msg.LengthBytes);
+
+                        MsgDeathPacket packet = MsgDeathPacket.Read(msg);
+
+                        FireMessageEvent(gameTime, packet);
+
+                        break;
+                    }
+
+                case MessageType.MsgSpawn:
+                    {
+                        Log.DebugFormat("Got MsgSpawn ({0} bytes)", msg.LengthBytes);
+
+                        MsgSpawnPacket packet = MsgSpawnPacket.Read(msg);
+
+                        FireMessageEvent(gameTime, packet);
+
+                        break;
+                    }
+
                 case MessageType.MsgWorld:
                     {
                         Log.DebugFormat("Got MsgWorld ({0} bytes)", msg.LengthBytes);

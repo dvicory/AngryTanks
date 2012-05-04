@@ -553,6 +553,53 @@ namespace AngryTanks.Common
         /// Sent by the client to request a spawn.
         /// Sent by the server to spawn a player.
         /// </summary>
+        public class MsgDeathPacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgDeath; }
+            }
+
+            public readonly Byte Slot;
+            public readonly Byte Killer;
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgDeathPacket"/> on the client to tell the server it got killed.
+            /// </summary>
+            public MsgDeathPacket(Byte killer)
+            {
+                this.Slot = ProtocolInformation.DummySlot;
+                this.Killer = killer;
+            }
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgDeathPacket"/> on the server to inform about a death.
+            /// </summary>
+            public MsgDeathPacket(Byte slot, Byte killer)
+            {
+                this.Slot = slot;
+                this.Killer = killer;
+            }
+
+            public static MsgDeathPacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+                Byte killer = packet.ReadByte();
+
+                return new MsgDeathPacket(slot, killer);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+                packet.Write(this.Killer);
+            }
+        }
+
+        /// <summary>
+        /// Sent by the client to request a spawn.
+        /// Sent by the server to spawn a player.
+        /// </summary>
         public class MsgSpawnPacket : MsgBasePacket
         {
             public override MessageType MsgType

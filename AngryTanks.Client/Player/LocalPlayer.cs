@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using Lidgren.Network;
+using Nuclex.Input;
 using log4net;
 
 using AngryTanks.Common;
@@ -28,6 +29,7 @@ namespace AngryTanks.Client
         private TimeSpan msgUpdateFrequency;
 
         private KeyboardState kb;
+        private IInputService inputService;
 
         private Single velocityFactor, angularVelocityFactor;
         private Single maxVelocity, maxAngularVelocity;
@@ -41,12 +43,62 @@ namespace AngryTanks.Client
             // TODO support if these variables change
             this.maxVelocity = (Single)World.VarDB["tankSpeed"].Value;
             this.maxAngularVelocity = (Single)World.VarDB["tankAngVel"].Value;
+
+            inputService = (IInputService)World.IService.GetService(typeof(IInputService));
+            inputService.GetKeyboard().KeyPressed += KeyPressed;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // unregister event handlers
+                try
+                {
+                    inputService.GetKeyboard().KeyPressed -= KeyPressed;
+                }
+                // our input service disposed before we did... a dirty hack
+                catch (NullReferenceException e)
+                {
+                    Log.Error(e.Message);
+                    Log.Error(e.StackTrace);
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private void KeyPressed(Keys key)
+        {
+            switch (key)
+            {
+                // kill ourselves if we hit delete
+                case Keys.Delete:
+                    Die(this);
+                    break;
+
+                // shoot when you hit enter
+                case Keys.Enter:
+                    Shoot();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
             kb = Keyboard.GetState();
 
+            if (State == PlayerState.Alive)
+                UpdatePosition(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        private void UpdatePosition(GameTime gameTime)
+        {
             /*  Basing my calculations on this:
              *  Velocity.X = VelocityFactor * MaxVelocity.X * cos(Rotation)
              *  Velocity.Y = VelocityFactor * MaxVelocity.X * sin(Rotation)
@@ -73,8 +125,10 @@ namespace AngryTanks.Client
 
             if (kb.IsKeyDown(Keys.W) || kb.IsKeyDown(Keys.S))
             {
-                newVelocity.X = velocityFactor * maxVelocity * (Single)Math.Cos(Rotation - Math.PI / 2);
-                newVelocity.Y = velocityFactor * maxVelocity * (Single)Math.Sin(Rotation - Math.PI / 2);
+                newVelocity = new Vector2((Single)Math.Cos(Rotation - Math.PI / 2),
+                                          (Single)Math.Sin(Rotation - Math.PI / 2));
+
+                newVelocity *= velocityFactor *= maxVelocity;
             }
             else
             {
@@ -91,13 +145,9 @@ namespace AngryTanks.Client
                 angularVelocityFactor = 0;
 
             if (kb.IsKeyDown(Keys.A) || kb.IsKeyDown(Keys.D))
-            {
                 newAngularVelocity = angularVelocityFactor * maxAngularVelocity;
-            }
             else
-            {
                 newAngularVelocity = 0;
-            }
 
             // update based on newly found out velocities/positions
             Velocity = (oldVelocity + newVelocity) * 0.5f;
@@ -135,8 +185,6 @@ namespace AngryTanks.Client
 
                 World.ServerLink.SendMessage(playerClientUpdateMessage, NetDeliveryMethod.UnreliableSequenced, 0);
             }
-
-            base.Update(gameTime);
         }
 
         protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)

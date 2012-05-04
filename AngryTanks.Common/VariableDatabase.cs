@@ -144,7 +144,7 @@ namespace AngryTanks.Common
             AddVariable("shotSlots",
                         "Number of shot slots", 5, typeof(UInt16));
             AddVariable("shotSpeed",
-                        "Speed of shots", 100f, typeof(Single));
+                        "Speed of shots", 50f, typeof(Single));
             AddVariable("tankAngVel",
                         "Angular speed (radians/sec) of the tank", (Single)Math.PI / 2, typeof(Single));
             AddVariable("tankLength",

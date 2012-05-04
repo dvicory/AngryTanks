@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Lidgren.Network;
 using log4net;
 
 using AngryTanks.Common;
@@ -61,6 +62,8 @@ namespace AngryTanks.Client
 
         #endregion
 
+        public Dictionary<Byte, Shot> Shots = new Dictionary<Byte, Shot>();
+
         public Player(World world, PlayerInformation playerInfo)
             : base(world, GetTexture(world, playerInfo), Vector2.Zero, GetTankSize(world, playerInfo), 0)
         {
@@ -91,18 +94,114 @@ namespace AngryTanks.Client
         protected static Texture2D GetTexture(World world, PlayerInformation playerInfo)
         {
             // TODO get the correct texture depending on team
-            return world.Content.Load<Texture2D>("textures/tank_white");
+            return world.Content.Load<Texture2D>("textures/tank_rogue");
         }
 
         protected static Vector2 GetTankSize(World world, PlayerInformation playerInfo)
         {
-            // TODO get size from variable database
-            return new Vector2(4.86f, 6);
+            return new Vector2((Single)world.VarDB["tankWidth"].Value,
+                               (Single)world.VarDB["tankLength"].Value);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            // move straight into dead state if we're exploding since we have no logic for exploding yet
+            if (State == PlayerState.Exploding)
+                state = PlayerState.Dead;
+
+            // update all our shots
+            List<Shot> shots = Shots.Values.ToList();
+            foreach (Shot shot in shots)
+            {
+                shot.Update(gameTime);
+
+                if (shot.State == ShotState.None)
+                    Shots.Remove(shot.Slot);
+            }
+
+            base.Update(gameTime);
         }
 
         protected virtual void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
+            switch (message.MessageType)
+            {
+                case MessageType.MsgSpawn:
+                    {
+                        MsgSpawnPacket packet = (MsgSpawnPacket)message.MessageData;
+
+                        // only interested in it if it's us that is spawning
+                        if (packet.Slot == this.Slot)
+                        {
+                            // set position and rotation...
+                            Position = newPosition = oldPosition = packet.Position;
+                            Rotation = newRotation = oldRotation = packet.Rotation;
+
+                            // reset camera
+                            World.Camera.Zoom = 1;
+                            World.Camera.PanPosition = Vector2.Zero;
+
+                            // move into alive state
+                            state = PlayerState.Alive;
+                        }
+
+                        break;
+                    }
+
+                case MessageType.MsgDeath:
+                    {
+                        MsgDeathPacket packet = (MsgDeathPacket)message.MessageData;
+
+                        // only interested in it if it's us that was killed
+                        if (packet.Slot == this.Slot)
+                        {
+                            // move into exploding state
+                            state = PlayerState.Exploding;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+
             return;
+        }
+
+        protected virtual void Die(Player killer)
+        {
+            // send out the death packet right away
+            NetOutgoingMessage deathMessage = World.ServerLink.CreateMessage();
+
+            MsgDeathPacket deathPacket = new MsgDeathPacket(killer.Slot);
+
+            deathMessage.Write((Byte)MessageType.MsgDeath);
+            deathPacket.Write(deathMessage);
+
+            World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // move into the exploding state
+            state = PlayerState.Exploding;
+        }
+
+        protected virtual Byte Shoot()
+        {
+            // find first available shot ID
+            Byte shotSlot = Shot.AllocateSlot(Shots);
+
+            // no more shot slots
+            if (shotSlot == ProtocolInformation.DummyShot)
+                return shotSlot;
+
+            // get starting position
+            Vector2 front = Bounds.LowerLeft - Bounds.UpperLeft;
+            Vector2 initialPosition = Position - front;
+
+            // create the shot
+            Shots[shotSlot] = new Shot(World, World.Content.Load<Texture2D>("textures/bz/rogue_bolt"), initialPosition, Rotation, Velocity, shotSlot, this);
+
+            return shotSlot;
         }
 
         /// <summary>
@@ -113,7 +212,7 @@ namespace AngryTanks.Client
         public virtual void DrawCallsign(GameTime gameTime, SpriteBatch spriteBatch)
         {
             SpriteFont font = World.Content.Load<SpriteFont>("fonts/ConsoleFont14");
-            Vector2 side = Bounds.UpperRight - Bounds.LowerRight;
+            Vector2 side = Bounds.UpperLeft - Bounds.LowerLeft;
             Vector2 position = Position - side;
 
             Vector2 pixelPosition = World.WorldUnitsToPixels(position);
@@ -131,6 +230,16 @@ namespace AngryTanks.Client
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            // draw all our shots
+            foreach (Shot shot in Shots.Values)
+            {
+                shot.Draw(gameTime, spriteBatch);
+            }
+
+            // if we're dead, there's nothing to draw
+            if (State == PlayerState.Dead)
+                return;
+
             DrawCallsign(gameTime, spriteBatch);
 
             DrawStretched(gameTime, spriteBatch);
