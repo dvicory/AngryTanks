@@ -20,7 +20,7 @@ namespace AngryTanks.Client
             get;
             set;
         }
-        
+
         public byte TeamKills
         {
             get;
@@ -29,9 +29,58 @@ namespace AngryTanks.Client
 
         public Int32 Score
         {
-            get {return Wins - Losses - TeamKills;}            
-        }        
+            get { return Wins - Losses - TeamKills; }
+        }
 
         #endregion
+
+        public Score()
+        {
+            Wins = 0;
+            Losses = 0;
+            TeamKills = 0;
+        }
+
+        public bool operator >(Score x, Score y)
+        {
+            if (x.Score > y.Score)
+                return true;
+            return false;
+        }
+
+        public bool operator <(Score x, Score y)
+        {
+            if (x.Score < y.Score)
+                return true;
+            return false;
+        }
+
+        public bool operator ==(Score x, Score y)
+        {
+            if (x.Score == y.Score)
+                return true;
+            return false;
+        }
+
+        public bool operator !=(Score x, Score y)
+        {
+            if (x.Score != y.Score)
+                return true;
+            return false;
+        }
+
+        public override bool Equals(System.Object o)
+        {
+            if (o == null || this.GetType() != o.GetType())
+                return false;
+            return (this.Score == ((Score)o).Score);
+        }
+
+        public override int GetHashCode()
+        {
+            return (this.Score);
+        }
     }
+
+
 }
