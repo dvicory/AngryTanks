@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AngryTanks.Client
 {
-    public class Score
+    public class Stats
     {
         #region Properties
 
@@ -34,35 +34,35 @@ namespace AngryTanks.Client
 
         #endregion
 
-        public Score()
+        public Stats()
         {
             Wins = 0;
             Losses = 0;
             TeamKills = 0;
         }
 
-        public bool operator >(Score x, Score y)
+        public static bool operator >(Stats x, Stats y)
         {
             if (x.Score > y.Score)
                 return true;
             return false;
         }
 
-        public bool operator <(Score x, Score y)
+        public static bool operator <(Stats x, Stats y)
         {
             if (x.Score < y.Score)
                 return true;
             return false;
         }
 
-        public bool operator ==(Score x, Score y)
+        public static bool operator ==(Stats x, Stats y)
         {
             if (x.Score == y.Score)
                 return true;
             return false;
         }
 
-        public bool operator !=(Score x, Score y)
+        public static bool operator !=(Stats x, Stats y)
         {
             if (x.Score != y.Score)
                 return true;
@@ -73,7 +73,7 @@ namespace AngryTanks.Client
         {
             if (o == null || this.GetType() != o.GetType())
                 return false;
-            return (this.Score == ((Score)o).Score);
+            return (this.Score == ((Stats)o).Score);
         }
 
         public override int GetHashCode()

@@ -183,7 +183,7 @@ namespace AngryTanks.Client
             console = (IGameConsole)IService.GetService(typeof(IGameConsole));
 
             // get the audioManager
-            audioManager = (IAudioManager)Game.Services.GetService(typeof(IAudioManager));            
+            audioManager = (IAudioManager)IService.GetService(typeof(IAudioManager));            
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
