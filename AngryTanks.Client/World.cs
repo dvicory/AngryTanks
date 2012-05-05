@@ -121,6 +121,8 @@ namespace AngryTanks.Client
 
         private PlayerManager playerManager;
 
+        private IAudioManager audioManager;        
+
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
         public World(IServiceProvider iservice, ServerLink serverLink)
@@ -138,7 +140,7 @@ namespace AngryTanks.Client
             this.varDB = new VariableDatabase();
 
             // initialize player manager
-            this.playerManager = new PlayerManager(this);
+            this.playerManager = new PlayerManager(this);            
 
             ServerLink.MessageReceivedEvent += HandleReceivedMessage;
         }
@@ -179,6 +181,9 @@ namespace AngryTanks.Client
 
             // get the game console
             console = (IGameConsole)IService.GetService(typeof(IGameConsole));
+
+            // get the audioManager
+            audioManager = (IAudioManager)Game.Services.GetService(typeof(IAudioManager));            
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
@@ -225,8 +230,8 @@ namespace AngryTanks.Client
 
             // update the players
             if (playerManager != null)
-                playerManager.Update(gameTime);
-
+                playerManager.Update(gameTime);            
+           
             // now finally track the tank (disregards any panning)
             // smoothstep helps smooth the camera if player gets stuck
             if (playerManager != null && playerManager.LocalPlayer != null)
@@ -274,6 +279,12 @@ namespace AngryTanks.Client
                 camera.Rotation += 0.01f;
             if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
+
+            //audio (testing only)
+            if (ks.IsKeyDown(Keys.B))
+            {
+                audioManager.play("boom");
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -346,6 +357,8 @@ namespace AngryTanks.Client
 
             spriteBatch.End();
 
+            // FIFTH Draw pass: draw the HUD components.
+           
             base.Draw(gameTime);
         }
 
