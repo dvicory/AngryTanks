@@ -59,6 +59,12 @@ namespace AngryTanks.Client
             get { return state; }
         }
 
+        public Score PlayerScore
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         public Player(World world, PlayerInformation playerInfo)
