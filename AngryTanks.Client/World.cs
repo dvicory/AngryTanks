@@ -120,7 +120,7 @@ namespace AngryTanks.Client
 
         private PlayerManager playerManager;
 
-        private IAudioManager audioManager;
+        private IAudioManager audioManager;        
 
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
@@ -137,7 +137,7 @@ namespace AngryTanks.Client
             this.varDB = new VariableDatabase();
 
             // initialize player manager
-            this.playerManager = new PlayerManager(this);
+            this.playerManager = new PlayerManager(this);            
         }
 
         protected override void Dispose(bool disposing)
@@ -176,7 +176,7 @@ namespace AngryTanks.Client
             console = (IGameConsole)Game.Services.GetService(typeof(IGameConsole));
 
             // get the audioManager
-            audioManager = (IAudioManager)Game.Services.GetService(typeof(IAudioManager));
+            audioManager = (IAudioManager)Game.Services.GetService(typeof(IAudioManager));            
 
             // setup camera
             camera = new Camera(graphicsDevice.Viewport);
@@ -229,8 +229,8 @@ namespace AngryTanks.Client
 
             // update the players
             if (playerManager != null)
-                playerManager.Update(gameTime);
-
+                playerManager.Update(gameTime);            
+           
             // now finally track the tank (disregards any panning)
             // smoothstep helps smooth the camera if player gets stuck
             if (playerManager != null && playerManager.LocalPlayer != null)
@@ -356,6 +356,8 @@ namespace AngryTanks.Client
 
             spriteBatch.End();
 
+            // FIFTH Draw pass: draw the HUD components.
+           
             base.Draw(gameTime);
         }
 

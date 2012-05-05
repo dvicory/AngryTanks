@@ -102,6 +102,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="AngryTanks.cs" />
     <Compile Include="Pyramid.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="ServerLink.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="StaticSprite.cs" />

@@ -47,8 +47,7 @@ namespace AngryTanks.Client
         public static GameConsole Console
         {
             get { return gameConsole; }
-        }
-
+        }              
 
         private bool fullscreen = false;
         private Viewport lastViewport;
@@ -82,7 +81,7 @@ namespace AngryTanks.Client
             gameConsole.DrawOrder = 1000;
 
             gameConsole.PromptReceivedInput += HandlePromptInput;
-
+            
             // instantiate  AudioManager 
             audioManager = new AudioManager(this);
 
