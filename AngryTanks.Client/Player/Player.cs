@@ -60,6 +60,12 @@ namespace AngryTanks.Client
             get { return state; }
         }
 
+        public Stats PlayerStats
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         public Dictionary<Byte, Shot> Shots = new Dictionary<Byte, Shot>();
