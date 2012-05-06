@@ -5,23 +5,23 @@ using System.Text;
 
 namespace AngryTanks.Client
 {
-    public class Stats
+    public class Stats : IComparable, IEquatable<Stats>
     {
         #region Properties
 
-        public byte Wins
+        public Int32 Wins
         {
             get;
             set;
         }
 
-        public byte Losses
+        public Int32 Losses
         {
             get;
             set;
         }
 
-        public byte TeamKills
+        public Int32 Teamkills
         {
             get;
             set;
@@ -29,58 +29,74 @@ namespace AngryTanks.Client
 
         public Int32 Score
         {
-            get { return Wins - Losses - TeamKills; }
+            get { return Wins - Losses - Teamkills; }
         }
 
         #endregion
 
         public Stats()
         {
-            Wins = 0;
-            Losses = 0;
-            TeamKills = 0;
+            this.Wins      = 0;
+            this.Losses    = 0;
+            this.Teamkills = 0;
         }
 
         public static bool operator >(Stats x, Stats y)
         {
             if (x.Score > y.Score)
                 return true;
+
             return false;
         }
 
         public static bool operator <(Stats x, Stats y)
         {
-            if (x.Score < y.Score)
-                return true;
-            return false;
+            return !(x > y);
         }
 
         public static bool operator ==(Stats x, Stats y)
         {
             if (x.Score == y.Score)
                 return true;
+
             return false;
         }
 
         public static bool operator !=(Stats x, Stats y)
         {
-            if (x.Score != y.Score)
-                return true;
-            return false;
+            return !(x == y);
         }
 
-        public override bool Equals(System.Object o)
+        public override bool Equals(Object o)
         {
             if (o == null || this.GetType() != o.GetType())
                 return false;
-            return (this.Score == ((Stats)o).Score);
+
+            return (this == (Stats)o);
+        }
+
+        public virtual bool Equals(Stats o)
+        {
+            if (o == null)
+                return false;
+
+            return (this == o);
         }
 
         public override int GetHashCode()
         {
-            return (this.Score);
+            return this.Score;
+        }
+
+        public int CompareTo(Object o)
+        {
+            if (o is Stats)
+            {
+                Stats temp = (Stats)o;
+                return this.Score.CompareTo(temp.Score);
+            }
+
+            throw new ArgumentException("object is not a Stats");
         }
     }
-
-
 }
