@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioManager.cs" />
     <Compile Include="Box.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Player\PlayerManager.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="AngryTanks.cs" />
     <Compile Include="Pyramid.cs" />
+    <Compile Include="Stats.cs" />
     <Compile Include="ServerLink.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="StaticSprite.cs" />
