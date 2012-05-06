@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangleF.cs" />
     <Compile Include="RotatedRectangle.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="UniqueList.cs" />
     <Compile Include="VariableDatabase.cs" />
   </ItemGroup>

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AngryTanks.Client
+namespace AngryTanks.Common
 {
-    public class Stats : IComparable, IEquatable<Stats>
+    public class Score : IComparable, IEquatable<Score>
     {
         #region Properties
 
@@ -27,42 +27,42 @@ namespace AngryTanks.Client
             set;
         }
 
-        public Int32 Score
+        public Int32 Overall
         {
             get { return Wins - Losses - Teamkills; }
         }
 
         #endregion
 
-        public Stats()
+        public Score()
         {
             this.Wins      = 0;
             this.Losses    = 0;
             this.Teamkills = 0;
         }
 
-        public static bool operator >(Stats x, Stats y)
+        public static bool operator >(Score x, Score y)
         {
-            if (x.Score > y.Score)
+            if (x.Overall > y.Overall)
                 return true;
 
             return false;
         }
 
-        public static bool operator <(Stats x, Stats y)
+        public static bool operator <(Score x, Score y)
         {
             return !(x > y);
         }
 
-        public static bool operator ==(Stats x, Stats y)
+        public static bool operator ==(Score x, Score y)
         {
-            if (x.Score == y.Score)
+            if (x.Overall == y.Overall)
                 return true;
 
             return false;
         }
 
-        public static bool operator !=(Stats x, Stats y)
+        public static bool operator !=(Score x, Score y)
         {
             return !(x == y);
         }
@@ -72,10 +72,10 @@ namespace AngryTanks.Client
             if (o == null || this.GetType() != o.GetType())
                 return false;
 
-            return (this == (Stats)o);
+            return (this == (Score)o);
         }
 
-        public virtual bool Equals(Stats o)
+        public virtual bool Equals(Score o)
         {
             if (o == null)
                 return false;
@@ -85,18 +85,18 @@ namespace AngryTanks.Client
 
         public override int GetHashCode()
         {
-            return this.Score;
+            return this.Overall;
         }
 
         public int CompareTo(Object o)
         {
-            if (o is Stats)
+            if (o is Score)
             {
-                Stats temp = (Stats)o;
-                return this.Score.CompareTo(temp.Score);
+                Score temp = (Score)o;
+                return this.Overall.CompareTo(temp.Overall);
             }
 
-            throw new ArgumentException("object is not a Stats");
+            throw new ArgumentException("object is not a Score");
         }
     }
 }

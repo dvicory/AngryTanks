@@ -60,7 +60,7 @@ namespace AngryTanks.Client
             get { return state; }
         }
 
-        public Stats PlayerStats
+        public Score Score
         {
             get;
             set;
