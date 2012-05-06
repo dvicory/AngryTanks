@@ -187,7 +187,6 @@ namespace AngryTanks.Common
             {
                 TypeCode typeCode = (TypeCode)packet.ReadByte();
                 String name = packet.ReadString();
-                String description = packet.ReadString();
                 Object value = ReadValue(packet, typeCode);
 
                 return new MsgSetVariablePacket(name, value, typeCode);

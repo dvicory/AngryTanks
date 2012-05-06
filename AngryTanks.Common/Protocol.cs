@@ -9,7 +9,7 @@ namespace AngryTanks.Common
     {
         public static class ProtocolInformation
         {
-            public static readonly UInt16 ProtocolVersion = 8;
+            public static readonly UInt16 ProtocolVersion = 9;
             public static readonly Byte MaxPlayers = 100;
             public static readonly Byte DummySlot = 255;
             public static readonly Byte MaxShots = 100;
