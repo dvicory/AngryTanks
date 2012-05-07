@@ -372,6 +372,14 @@ namespace AngryTanks.Client
             spriteBatch.End();
 
             // FIFTH Draw pass: draw the HUD components.
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend,
+                              SpriteSortMode.BackToFront,
+                              SaveStateMode.None,
+                              camera.GetViewMatrix());
+
+            scoreHUD.Draw(spriteBatch);
+
+            spriteBatch.End();
            
             base.Draw(gameTime);
         }
