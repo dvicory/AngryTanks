@@ -121,7 +121,9 @@ namespace AngryTanks.Client
 
         private PlayerManager playerManager;
 
-        private IAudioManager audioManager;        
+        private IAudioManager audioManager;
+
+        private ScoreHUD scoreHUD;
 
         private Vector2     lastPlayerPosition; // TODO we shouldn't store this here
 
@@ -140,7 +142,10 @@ namespace AngryTanks.Client
             this.varDB = new VariableDatabase();
 
             // initialize player manager
-            this.playerManager = new PlayerManager(this);            
+            this.playerManager = new PlayerManager(this); 
+           
+            //initialize scoreHUD
+            this.scoreHUD = new ScoreHUD(this.playerManager);
 
             ServerLink.MessageReceivedEvent += HandleReceivedMessage;
         }
@@ -159,6 +164,9 @@ namespace AngryTanks.Client
 
             GraphicsDevice.DeviceReset -= GraphicsDeviceReset;
             ServerLink.MessageReceivedEvent -= HandleReceivedMessage;
+
+            if(scoreHUD != null)
+                scoreHUD.isActive = false; //Deactivate scoreHUD to prevent NullReferenceException
 
             base.Dispose();
         }
@@ -220,6 +228,9 @@ namespace AngryTanks.Client
             //localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
             //localPlayer = new LocalPlayer(this, new PlayerInformation(0, "test", "test", TeamType.RogueTeam));
 
+            //Load scoreHUD font
+            scoreHUD.LoadContent(Content);
+
             base.LoadContent();
         }
 
@@ -238,6 +249,9 @@ namespace AngryTanks.Client
             {
                 lastPlayerPosition = playerManager.LocalPlayer.Position;
                 camera.LookAt(World.WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, playerManager.LocalPlayer.Position, 0.5f)));
+                
+                //Activate scoreHUD
+                scoreHUD.isActive = true;
             }
 
             base.Update(gameTime);
