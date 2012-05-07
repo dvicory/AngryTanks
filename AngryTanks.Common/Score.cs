@@ -9,6 +9,11 @@ namespace AngryTanks.Common
     {
         #region Properties
 
+        public Int32 Overall
+        {
+            get { return Wins - Losses - Teamkills; }
+        }
+
         public Int32 Wins
         {
             get;
@@ -27,11 +32,6 @@ namespace AngryTanks.Common
             set;
         }
 
-        public Int32 Overall
-        {
-            get { return Wins - Losses - Teamkills; }
-        }
-
         #endregion
 
         public Score()
@@ -41,30 +41,51 @@ namespace AngryTanks.Common
             this.Teamkills = 0;
         }
 
-        public static bool operator >(Score x, Score y)
+        public static bool operator >(Score a, Score b)
         {
-            if (x.Overall > y.Overall)
+            if (((Object)a == null) || ((Object)b == null))
+                return false;
+
+            return a.Overall > b.Overall;
+        }
+
+        public static bool operator <(Score a, Score b)
+        {
+            return !(a > b);
+        }
+
+        public static bool operator >=(Score a, Score b)
+        {
+            if (((Object)a == null) || ((Object)b == null))
+                return false;
+
+            return a.Overall >= b.Overall;
+        }
+
+        public static bool operator <=(Score a, Score b)
+        {
+            if (((Object)a == null) || ((Object)b == null))
+                return false;
+
+            return a.Overall <= b.Overall;
+        }
+
+        public static bool operator ==(Score a, Score b)
+        {
+            if (ReferenceEquals(a, b))
                 return true;
 
-            return false;
+            if (((Object)a == null) || ((Object)b == null))
+                return false;
+
+            return a.Wins      == b.Wins &&
+                   a.Losses    == b.Losses &&
+                   a.Teamkills == b.Teamkills;
         }
 
-        public static bool operator <(Score x, Score y)
+        public static bool operator !=(Score a, Score b)
         {
-            return !(x > y);
-        }
-
-        public static bool operator ==(Score x, Score y)
-        {
-            if (x.Overall == y.Overall)
-                return true;
-
-            return false;
-        }
-
-        public static bool operator !=(Score x, Score y)
-        {
-            return !(x == y);
+            return !(a == b);
         }
 
         public override bool Equals(Object o)
@@ -72,7 +93,7 @@ namespace AngryTanks.Common
             if (o == null || this.GetType() != o.GetType())
                 return false;
 
-            return (this == (Score)o);
+            return this == (Score)o;
         }
 
         public virtual bool Equals(Score o)
@@ -80,7 +101,7 @@ namespace AngryTanks.Common
             if (o == null)
                 return false;
 
-            return (this == o);
+            return this == o;
         }
 
         public override int GetHashCode()
