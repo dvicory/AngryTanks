@@ -75,6 +75,7 @@ namespace AngryTanks.Client
             : base(world, GetTexture(world, playerInfo), Vector2.Zero, GetTankSize(world, playerInfo), 0)
         {
             this.playerInfo = playerInfo;
+            this.Score = new Score(); //Gives scoreHUD a valid reference to start with
 
             World.ServerLink.MessageReceivedEvent += HandleReceivedMessage;
         }
