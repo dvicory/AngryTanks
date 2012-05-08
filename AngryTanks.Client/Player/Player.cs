@@ -15,6 +15,7 @@ using Lidgren.Network;
 using log4net;
 
 using AngryTanks.Common;
+using AngryTanks.Common.Extensions.DictionaryExtensions;
 using AngryTanks.Common.Messages;
 using AngryTanks.Common.Protocol;
 
@@ -116,14 +117,13 @@ namespace AngryTanks.Client
                 state = PlayerState.Dead;
 
             // update all our shots
-            List<Shot> shots = Shots.Values.ToList();
-            foreach (Shot shot in shots)
+            foreach (Shot shot in Shots.Values)
             {
                 shot.Update(gameTime);
-
-                if (shot.State == ShotState.None)
-                    Shots.Remove(shot.Slot);
             }
+
+            // remove all shots that are done
+            Shots.RemoveAll(kvp => kvp.Value.State == ShotState.None);
 
             base.Update(gameTime);
         }
@@ -201,11 +201,12 @@ namespace AngryTanks.Client
                 return shotSlot;
 
             // get starting position
-            Vector2 front = Bounds.LowerLeft - Bounds.UpperLeft;
-            Vector2 initialPosition = Position - front;
+            Single tankLength = (Single)World.VarDB["tankLength"].Value;
+            Vector2 initialPosition = Position + new Vector2((tankLength / 2) * (Single)Math.Cos(Rotation - Math.PI / 2),
+                                                             (tankLength / 2) * (Single)Math.Sin(Rotation - Math.PI / 2));
 
             // create the shot
-            Shots[shotSlot] = new Shot(World, World.Content.Load<Texture2D>("textures/bz/rogue_bolt"), initialPosition, Rotation, Velocity, shotSlot, this);
+            Shots[shotSlot] = new Shot(World, this, shotSlot, initialPosition, Rotation, Velocity);
 
             return shotSlot;
         }

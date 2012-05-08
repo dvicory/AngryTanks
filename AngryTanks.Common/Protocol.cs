@@ -12,7 +12,7 @@ namespace AngryTanks.Common
             public static readonly UInt16 ProtocolVersion = 9;
             public static readonly Byte MaxPlayers = 100;
             public static readonly Byte DummySlot = 255;
-            public static readonly Byte MaxShots = 100;
+            public static readonly Byte MaxShots = 20;
             public static readonly Byte DummyShot = Byte.MaxValue;
         }
 

@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using log4net;
 
+using AngryTanks.Common;
 using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
@@ -29,14 +30,14 @@ namespace AngryTanks.Client
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected ShotState state = ShotState.None;
+        private ShotState state = ShotState.None;
 
         public ShotState State
         {
             get { return state; }
         }
 
-        protected readonly Byte slot;
+        private readonly Byte slot;
 
         public Byte Slot
         {
@@ -44,28 +45,34 @@ namespace AngryTanks.Client
         }
 
         /// <summary>
+        /// <see cref="Player"/> the <see cref="Shot"/> is associated with.
+        /// </summary>
+        private Player player;
+
+        /// <summary>
         /// Stores the position the shot originated from.
         /// </summary>
-        protected Vector2 initialPosition;
+        private Vector2 initialPosition;
 
-        protected Single maxShotRange;
+        /// <summary>
+        /// Maximum distance the shot will travel.
+        /// </summary>
+        private Single maxShotRange;
 
-        protected Player player;
-
-        public Shot(World world, Texture2D texture, Vector2 initialPosition, Single rotation, Vector2 initialVelocity, Byte slot, Player player)
-            : base(world, texture, initialPosition, new Vector2(2, 2), rotation)
+        public Shot(World world, Player player, Byte slot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+            : base(world, GetTexture(world), initialPosition, new Vector2(2, 2), rotation)
         {
             Single shotSpeed = (Single)World.VarDB["shotSpeed"].Value;
 
-            // get the unit vector (direction)
+            // get the unit vector in the forward direction
             Velocity = new Vector2((Single)Math.Cos(Rotation - Math.PI / 2),
                                    (Single)Math.Sin(Rotation - Math.PI / 2));
 
-            // get our shot speed in the correct direction by multiplying by magnitude
+            // get our shot velocity by multiplying by the magnitude
             Velocity *= shotSpeed;
 
             // add the velocity from the tank to the shot
-            Velocity += initialVelocity;
+            //Velocity += initialVelocity;
 
             // store info...
             this.initialPosition = initialPosition;
@@ -79,21 +86,12 @@ namespace AngryTanks.Client
 
         public static Byte AllocateSlot(Dictionary<Byte, Shot> shots)
         {
-            Shot shot;
             Byte earliestSlot = ProtocolInformation.DummyShot;
 
             for (Byte i = 0; i < ProtocolInformation.MaxShots; ++i)
             {
-                // we found a shot at this slot
-                if (shots.TryGetValue(i, out shot))
-                {
-                    // check if it's ended, if it has, we'll use it
-                    if (shot.State == ShotState.None)
-                    {
-                        return i;
-                    }
-                }
-                else
+                // we didn't find a shot at this slot
+                if (!shots.ContainsKey(i))
                 {
                     // we didn't find a shot at i, so let's save this slot in case we make it out of this loop
                     if (i < earliestSlot)
@@ -108,6 +106,12 @@ namespace AngryTanks.Client
             return earliestSlot;
         }
 
+        protected static Texture2D GetTexture(World world)
+        {
+            // TODO get the correct texture depending on team
+            return world.Content.Load<Texture2D>("textures/bz/rogue_bolt");
+        }
+
         public void End()
         {
             // we are no longer moving now
@@ -116,7 +120,7 @@ namespace AngryTanks.Client
             // and we are ending
             state = ShotState.Ending;
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             // if we're starting, move straight to active
@@ -127,6 +131,10 @@ namespace AngryTanks.Client
             // TODO logic to handle explosions while ending
             if (State == ShotState.Ending)
                 state = ShotState.None;
+
+            // bail out now
+            if (State == ShotState.None)
+                return;
 
             // see if we collide with any world objects
             Single overlap;
