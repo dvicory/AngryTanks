@@ -15,15 +15,14 @@ namespace AngryTanks.Common
         #region Properties
 
         // world unit coords of grid cell
-        public readonly short X, Y;
+        public readonly Int16 X, Y;
 
-        // TODO GridLocation probably shouldn't care about its size, keep it lean
-        // public readonly Single Width, Height; -removed
+        // bounds of the grid cell
         public readonly RotatedRectangle Bounds;
 
         #endregion
 
-        public GridLocation(short X, short Y, Vector2 worldCellSize)
+        public GridLocation(Int16 X, Int16 Y, Vector2 worldCellSize)
         {
             this.X = X;
             this.Y = Y;
@@ -35,64 +34,81 @@ namespace AngryTanks.Common
 
         public override int GetHashCode()
         {
-            return (this.X * 10 + this.Y);
+            return this.X ^ this.Y;
         }
 
-        public override bool Equals(System.Object o)
+        public static bool operator ==(GridLocation a, GridLocation b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator !=(GridLocation a, GridLocation b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(Object o)
         {
             if (o == null || this.GetType() != o.GetType())
                 return false;
-            return (this.X == ((GridLocation)o).X && this.Y == ((GridLocation)o).Y);
+
+            return this == (GridLocation)o;
         }
 
-        public static bool operator ==(GridLocation g, GridLocation h)
+        public bool Equals(GridLocation o)
         {
-            if (h.X == g.X && h.Y == g.Y)
-                return true;
+            if (o == null)
+                return false;
 
-            return false;
-        }
-
-        public static bool operator !=(GridLocation g, GridLocation h)
-        {
-            if (h.X != g.X || h.Y != g.Y)
-                return true;
-
-            return false;
+            return this == o;
         }
     }
 
     public class Grid
     {
         private List<IWorldObject> allObjects = new List<IWorldObject>();
-        private Dictionary<GridLocation, List<IWorldObject>> grid
-                = new Dictionary<GridLocation, List<IWorldObject>>();
 
-        // Default Grid values may be overriden by Constructor
-        private Vector2 worldCellSize = new Vector2(50, 50);//World dimensions of each grid cell        
-        private Point minGrid = new Point(-8, -8);          //Upperleft-most coord of Grid
-        private Point maxGrid = new Point(7, 7);            //Lowerright-most coord of Grid
-
-        // Default Constructor applies a 16x16 Grid
-        public Grid(Single worldWidth, Single worldHeight, List<IWorldObject> allObjects)
+        public List<IWorldObject> AllObjects
         {
-            this.allObjects = allObjects;
-            this.worldCellSize.X = worldWidth / 16;
-            this.worldCellSize.Y = worldHeight / 16;
-
-            CutIntoGrid();
+            get { return allObjects; }
         }
 
-        //Accepts user-defined grid size
-        public Grid(Single worldWidth, Single worldHeight, Point grid_size, List<IWorldObject> allObjects)
+        private Dictionary<GridLocation, List<IWorldObject>> grid = new Dictionary<GridLocation, List<IWorldObject>>();
+
+        // grid characteristics
+        private Vector2 cellSize; // world dimensions of each grid cell        
+        private Point gridSize;   // X-by-Y dimensions of grid
+        private Point minGrid;    // upper left most coord of Grid
+        private Point maxGrid;    // lower right most coord of Grid
+
+        /// <summary>
+        /// Constructs a default 16x16 <see cref="Grid"/>.
+        /// </summary>
+        /// <param name="worldSize"></param>
+        /// <param name="allObjects"></param>
+        public Grid(Vector2 worldSize, List<IWorldObject> allObjects)
+            : this(worldSize, new Point(16, 16), allObjects)
+        { }
+
+        /// <summary>
+        /// Constructs a user-defined size <see cref="Grid"/>.
+        /// </summary>
+        /// <param name="worldSize"></param>
+        /// <param name="gridSize"></param>
+        /// <param name="allObjects"></param>
+        public Grid(Vector2 worldSize, Point gridSize, List<IWorldObject> allObjects)
         {
             this.allObjects = allObjects;
-            this.worldCellSize.X = worldWidth / grid_size.X;
-            this.worldCellSize.Y = worldHeight / grid_size.Y;
-            this.minGrid.X = -grid_size.X / 2;
-            this.minGrid.Y = -grid_size.Y / 2;
-            this.maxGrid.X = (grid_size.X / 2) - 1; //You must substract 1 to get the upperleft
-            this.maxGrid.Y = (grid_size.X / 2) - 1; //corner of the lowerright-most grid-cell
+
+            this.cellSize.X = worldSize.X / gridSize.X;
+            this.cellSize.Y = worldSize.Y / gridSize.Y;
+
+            this.gridSize = gridSize;
+
+            this.minGrid.X = -gridSize.X / 2;
+            this.minGrid.Y = -gridSize.Y / 2;
+            this.maxGrid.X = (gridSize.X / 2) - 1; // you must substract 1 to get the upper left
+            this.maxGrid.Y = (gridSize.X / 2) - 1; // corner of the lower right-most grid cell
 
             CutIntoGrid();
         }
@@ -134,39 +150,37 @@ namespace AngryTanks.Common
         /// </summary>
         private void CutIntoGrid()
         {
-            //STEP 1. Initialize the Dictionary
+            // STEP 1. Initialize the Dictionary
             // current grid coords
-            short X, Y;
+            Int16 X, Y;
 
             // start in the upper left corner
-            X = (short)(minGrid.X);
-            Y = (short)(minGrid.Y);
+            X = (Int16)minGrid.X;
+            Y = (Int16)minGrid.Y;
 
-            // make appropriate number of grid locations
-            // initialize Dictionary
+            // make appropriate number of grid locations, filling the dictionary
             while (X <= maxGrid.X)
             {
                 while (Y <= maxGrid.Y)
                 {
-                    grid.Add(new GridLocation(X, Y, worldCellSize), new List<IWorldObject>());
+                    grid.Add(new GridLocation(X, Y, cellSize), new List<IWorldObject>());
                     Y++;
                 }
 
                 // when finished with one column, reset Y and increment X
-                Y = (short)minGrid.Y;
+                Y = (Int16)minGrid.Y;
                 X++;
             }
 
             // STEP 2. Associate objects with their GridLocations
             foreach (IWorldObject worldObject in allObjects)
             {
-                List<GridLocation> IntersectedGridCells = Intersects(worldObject);
-                foreach (GridLocation gridLocation in IntersectedGridCells)
+                List<GridLocation> intersectedGridCells = Intersects(worldObject);
+                foreach (GridLocation gridLocation in intersectedGridCells)
                 {
                     grid[gridLocation].Add(worldObject);
                 }
             }
-            System.Diagnostics.Debug.WriteLine("CutIntoGrid is finished");
         }
 
         /// <summary>
@@ -176,40 +190,41 @@ namespace AngryTanks.Common
         /// <returns>A list of all <see cref="GridLocation"/>s containing the <see cref="IWorldObject"/></returns>
         public List<GridLocation> Intersects(IWorldObject worldObject)
         {
-            List<GridLocation> found = new List<GridLocation>();
-            List<GridLocation> missed = new List<GridLocation>();
-            UniqueList<GridLocation> toTest = new UniqueList<GridLocation>();
-            UniqueList<GridLocation> newToBeTested = new UniqueList<GridLocation>();
-            GridLocation hasCenter; //The GridLocation that contains the center of the object
+            List<GridLocation> found = new List<GridLocation>(gridSize.X * gridSize.Y);
+            List<GridLocation> missed = new List<GridLocation>(gridSize.X * gridSize.Y);
+            UniqueList<GridLocation> toTest = new UniqueList<GridLocation>(gridSize.X * gridSize.Y);
+            UniqueList<GridLocation> newToBeTested = new UniqueList<GridLocation>(gridSize.X * gridSize.Y);
 
-
+            // the GridLocation that contains the center of the object
+            GridLocation hasCenter;
 
             // STEP 1 - determine the GridLocation of the object's center
-            short cellCoordX, cellCoordY;
+            Point cellCoord;
 
             // Use integer division to find cell coordinates.
             // Since the grid cell coords are in the upperleft corner
             // 1 must be subtracted from the division if we are in the negative (left or up)
             // direction - effectively rounding up in absolute value.
             if (worldObject.Position.X < 0)
-                cellCoordX = (short)(((int)worldObject.Position.X / (int)worldCellSize.X) - 1);
+                cellCoord.X = (Int16)(((Int16)worldObject.Position.X / (Int16)cellSize.X) - 1);
             else
-                cellCoordX = (short)(((int)worldObject.Position.X / (int)worldCellSize.X));
+                cellCoord.X = (Int16)(((Int16)worldObject.Position.X / (Int16)cellSize.X));
 
             if (worldObject.Position.Y < 0)
-                cellCoordY = (short)(((int)worldObject.Position.Y / (int)worldCellSize.Y) - 1);
+                cellCoord.Y = (Int16)(((Int16)worldObject.Position.Y / (Int16)cellSize.Y) - 1);
             else
-                cellCoordY = (short)(((int)worldObject.Position.Y / (int)worldCellSize.Y));
+                cellCoord.Y = (Int16)(((Int16)worldObject.Position.Y / (Int16)cellSize.Y));
 
-            //Check to makes sure these coordinates are in the world
-            if (minGrid.X <= cellCoordX && cellCoordX <= maxGrid.X &&
-                minGrid.Y <= cellCoordY && cellCoordY <= maxGrid.Y)
+            // check to makes sure these coordinates are in the world
+            if (minGrid.X <= cellCoord.X && cellCoord.X <= maxGrid.X &&
+                minGrid.Y <= cellCoord.Y && cellCoord.Y <= maxGrid.Y)
             {
-                hasCenter = new GridLocation(cellCoordX,
-                                             cellCoordY,
-                                             worldCellSize);
+                hasCenter = new GridLocation((Int16)cellCoord.X,
+                                             (Int16)cellCoord.Y,
+                                             cellSize);
             }
-            else //If they are not in the world return an empty list.
+            // if they are not in the world, return the empty list
+            else
             {
                 return found;
             }
@@ -224,36 +239,42 @@ namespace AngryTanks.Common
             {
                 foreach (GridLocation gridLocation in toTest)
                 {
-                    // If a surrounding GridLocation interects the object do 4 things
+                    // if a surrounding GridLocation intersects the object do 4 things
                     if (worldObject.Bounds.Intersects(gridLocation.Bounds))
                     {
                         // 1. Add it to the found list
                         found.Add(gridLocation);
+
                         // 2. Get its surrounding GridLocations
                         newToBeTested.UnionWith(GetSurrounding(gridLocation));
+
                         // 3. Remove any that are already known to not contain the object
                         foreach (GridLocation g in missed)
                         {
                             newToBeTested.Remove(g);
                         }
+
                         // 4. Remove any that are already known to contain the object
                         foreach (GridLocation g in found)
                         {
                             newToBeTested.Remove(g);
                         }
                     }
-                    // If a surrounding GridLocation DOES NOT interect the object add it to missed.    
+                    // if a surrounding GridLocation DOES NOT intersect the object add it to missed
                     else
                     {
                         missed.Add(gridLocation);
                     }
-
                 }
-                //Since we have checked everything in toTest flush it
+
+                // since we have checked everything in toTest flush it
                 toTest.Clear();
-                //Add the newly found surrounding candidates to toTest
+
+                // add the newly found surrounding candidates to toTest
                 toTest.UnionWith(newToBeTested);
-                newToBeTested.Clear(); //Flush the temp list;
+
+                // flush the temp list
+                newToBeTested.Clear();
             }
 
             return found;
@@ -271,32 +292,22 @@ namespace AngryTanks.Common
         {
             GridLocation g = gridLocation;
 
-            List<GridLocation> surrounding = new List<GridLocation>();
+            List<GridLocation> surrounding = new List<GridLocation>(8);
 
-            surrounding.Add(new GridLocation((short)(g.X - 1), (short)(g.Y - 1), worldCellSize));
-            surrounding.Add(new GridLocation((short)(g.X - 1), (short)g.Y, worldCellSize));
-            surrounding.Add(new GridLocation((short)(g.X - 1), (short)(g.Y + 1), worldCellSize));
-            surrounding.Add(new GridLocation((short)g.X, (short)(g.Y - 1), worldCellSize));
-            //surrounding.Add(new GridLocation((short)g.X          , (short)g.Y             , worldCellSize)); - the cell itself
-            surrounding.Add(new GridLocation((short)g.X, (short)(g.Y + 1), worldCellSize));
-            surrounding.Add(new GridLocation((short)(g.X + 1), (short)(g.Y - 1), worldCellSize));
-            surrounding.Add(new GridLocation((short)(g.X + 1), (short)g.Y, worldCellSize));
-            surrounding.Add(new GridLocation((short)(g.X + 1), (short)(g.Y + 1), worldCellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X - 1), (Int16)(g.Y - 1), cellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X - 1), (Int16)g.Y,       cellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X - 1), (Int16)(g.Y + 1), cellSize));
+            surrounding.Add(new GridLocation((Int16)g.X,       (Int16)(g.Y - 1), cellSize));
+            //surrounding.Add(new GridLocation((Int16)g.X,     (Int16)g.Y,       cellSize)); - the cell itself
+            surrounding.Add(new GridLocation((Int16)g.X,       (Int16)(g.Y + 1), cellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X + 1), (Int16)(g.Y - 1), cellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X + 1), (Int16)g.Y,       cellSize));
+            surrounding.Add(new GridLocation((Int16)(g.X + 1), (Int16)(g.Y + 1), cellSize));
 
-            // check to make sure the surrounding cells are inside the world
-            List<GridLocation> outOfThisworld = new List<GridLocation>();
-            foreach (GridLocation s in surrounding)
-            {
-                if (s.X < minGrid.X || s.X > maxGrid.X ||
-                    s.Y < minGrid.Y || s.Y > maxGrid.Y)
-                {
-                    outOfThisworld.Add(s);
-                }
-            }
-            foreach (GridLocation o in outOfThisworld)
-            {
-                surrounding.Remove(o);
-            }
+            // check to make sure the surrounding cells are inside the world, remove any that don't
+            surrounding.RemoveAll(
+                s => s.X < minGrid.X || s.X > maxGrid.X || s.Y < minGrid.Y || s.Y > maxGrid.Y
+            );
 
             return surrounding;
         }
