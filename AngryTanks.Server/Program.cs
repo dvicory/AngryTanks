@@ -225,7 +225,7 @@ namespace AngryTanks.Server
                                     break;
                                 }
 
-                                TeamType team = ProtocolHelpers.TeamByteToType(msg.ReadByte());
+                                TeamType team = (TeamType)msg.ReadByte();
                                 String callsign = msg.ReadString();
                                 String tag = msg.ReadString();
 
