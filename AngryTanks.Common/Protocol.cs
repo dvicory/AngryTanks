@@ -67,72 +67,48 @@ namespace AngryTanks.Common
         {
             public static Color TeamTypeToColor(TeamType team)
             {
-                Color color;
-
                 switch (team)
                 {
                     case TeamType.AutomaticTeam:
-                        color = Color.White;
-                        break;
+                        return Color.White;
                     case TeamType.RogueTeam:
-                        color = Color.DarkGray;
-                        break;
+                        return Color.DarkGray;
                     case TeamType.RedTeam:
-                        color = Color.Red;
-                        break;
+                        return Color.Red;
                     case TeamType.GreenTeam:
-                        color = Color.Green;
-                        break;
+                        return Color.Green;
                     case TeamType.BlueTeam:
-                        color = Color.Blue;
-                        break;
+                        return Color.Blue;
                     case TeamType.PurpleTeam:
-                        color = Color.Purple;
-                        break;
+                        return Color.Purple;
                     case TeamType.ObserverTeam:
-                        color = Color.White;
-                        break;
+                        return Color.White;
                     default: // WTF?
                         throw new ArgumentOutOfRangeException("team", team, "team must be automatic, rogue, red, green, blue, purple, or observer team");
-                        break;
                 }
-
-                return color;
             }
 
             public static String TeamTypeToName(TeamType team)
             {
-                String name;
-
                 switch (team)
                 {
                     case TeamType.AutomaticTeam:
-                        name = "automatic";
-                        break;
+                        return "automatic";
                     case TeamType.RogueTeam:
-                        name = "rogue";
-                        break;
+                        return "rogue";
                     case TeamType.RedTeam:
-                        name = "red";
-                        break;
+                        return "red";
                     case TeamType.GreenTeam:
-                        name = "green";
-                        break;
+                        return "green";
                     case TeamType.BlueTeam:
-                        name = "blue";
-                        break;
+                        return "blue";
                     case TeamType.PurpleTeam:
-                        name = "purple";
-                        break;
+                        return "purple";
                     case TeamType.ObserverTeam:
-                        name = "observer";
-                        break;
+                        return "observer";
                     default: // WTF?
                         throw new ArgumentOutOfRangeException("team", team, "team must be automatic, rogue, red, green, blue, purple, or observer team");
-                        break;
                 }
-
-                return name;
             }
         }
     }
