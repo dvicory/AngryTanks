@@ -84,7 +84,7 @@ namespace AngryTanks.Tests.GridTesting
             allObjects.Add(LowerRight);
 
             //Without a camera only the first quadrant will be visible - so the world is 4x(800,600)
-            grid = new Grid(1600, 1200, gridSize, allObjects);
+            grid = new Grid(new Vector2(1600, 1200), gridSize, allObjects);
             System.Diagnostics.Debug.WriteLine("The Grid is constructed");
             System.Diagnostics.Debug.WriteLine("LoadContent is finshed");
         }
