@@ -109,7 +109,7 @@ namespace AngryTanks.Client
             // if we're open, then we draw the whole scoreboard too
             if (isOpen)
             {
-                String header = String.Format("{0,-6} ({1,-6} - {2,6}) {3}\n",
+                String header = String.Format("{0,-6} ({1,-6} - {2,6}) {3}",
                                               "Score", "Wins", "Losses", "Player");
 
                 spriteBatch.DrawString(scoreboardFont,
