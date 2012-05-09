@@ -72,7 +72,7 @@ namespace AngryTanks.Common
                     case TeamType.AutomaticTeam:
                         return Color.White;
                     case TeamType.RogueTeam:
-                        return Color.DarkGray;
+                        return Color.Yellow;
                     case TeamType.RedTeam:
                         return Color.Red;
                     case TeamType.GreenTeam:
