@@ -140,7 +140,7 @@ namespace AngryTanks.Client
             Single overlap;
             Vector2 collisionProjection;
 
-            if (FindNearestCollision(World.WorldObjects, out overlap, out collisionProjection))
+            if (FindNearestCollision(World.MapGrid.PotentialIntersects(this), out overlap, out collisionProjection))
             {
                 // move our position back
                 Position += overlap * collisionProjection;

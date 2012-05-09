@@ -88,16 +88,23 @@ namespace AngryTanks.Client
             get { return serverLink; }
         }
 
-        public List<IWorldObject> WorldObjects
+        public List<IWorldObject> MapObjects
         {
             get
             {
-                List<Sprite> worldObjects = new List<Sprite>();
-                worldObjects.AddRange(stretched.ToList());
-                worldObjects.AddRange(tiled.ToList());
+                List<Sprite> mapObjects = new List<Sprite>();
+                mapObjects.AddRange(this.mapObjects["stretched"].ToList());
+                mapObjects.AddRange(this.mapObjects["tiled"].ToList());
 
-                return worldObjects.Cast<IWorldObject>().ToList();
+                return mapObjects.Cast<IWorldObject>().ToList();
             }
+        }
+
+        private Grid mapGrid;
+
+        public Grid MapGrid
+        {
+            get { return mapGrid; }
         }
 
         #endregion
@@ -144,7 +151,7 @@ namespace AngryTanks.Client
             // initialize player manager
             this.playerManager = new PlayerManager(this); 
            
-            //initialize scoreHUD
+            // initialize score HUD
             this.scoreHUD = new ScoreHUD(this.playerManager);
 
             ServerLink.MessageReceivedEvent += HandleReceivedMessage;
@@ -190,7 +197,7 @@ namespace AngryTanks.Client
             // get the game console
             console = (IGameConsole)IService.GetService(typeof(IGameConsole));
 
-            // get the audioManager
+            // get the audio manager
             audioManager = (IAudioManager)IService.GetService(typeof(IAudioManager));            
 
             // setup camera
@@ -223,12 +230,10 @@ namespace AngryTanks.Client
             List<Sprite> stretched = new List<Sprite>();
             mapObjects.Add("stretched", stretched);
 
-            // 2.8 width and 6 length are bzflag defaults
-            // our tank, however, is a different ratio... it's much fatter. this means some maps may not work so well.
-            //localPlayer = new LocalPlayer(this, tankTexture, Vector2.Zero, new Vector2(4.86f, 6), 0);
-            //localPlayer = new LocalPlayer(this, new PlayerInformation(0, "test", "test", TeamType.RogueTeam));
+            // load grid
+            mapGrid = new Grid(new Vector2(WorldSize, WorldSize), MapObjects);
 
-            //Load scoreHUD font
+            // load scoreHUD font
             scoreHUD.LoadContent(Content);
 
             base.LoadContent();
@@ -250,7 +255,7 @@ namespace AngryTanks.Client
                 lastPlayerPosition = playerManager.LocalPlayer.Position;
                 camera.LookAt(World.WorldUnitsToPixels(Vector2.SmoothStep(lastPlayerPosition, playerManager.LocalPlayer.Position, 0.5f)));
                 
-                //Activate scoreHUD
+                // activate score HUD
                 scoreHUD.isActive = true;
             }
 
@@ -294,7 +299,7 @@ namespace AngryTanks.Client
             if (ks.IsKeyDown(Keys.RightShift) && ks.IsKeyDown(Keys.RightAlt))
                 camera.Rotation -= 0.01f;
 
-            //audio (testing only)
+            // audio (testing only)
             if (ks.IsKeyDown(Keys.B))
             {
                 audioManager.play("boom");
@@ -408,6 +413,9 @@ namespace AngryTanks.Client
         {
             // construct the StaticSprites from the stream
             mapObjects = ParseMapFile(sr);
+
+            // now we can make our grid
+            mapGrid = new Grid(new Vector2(WorldSize, WorldSize), MapObjects);
         }
 
         /* parseMapFile()
