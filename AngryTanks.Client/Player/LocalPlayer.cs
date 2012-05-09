@@ -70,6 +70,10 @@ namespace AngryTanks.Client
 
         private void KeyPressed(Keys key)
         {
+            // jump out early if console prompt is active
+            if (World.Console.PromptActive)
+                return;
+
             switch (key)
             {
                 // kill ourselves if we hit delete
