@@ -51,6 +51,9 @@ namespace AngryTanks.Client
             if (!isActive)
                 return;
 
+            //First update the Local Player's score
+            myScore = playerManager.LocalPlayer.Score;            
+
             ks = Keyboard.GetState();
             if (ks.IsKeyDown(Keys.Tab) && oldKs.IsKeyUp(Keys.Tab))
             {
@@ -62,7 +65,8 @@ namespace AngryTanks.Client
             if (isOpen)
             {
                 //Step #1 get the data from playerManager
-                myScore = playerManager.LocalPlayer.Score;
+                otherScores.Clear();//Flush for new sorting process
+                sortedToPrint.Clear();
                 otherScores.Add(playerManager.LocalPlayer.Callsign, myScore);
                 foreach (Player p in playerManager.RemotePlayers)
                 {
@@ -92,20 +96,21 @@ namespace AngryTanks.Client
             //Draw the local player's Overall always
             spriteBatch.DrawString(HUDfont,
                                    playerManager.LocalPlayer.Callsign + ": " + myScore.Overall.ToString(),
-                                   new Vector2(3, 3),
-                                   Color.Red,
+                                   new Vector2(5, 18),
+                                   new Color(255,100,50),
                                    0.0f,
                                    Vector2.Zero,
                                    2.0f,
                                    SpriteEffects.None,
                                    0.0f);
 
+
             //If the Overallboard is Open, then draw it as well
             if (isOpen)
             {
                 spriteBatch.DrawString(HUDfont,
                                    "Wins      Losses    Overall     Player",
-                                   new Vector2(3, 20),
+                                   new Vector2(5, 100),
                                    Color.Tan,
                                    0.0f,
                                    Vector2.Zero,
@@ -124,7 +129,7 @@ namespace AngryTanks.Client
                 }
                 spriteBatch.DrawString(HUDfont,
                                    scoreBoard,
-                                   new Vector2(3, 20),
+                                   new Vector2(5, 120),
                                    Color.Blue,
                                    0.0f,
                                    Vector2.Zero,
