@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -11,18 +10,22 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using Nuclex.Game;
+
+using log4net;
+
 using AngryTanks.Common;
+using AngryTanks.Common.Protocol;
 
 namespace AngryTanks.Client
 {
     class ScoreHUD
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private Score myScore;
 
-        private Dictionary<String, Score> otherScores;
-        private List<KeyValuePair<string, Score>> sortedToPrint = new List<KeyValuePair<string, Score>>();
         private PlayerManager playerManager;
+        private List<Player> players;
 
         public bool isActive = false;
         public bool isOpen = false;
@@ -34,10 +37,10 @@ namespace AngryTanks.Client
 
         public ScoreHUD(PlayerManager playerManager)
         {
-            myScore = new Score();
-
-            otherScores = new Dictionary<String, Score>();
             this.playerManager = playerManager;
+
+            myScore = new Score();
+            players = new List<Player>(ProtocolInformation.DummySlot);
         }
 
         public void LoadContent(ContentManager Content)
@@ -65,27 +68,19 @@ namespace AngryTanks.Client
             // only load and sort data if we must
             if (isOpen)
             {
-                // step 1: get the data from playerManager
-                otherScores.Clear(); // flush for new sorting process
-                sortedToPrint.Clear();
-                otherScores.Add(playerManager.LocalPlayer.Callsign, myScore);
-                foreach (Player p in playerManager.RemotePlayers)
-                {
-                    otherScores.Add(p.Callsign, p.Score);
-                }
+                // step 1: get the players from player manager
+                players.Clear(); // first clear it out
 
-                // step 2: sort the data by overall in descending order
-                // TODO use container that sorts for us
-                List<KeyValuePair<string, Score>> unsorted = new List<KeyValuePair<string, Score>>();
-                foreach (KeyValuePair<string, Score> kv in otherScores)
-                {
-                    unsorted.Add(kv);
-                }
-                var result = unsorted.OrderByDescending(score => score.Value);
-                foreach (var keyPair in result)
-                {
-                    sortedToPrint.Add(keyPair);
-                }
+                // add all remote players
+                players.AddRange(playerManager.RemotePlayers.Cast<Player>());
+
+                // add local player, if we can
+                if (playerManager.LocalPlayer != null)
+                    players.Add(playerManager.LocalPlayer);
+
+                // step 2: sort players in descending order
+                // first by wins, then by overall score
+                players = players.OrderByDescending(p => p.Score.Wins).ThenByDescending(p => p.Score.Overall).ToList();
             }
         }
 
@@ -123,17 +118,17 @@ namespace AngryTanks.Client
                                    0.0f);
 
                 int i = 0;
-                foreach (KeyValuePair<string, Score> kv in sortedToPrint)
+                foreach (Player p in players)
                 {
                     // draw an individual scoreboard entry
                     String scoreboardEntry = String.Format("{0,-6} ({1,-6} - {2,6}) {3}",
-                                                           kv.Value.Overall, kv.Value.Wins, kv.Value.Losses, kv.Key);
+                                                           p.Score.Overall, p.Score.Wins, p.Score.Losses, p.Callsign);
 
                     // TODO draw with the same color as the player's team
                     spriteBatch.DrawString(scoreboardFont,
                                            scoreboardEntry,
                                            new Vector2(5, 120 + (int)(i * scoreboardFont.MeasureString(scoreboardEntry).Y)),
-                                           Color.Blue,
+                                           ProtocolHelpers.TeamTypeToColor(p.Team),
                                            0.0f,
                                            Vector2.Zero,
                                            1.0f,
