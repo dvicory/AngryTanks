@@ -28,8 +28,9 @@ namespace AngryTanks.Client
         public bool isOpen = false;
 
         private KeyboardState ks, oldKs;
-        private SpriteFont HUDfont;
 
+        private SpriteFont scoreFont;
+        private SpriteFont scoreboardFont;
 
         public ScoreHUD(PlayerManager playerManager)
         {
@@ -39,19 +40,19 @@ namespace AngryTanks.Client
             this.playerManager = playerManager;
         }
 
-        //Load the SpriteFont to use in the HUD
         public void LoadContent(ContentManager Content)
         {
-            HUDfont = Content.Load<SpriteFont>("fonts/ConsoleFont12");
+            // load the SpriteFonts to use in the HUD
+            scoreFont = Content.Load<SpriteFont>("fonts/BoldConsoleFont14");
+            scoreboardFont = Content.Load<SpriteFont>("fonts/ConsoleFont12");
         }
 
-        //Update the Overalls if needed
         public void Update()
         {
             if (!isActive)
                 return;
 
-            //First update the Local Player's score
+            // first update the local player's score
             myScore = playerManager.LocalPlayer.Score;            
 
             ks = Keyboard.GetState();
@@ -61,11 +62,11 @@ namespace AngryTanks.Client
             }
             oldKs = ks;
 
-            //Only load and sort data if we must
+            // only load and sort data if we must
             if (isOpen)
             {
-                //Step #1 get the data from playerManager
-                otherScores.Clear();//Flush for new sorting process
+                // step 1: get the data from playerManager
+                otherScores.Clear(); // flush for new sorting process
                 sortedToPrint.Clear();
                 otherScores.Add(playerManager.LocalPlayer.Callsign, myScore);
                 foreach (Player p in playerManager.RemotePlayers)
@@ -73,7 +74,8 @@ namespace AngryTanks.Client
                     otherScores.Add(p.Callsign, p.Score);
                 }
 
-                //Step #2 Sort the data by Overall in descending order
+                // step 2: sort the data by overall in descending order
+                // TODO use container that sorts for us
                 List<KeyValuePair<string, Score>> unsorted = new List<KeyValuePair<string, Score>>();
                 foreach (KeyValuePair<string, Score> kv in otherScores)
                 {
@@ -87,55 +89,59 @@ namespace AngryTanks.Client
             }
         }
 
-        //Draw HUD components as needed
         public void Draw(SpriteBatch spriteBatch)
         {
             if (!isActive)
                 return;
 
-            //Draw the local player's Overall always
-            spriteBatch.DrawString(HUDfont,
+            // draw the local player's overall score always
+            spriteBatch.DrawString(scoreFont,
                                    playerManager.LocalPlayer.Callsign + ": " + myScore.Overall.ToString(),
-                                   new Vector2(5, 18),
-                                   new Color(255,100,50),
+                                   new Vector2(5, 5),
+                                   Color.White,
                                    0.0f,
                                    Vector2.Zero,
-                                   2.0f,
+                                   1.0f,
                                    SpriteEffects.None,
                                    0.0f);
 
 
-            //If the Overallboard is Open, then draw it as well
+            // if we're open, then we draw the whole scoreboard too
             if (isOpen)
             {
-                spriteBatch.DrawString(HUDfont,
-                                   "Wins      Losses    Overall     Player",
+                String header = String.Format("{0,-6} ({1,-6} - {2,6}) {3}\n",
+                                              "Score", "Wins", "Losses", "Player");
+
+                spriteBatch.DrawString(scoreboardFont,
+                                   header,
                                    new Vector2(5, 100),
-                                   Color.Tan,
+                                   Color.White,
                                    0.0f,
                                    Vector2.Zero,
                                    1.0f,
                                    SpriteEffects.None,
                                    0.0f);
 
-                string scoreBoard = "";
+                int i = 0;
                 foreach (KeyValuePair<string, Score> kv in sortedToPrint)
                 {
-                    scoreBoard = kv.Value.Wins.ToString().PadRight(10, ' ') +
-                                 kv.Value.Losses.ToString().PadRight(10, ' ') +
-                                 kv.Value.Overall.ToString().PadRight(10, ' ') +
-                                 kv.Key + "\n";
+                    // draw an individual scoreboard entry
+                    String scoreboardEntry = String.Format("{0,-6} ({1,-6} - {2,6}) {3}",
+                                                           kv.Value.Overall, kv.Value.Wins, kv.Value.Losses, kv.Key);
 
+                    // TODO draw with the same color as the player's team
+                    spriteBatch.DrawString(scoreboardFont,
+                                           scoreboardEntry,
+                                           new Vector2(5, 120 + (int)(i * scoreboardFont.MeasureString(scoreboardEntry).Y)),
+                                           Color.Blue,
+                                           0.0f,
+                                           Vector2.Zero,
+                                           1.0f,
+                                           SpriteEffects.None,
+                                           0.0f);
+
+                    ++i;
                 }
-                spriteBatch.DrawString(HUDfont,
-                                   scoreBoard,
-                                   new Vector2(5, 120),
-                                   Color.Blue,
-                                   0.0f,
-                                   Vector2.Zero,
-                                   1.0f,
-                                   SpriteEffects.None,
-                                   0.0f);
             }
         }
     }
