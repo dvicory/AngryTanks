@@ -121,8 +121,15 @@ namespace AngryTanks.Client
                 foreach (Player p in players)
                 {
                     // draw an individual scoreboard entry
-                    String scoreboardEntry = String.Format("{0,-6} ({1,-6} - {2,6}) {3}",
-                                                           p.Score.Overall, p.Score.Wins, p.Score.Losses, p.Callsign);
+                    String scoreboardEntry;
+
+                    // this player has no tag
+                    if (p.Tag.Length == 0)
+                        scoreboardEntry = String.Format("{0,-6} ({1,-6} - {2,6}) {3}",
+                                                        p.Score.Overall, p.Score.Wins, p.Score.Losses, p.Callsign);
+                    else
+                        scoreboardEntry = String.Format("{0,-6} ({1,-6} - {2,6}) {3} ({4})",
+                                                        p.Score.Overall, p.Score.Wins, p.Score.Losses, p.Callsign, p.Tag);
 
                     // TODO draw with the same color as the player's team
                     spriteBatch.DrawString(scoreboardFont,
