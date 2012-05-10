@@ -167,6 +167,40 @@ namespace AngryTanks.Client
                         break;
                     }
 
+                case MessageType.MsgShotBegin:
+                    {
+                        MsgShotBeginPacket packet = (MsgShotBeginPacket)message.MessageData;
+
+                        // only interested if it's a shot that this player began
+                        if (packet.Slot == this.Slot)
+                        {
+                            Shoot(packet.ShotSlot, packet.Position, packet.Rotation, packet.Velocity);
+                        }
+
+                        break;
+                    }
+
+                case MessageType.MsgShotEnd:
+                    {
+                        MsgShotEndPacket packet = (MsgShotEndPacket)message.MessageData;
+
+                        // only interested if it's a shot by this player that's ending
+                        if (packet.Slot == this.Slot)
+                        {
+                            try
+                            {
+                                Shots[packet.ShotSlot].End();
+                            }
+                            catch (KeyNotFoundException e)
+                            {
+                                Log.Warn(e.Message);
+                                Log.Warn(e.StackTrace);
+                            }
+                        }
+
+                        break;
+                    }
+
                 default:
                     break;
             }
@@ -179,10 +213,6 @@ namespace AngryTanks.Client
             // set position and rotation...
             Position = newPosition = oldPosition = position;
             Rotation = newRotation = oldRotation = rotation;
-
-            // reset camera
-            World.Camera.Zoom = 1;
-            World.Camera.PanPosition = Vector2.Zero;
 
             // move into alive state
             state = PlayerState.Alive;
@@ -201,6 +231,11 @@ namespace AngryTanks.Client
             Vector2 initialPosition = Position + new Vector2((tankLength / 2) * (Single)Math.Cos(Rotation - Math.PI / 2),
                                                              (tankLength / 2) * (Single)Math.Sin(Rotation - Math.PI / 2));
 
+            Shoot(shotSlot, initialPosition, Rotation, Velocity);
+        }
+
+        protected virtual void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+        {
             // create the shot
             Shots[shotSlot] = new Shot(World, this, shotSlot, initialPosition, Rotation, Velocity);
         }

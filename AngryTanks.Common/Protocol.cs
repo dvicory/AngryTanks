@@ -11,7 +11,7 @@ namespace AngryTanks.Common
     {
         public static class ProtocolInformation
         {
-            public static readonly UInt16 ProtocolVersion = 9;
+            public static readonly UInt16 ProtocolVersion = 10;
             public static readonly Byte MaxPlayers = 100;
             public static readonly Byte DummySlot = 255;
             public static readonly Byte MaxShots = 20;
@@ -30,7 +30,9 @@ namespace AngryTanks.Common
             MsgPlayerClientUpdate, // from client to server
             MsgPlayerServerUpdate, // from server to client
             MsgDeath,
-            MsgSpawn
+            MsgSpawn,
+            MsgShotBegin,
+            MsgShotEnd
         }
 
         public enum GamePlayType

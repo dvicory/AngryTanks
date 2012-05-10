@@ -217,6 +217,15 @@ namespace AngryTanks.Client
             base.HandleReceivedMessage(sender, message);
         }
 
+        public override void Spawn(Vector2 position, float rotation)
+        {
+            // reset camera
+            World.Camera.Zoom = 1;
+            World.Camera.PanPosition = Vector2.Zero;
+
+            base.Spawn(position, rotation);
+        }
+
         public override void Die(Player killer)
         {
             // send out the death packet right away
@@ -230,6 +239,21 @@ namespace AngryTanks.Client
             World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
             base.Die(killer);
+        }
+
+        protected override void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+        {
+            // send out the shot begin packet right away
+            NetOutgoingMessage shotBeginMessage = World.ServerLink.CreateMessage();
+
+            MsgShotBeginPacket shotBeginPacket = new MsgShotBeginPacket(shotSlot, initialPosition, rotation, initialVelocity);
+
+            shotBeginMessage.Write((Byte)MessageType.MsgShotBegin);
+            shotBeginPacket.Write(shotBeginMessage);
+
+            World.ServerLink.SendMessage(shotBeginMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
+            base.Shoot(shotSlot, initialPosition, rotation, initialVelocity);
         }
     }
 }

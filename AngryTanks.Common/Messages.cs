@@ -646,5 +646,107 @@ namespace AngryTanks.Common
                 packet.Write(this.Rotation);
             }
         }
+
+        /// <summary>
+        /// Sent by the client to begin a shot.
+        /// Sent by the server to tell other players to begin the shot.
+        /// </summary>
+        public class MsgShotBeginPacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgShotBegin; }
+            }
+
+            public readonly Byte Slot;
+            public readonly Byte ShotSlot;
+            public readonly Vector2 Position;
+            public readonly Single Rotation;
+            public readonly Vector2 Velocity;
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgShotBeginPacket"/> on the client to notify about a new shot.
+            /// </summary>
+            public MsgShotBeginPacket(Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
+                : this(ProtocolInformation.DummySlot, shotSlot, position, rotation, velocity)
+            { }
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgShotBegin"/> on the server to inform about a shot.
+            /// </summary>
+            public MsgShotBeginPacket(Byte slot, Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
+            {
+                this.Slot     = slot;
+                this.ShotSlot = shotSlot;
+                this.Position = position;
+                this.Rotation = rotation;
+                this.Velocity = velocity;
+            }
+
+            public static MsgShotBeginPacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+                Byte shotSlot = packet.ReadByte();
+                Vector2 position = packet.ReadVector2();
+                Single rotation = packet.ReadSingle();
+                Vector2 velocity = packet.ReadVector2();
+
+                return new MsgShotBeginPacket(slot, shotSlot, position, rotation, velocity);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+                packet.Write(this.ShotSlot);
+                packet.Write(this.Position);
+                packet.Write(this.Rotation);
+                packet.Write(this.Velocity);
+            }
+        }
+
+        /// <summary>
+        /// Sent by the client to end a shot.
+        /// Sent by the server to tell other players to end the shot.
+        /// </summary>
+        public class MsgShotEndPacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgShotEnd; }
+            }
+
+            public readonly Byte Slot;
+            public readonly Byte ShotSlot;
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgShotEndPacket"/> on the client to notify about a new shot.
+            /// </summary>
+            public MsgShotEndPacket(Byte shotSlot)
+                : this(ProtocolInformation.DummySlot, shotSlot)
+            { }
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgShotEndPacket"/> on the server to inform about a shot.
+            /// </summary>
+            public MsgShotEndPacket(Byte slot, Byte shotSlot)
+            {
+                this.Slot = slot;
+                this.ShotSlot = shotSlot;
+            }
+
+            public static MsgShotEndPacket Read(NetIncomingMessage packet)
+            {
+                Byte slot = packet.ReadByte();
+                Byte shotSlot = packet.ReadByte();
+
+                return new MsgShotEndPacket(slot, shotSlot);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+                packet.Write(this.ShotSlot);
+            }
+        }
     }
 }

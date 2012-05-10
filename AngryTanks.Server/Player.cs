@@ -19,6 +19,12 @@ namespace AngryTanks.Server
 
         #region Player Properties
 
+        private PlayerState state;
+        public PlayerState State
+        {
+            get { return state; }
+        }
+
         public readonly Byte          Slot;
         public readonly NetConnection Connection;
         public readonly String        Callsign, Tag;
@@ -32,10 +38,10 @@ namespace AngryTanks.Server
             }
         }
 
-        private PlayerState state;
-        public PlayerState State
+        private Score score;
+        public Score Score
         {
-            get { return state; }
+            get { return score; }
         }
 
         #endregion
@@ -53,6 +59,7 @@ namespace AngryTanks.Server
             this.gameKeeper = gameKeeper;
 
             this.state = PlayerState.Joining;
+            this.score = new Score();
 
             Log.InfoFormat("Player #{0} \"{1}\" <{2}> created and joined to {3}", Slot, Callsign, Tag, Team);
         }
@@ -90,6 +97,14 @@ namespace AngryTanks.Server
 
                 case MessageType.MsgDeath:
                     Die(incomingMsg);
+                    break;
+
+                case MessageType.MsgShotBegin:
+                    Shoot(incomingMsg);
+                    break;
+
+                case MessageType.MsgShotEnd:
+                    EndShot(incomingMsg);
                     break;
 
                 default:
@@ -229,6 +244,53 @@ namespace AngryTanks.Server
 
             // they're now dead as far as we're concerned
             state = PlayerState.Dead;
+        }
+
+        /// <summary>
+        /// Handles new shots by players and broadcasts that to all other <see cref="Player"/>s.
+        /// </summary>
+        /// <param name="incomingMessage"></param>
+        public void Shoot(NetIncomingMessage incomingMessage)
+        {
+            MsgShotBeginPacket incomingShotBeginPacket = MsgShotBeginPacket.Read(incomingMessage);
+
+            // create our shot begin message and packet
+            NetOutgoingMessage shotBeginMessage = gameKeeper.Server.CreateMessage();
+
+            MsgShotBeginPacket shotBeginPacket =
+                new MsgShotBeginPacket(this.Slot,
+                                       incomingShotBeginPacket.ShotSlot,
+                                       incomingShotBeginPacket.Position,
+                                       incomingShotBeginPacket.Rotation,
+                                       incomingShotBeginPacket.Velocity);
+
+            // write to the message
+            shotBeginMessage.Write((Byte)MessageType.MsgShotBegin);
+            shotBeginPacket.Write(shotBeginMessage);
+
+            // send the shot begin message to everyone except the player who reported it
+            gameKeeper.Server.SendToAll(shotBeginMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
+        /// <summary>
+        /// Handles end shots by players and broadcasts that to all other <see cref="Player"/>s.
+        /// </summary>
+        /// <param name="incomingMessage"></param>
+        public void EndShot(NetIncomingMessage incomingMessage)
+        {
+            MsgShotEndPacket incomingShotEndPacket = MsgShotEndPacket.Read(incomingMessage);
+
+            // create our shot end message and packet
+            NetOutgoingMessage shotEndMessage = gameKeeper.Server.CreateMessage();
+
+            MsgShotEndPacket shotEndPacket = new MsgShotEndPacket(this.Slot, incomingShotEndPacket.ShotSlot);
+
+            // write to the message
+            shotEndMessage.Write((Byte)MessageType.MsgShotEnd);
+            shotEndPacket.Write(shotEndMessage);
+
+            // send the shot end message to everyone except the player who reported it
+            gameKeeper.Server.SendToAll(shotEndMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
         #region Connection Helpers

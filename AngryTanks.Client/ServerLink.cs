@@ -288,44 +288,32 @@ namespace AngryTanks.Client
                 case MessageType.MsgAddPlayer:
                     {
                         Log.DebugFormat("Got MsgAddPlayer ({0} bytes)", msg.LengthBytes);
-
                         MsgAddPlayerPacket packet = MsgAddPlayerPacket.Read(msg);
-
                         FireMessageEvent(gameTime, packet);
-
                         break;
                     }
 
                 case MessageType.MsgRemovePlayer:
                     {
                         Log.DebugFormat("Got MsgRemovePlayer ({0} bytes)", msg.LengthBytes);
-
                         MsgRemovePlayerPacket packet = MsgRemovePlayerPacket.Read(msg);
-
                         FireMessageEvent(gameTime, packet);
-
                         break;
                     }
 
                 case MessageType.MsgDeath:
                     {
                         Log.DebugFormat("Got MsgDeath ({0} bytes)", msg.LengthBytes);
-
                         MsgDeathPacket packet = MsgDeathPacket.Read(msg);
-
                         FireMessageEvent(gameTime, packet);
-
                         break;
                     }
 
                 case MessageType.MsgSpawn:
                     {
                         Log.DebugFormat("Got MsgSpawn ({0} bytes)", msg.LengthBytes);
-
                         MsgSpawnPacket packet = MsgSpawnPacket.Read(msg);
-
                         FireMessageEvent(gameTime, packet);
-
                         break;
                     }
 
@@ -350,9 +338,21 @@ namespace AngryTanks.Client
                 case MessageType.MsgPlayerServerUpdate:
                     {
                         MsgPlayerServerUpdatePacket packet = MsgPlayerServerUpdatePacket.Read(msg);
-
                         FireMessageEvent(gameTime, packet);
+                        break;
+                    }
 
+                case MessageType.MsgShotBegin:
+                    {
+                        MsgShotBeginPacket packet = MsgShotBeginPacket.Read(msg);
+                        FireMessageEvent(gameTime, packet);
+                        break;
+                    }
+
+                case MessageType.MsgShotEnd:
+                    {
+                        MsgShotEndPacket packet = MsgShotEndPacket.Read(msg);
+                        FireMessageEvent(gameTime, packet);
                         break;
                     }
 
