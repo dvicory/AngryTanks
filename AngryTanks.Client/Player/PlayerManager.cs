@@ -43,6 +43,26 @@ namespace AngryTanks.Client
             }
         }
 
+        public List<Shot> AllActiveShots
+        {
+            get
+            {
+                List<Shot> allActiveShots = new List<Shot>();
+
+                // add local player's shots
+                if (localPlayer != null)
+                    allActiveShots.AddRange(localPlayer.ActiveShots);
+
+                // add all remote players' shots
+                foreach (RemotePlayer player in RemotePlayers)
+                {
+                    allActiveShots.AddRange(player.ActiveShots);
+                }
+
+                return allActiveShots;
+            }
+        }
+
         #endregion
 
         private World world;

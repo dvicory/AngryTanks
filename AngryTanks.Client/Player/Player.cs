@@ -177,18 +177,6 @@ namespace AngryTanks.Client
                         break;
                     }
 
-                case MessageType.MsgShotBegin:
-                    {
-                        MsgShotBeginPacket packet = (MsgShotBeginPacket)message.MessageData;
-
-                        // only interested if it's a shot that this player began
-                        if (packet.Slot == this.Slot)
-                        {
-                            Shoot(packet.ShotSlot, packet.Position, packet.Rotation, packet.Velocity);
-                        }
-
-                        break;
-                    }
 
                 case MessageType.MsgShotEnd:
                     {
@@ -241,17 +229,17 @@ namespace AngryTanks.Client
             state = PlayerState.Exploding;
         }
 
-        protected virtual void Shoot(Byte shotSlot)
+        protected virtual void Shoot(Byte shotSlot, bool local)
         {
             // get starting position
             Single tankLength = (Single)World.VarDB["tankLength"].Value;
             Vector2 initialPosition = Position + new Vector2((tankLength / 2) * (Single)Math.Cos(Rotation - Math.PI / 2),
                                                              (tankLength / 2) * (Single)Math.Sin(Rotation - Math.PI / 2));
 
-            Shoot(shotSlot, initialPosition, Rotation, Velocity);
+            Shoot(shotSlot, initialPosition, Rotation, Velocity, local);
         }
 
-        protected virtual void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+        protected virtual void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity, bool local)
         {
             // create the shot
             Shots[shotSlot] = new Shot(World, this, shotSlot, initialPosition, Rotation, Velocity);

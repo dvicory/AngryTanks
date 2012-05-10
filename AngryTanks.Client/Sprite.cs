@@ -108,23 +108,68 @@ namespace AngryTanks.Client
         /// Finds the nearest collision out of <paramref name="collisionObjects"/>.
         /// </summary>
         /// <param name="collisionObjects">List of objects to test against.</param>
+        /// <returns></returns>
+        public virtual bool FindNearestCollision(List<IWorldObject> collidableObjects)
+        {
+            Single overlap;
+            Vector2 collisionProjection;
+            IWorldObject collidingObject;
+
+            return FindNearestCollision(collidableObjects, out overlap, out collisionProjection, out collidingObject);
+        }
+
+        /// <summary>
+        /// Finds the nearest collision out of <paramref name="collisionObjects"/>.
+        /// </summary>
+        /// <param name="collisionObjects">List of objects to test against.</param>
+        /// <param name="collidingObject"></param>
+        /// <returns></returns>
+        public virtual bool FindNearestCollision(List<IWorldObject> collidableObjects, out IWorldObject collidingObject)
+        {
+            Single overlap;
+            Vector2 collisionProjection;
+
+            return FindNearestCollision(collidableObjects, out overlap, out collisionProjection, out collidingObject);
+        }
+
+        /// <summary>
+        /// Finds the nearest collision out of <paramref name="collisionObjects"/>.
+        /// </summary>
+        /// <param name="collisionObjects">List of objects to test against.</param>
         /// <param name="overlap"></param>
         /// <param name="collisionProjection"></param>
         /// <returns></returns>
-        public virtual bool FindNearestCollision(List<IWorldObject> collisionObjects, out Single overlap, out Vector2 collisionProjection)
+        public virtual bool FindNearestCollision(List<IWorldObject> collidableObjects, out Single overlap, out Vector2 collisionProjection)
+        {
+            IWorldObject collidingObject;
+
+            return FindNearestCollision(collidableObjects, out overlap, out collisionProjection, out collidingObject);
+        }
+
+        /// <summary>
+        /// Finds the nearest collision out of <paramref name="collisionObjects"/>.
+        /// </summary>
+        /// <param name="collisionObjects">List of objects to test against.</param>
+        /// <param name="overlap"></param>
+        /// <param name="collisionProjection"></param>
+        /// <param name="collidingObject"></param>
+        /// <returns></returns>
+        public virtual bool FindNearestCollision(List<IWorldObject> collidableObjects, out Single overlap, out Vector2 collisionProjection, out IWorldObject collidingObject)
         {
             Single largestOverlap = 0;
             Vector2 largestCollisionProjection = Vector2.Zero;
+            IWorldObject foundCollidingObject = null;
 
-            foreach (StaticSprite collisionObject in collisionObjects)
+            foreach (IWorldObject collidableObject in collidableObjects)
             {
-                if (!Intersects(collisionObject, out overlap, out collisionProjection))
+                if (!Intersects(collidableObject, out overlap, out collisionProjection))
                     continue;
 
                 if (overlap > largestOverlap)
                 {
                     largestOverlap = overlap;
                     largestCollisionProjection = collisionProjection;
+                    foundCollidingObject = collidableObject;
                 }
             }
 
@@ -133,12 +178,14 @@ namespace AngryTanks.Client
             {
                 overlap = 0;
                 collisionProjection = Vector2.Zero;
+                collidingObject = null;
                 return false;
             }
 
             // we did find a collision otherwise, so assign variables
             overlap = largestOverlap;
             collisionProjection = largestCollisionProjection;
+            collidingObject = foundCollidingObject;
 
             return true;
         }

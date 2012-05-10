@@ -66,10 +66,15 @@ namespace AngryTanks.Client
             get { return slot; }
         }
 
+        private Player player;
+
         /// <summary>
         /// <see cref="Player"/> the <see cref="Shot"/> is associated with.
         /// </summary>
-        private Player player;
+        public Player Player
+        {
+            get { return player; }
+        }
 
         private Vector2 initialPosition;
 

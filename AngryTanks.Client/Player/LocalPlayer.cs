@@ -102,7 +102,7 @@ namespace AngryTanks.Client
                             return;
 
                         // fire away
-                        Shoot(shotSlot);
+                        Shoot(Shot.AllocateSlot(Shots), true);
 
                         break;
                     }
@@ -117,7 +117,10 @@ namespace AngryTanks.Client
             kb = Keyboard.GetState();
 
             if (State == PlayerState.Alive)
+            {
                 UpdatePosition(gameTime);
+                CheckShots(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -212,6 +215,27 @@ namespace AngryTanks.Client
             }
         }
 
+        private void CheckShots(GameTime gameTime)
+        {
+            IWorldObject collidingObject;
+
+            List<Shot> activeShots = World.PlayerManager.AllActiveShots;
+            activeShots.RemoveAll(s => s.Player == this);
+            activeShots.RemoveAll(s => s.State != ShotState.Active);
+
+            if (FindNearestCollision(activeShots.Cast<IWorldObject>().ToList(), out collidingObject))
+            {
+                // get the shot that killed us
+                Shot shot = (Shot)collidingObject;
+
+                // we shall die
+                Die(shot.Player);
+
+                // now end that shot
+                shot.End();
+            }
+        }
+
         protected override void HandleReceivedMessage(object sender, ServerLinkMessageEvent message)
         {
             base.HandleReceivedMessage(sender, message);
@@ -241,7 +265,7 @@ namespace AngryTanks.Client
             base.Die(killer);
         }
 
-        protected override void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+        protected override void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity, bool local)
         {
             // send out the shot begin packet right away
             NetOutgoingMessage shotBeginMessage = World.ServerLink.CreateMessage();
@@ -253,7 +277,7 @@ namespace AngryTanks.Client
 
             World.ServerLink.SendMessage(shotBeginMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
-            base.Shoot(shotSlot, initialPosition, rotation, initialVelocity);
+            base.Shoot(shotSlot, initialPosition, rotation, initialVelocity, local);
         }
     }
 }

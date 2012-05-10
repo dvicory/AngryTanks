@@ -77,7 +77,21 @@ namespace AngryTanks.Client
 
                         break;
                     }
-                    
+
+
+                case MessageType.MsgShotBegin:
+                    {
+                        MsgShotBeginPacket packet = (MsgShotBeginPacket)message.MessageData;
+
+                        // only interested if it's a shot that this player began
+                        if (packet.Slot == this.Slot)
+                        {
+                            Shoot(packet.ShotSlot, packet.Position, packet.Rotation, packet.Velocity, false);
+                        }
+
+                        break;
+                    }
+
                 default:
                     break;
             }
