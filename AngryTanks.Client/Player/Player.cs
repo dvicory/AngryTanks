@@ -148,16 +148,7 @@ namespace AngryTanks.Client
                         // only interested in it if it's us that is spawning
                         if (packet.Slot == this.Slot)
                         {
-                            // set position and rotation...
-                            Position = newPosition = oldPosition = packet.Position;
-                            Rotation = newRotation = oldRotation = packet.Rotation;
-
-                            // reset camera
-                            World.Camera.Zoom = 1;
-                            World.Camera.PanPosition = Vector2.Zero;
-
-                            // move into alive state
-                            state = PlayerState.Alive;
+                            Spawn(packet.Position, packet.Rotation);
                         }
 
                         break;
@@ -170,8 +161,7 @@ namespace AngryTanks.Client
                         // only interested in it if it's us that was killed
                         if (packet.Slot == this.Slot)
                         {
-                            // move into exploding state
-                            state = PlayerState.Exploding;
+                            Die(World.PlayerManager.GetPlayerBySlot(packet.Killer));
                         }
 
                         break;
@@ -184,18 +174,22 @@ namespace AngryTanks.Client
             return;
         }
 
-        protected virtual void Die(Player killer)
+        public virtual void Spawn(Vector2 position, Single rotation)
         {
-            // send out the death packet right away
-            NetOutgoingMessage deathMessage = World.ServerLink.CreateMessage();
+            // set position and rotation...
+            Position = newPosition = oldPosition = position;
+            Rotation = newRotation = oldRotation = rotation;
 
-            MsgDeathPacket deathPacket = new MsgDeathPacket(killer.Slot);
+            // reset camera
+            World.Camera.Zoom = 1;
+            World.Camera.PanPosition = Vector2.Zero;
 
-            deathMessage.Write((Byte)MessageType.MsgDeath);
-            deathPacket.Write(deathMessage);
+            // move into alive state
+            state = PlayerState.Alive;
+        }
 
-            World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
-
+        public virtual void Die(Player killer)
+        {
             // move into the exploding state
             state = PlayerState.Exploding;
         }

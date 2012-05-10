@@ -107,6 +107,13 @@ namespace AngryTanks.Client
             get { return mapGrid; }
         }
 
+        private PlayerManager playerManager;
+
+        public PlayerManager PlayerManager
+        {
+            get { return playerManager; }
+        }
+
         #endregion
 
         public IServiceProvider IService;
@@ -125,8 +132,6 @@ namespace AngryTanks.Client
 
         // List of all Dynamic Sprites (tanks and flags), always drawn stretched.
         private List<Sprite> dynamicObjects = new List<Sprite>();
-
-        private PlayerManager playerManager;
 
         private IAudioManager audioManager;
 

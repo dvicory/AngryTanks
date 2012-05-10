@@ -216,5 +216,20 @@ namespace AngryTanks.Client
         {
             base.HandleReceivedMessage(sender, message);
         }
+
+        public override void Die(Player killer)
+        {
+            // send out the death packet right away
+            NetOutgoingMessage deathMessage = World.ServerLink.CreateMessage();
+
+            MsgDeathPacket deathPacket = new MsgDeathPacket(killer.Slot);
+
+            deathMessage.Write((Byte)MessageType.MsgDeath);
+            deathPacket.Write(deathMessage);
+
+            World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
+
+            base.Die(killer);
+        }
     }
 }
