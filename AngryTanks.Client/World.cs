@@ -303,7 +303,15 @@ namespace AngryTanks.Client
             // audio (testing only)
             if (ks.IsKeyDown(Keys.B))
             {
-                audioManager.Play("boom");
+                audioManager.Play("boom");                
+            }
+            if (ks.IsKeyDown(Keys.N))
+            {
+                audioManager.Play("boom", new Vector2(0, 0), new Vector2(400, 300));
+            }
+            if (ks.IsKeyDown(Keys.M))
+            {                
+                audioManager.playSong("Intergalactic");
             }
         }
 
