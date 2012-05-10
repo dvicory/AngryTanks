@@ -10,7 +10,28 @@ namespace AngryTanks.Common
     {
         #region Properties
 
-        public Single X, Y, Width, Height;
+        public virtual Single X
+        {
+            get;
+            set;
+        }
+
+        public virtual Single Y
+        {
+            get;
+            set;
+        }
+
+        public virtual Single Width {
+            get;
+            set;
+        }
+
+        public virtual Single Height
+        {
+            get;
+            set;
+        }
 
         public Single Top
         {
