@@ -262,6 +262,23 @@ namespace AngryTanks.Client
 
             World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
 
+            // write to console that you were killed
+            ConsoleMessageLine consoleMessage;
+
+            if (killer != this)
+            {
+                consoleMessage =
+                    new ConsoleMessageLine(
+                        "You were killed by ", Color.White,
+                        killer.Callsign, ProtocolHelpers.TeamTypeToColor(killer.Team));
+            }
+            else
+            {
+                consoleMessage = new ConsoleMessageLine("You blew yourself up!", Color.White);
+            }
+
+            World.Console.WriteLine(consoleMessage);
+
             base.Die(killer);
         }
 

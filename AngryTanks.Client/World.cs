@@ -279,7 +279,7 @@ namespace AngryTanks.Client
             }
 
             // the above is the only thing allowed when console prompt is active
-            if (console.PromptActive)
+            if (Console.PromptActive)
                 return;
 
             // pan the camera
@@ -407,13 +407,44 @@ namespace AngryTanks.Client
             switch (message.MessageType)
             {
                 case MessageType.MsgWorld:
-                    console.WriteLine("Loading map...");
+                    Console.WriteLine("Loading map...");
 
-                    MsgWorldPacket msgWorldData = (MsgWorldPacket)message.MessageData;
-                    
-                    LoadMap(msgWorldData.Map);
+                    MsgWorldPacket worldPacket = (MsgWorldPacket)message.MessageData;
 
-                    console.WriteLine(String.Format("Map \"{0}\" loaded.", WorldName));
+                    LoadMap(worldPacket.Map);
+
+                    Console.WriteLine(String.Format("Map \"{0}\" loaded.", WorldName));
+
+                    break;
+
+                case MessageType.MsgDeath:
+                    MsgDeathPacket deathPacket = (MsgDeathPacket)message.MessageData;
+
+                    Player killee = PlayerManager.GetPlayerBySlot(deathPacket.Slot);
+                    Player killer = PlayerManager.GetPlayerBySlot(deathPacket.Killer);
+
+                    if (killee == null || killer == null)
+                        return;
+
+                    ConsoleMessageLine consoleMessage;
+
+                    if (killer == PlayerManager.LocalPlayer)
+                    {
+                        consoleMessage =
+                            new ConsoleMessageLine(
+                                "You killed ", Color.White,
+                                killee.Callsign, ProtocolHelpers.TeamTypeToColor(killer.Team));
+                    }
+                    else
+                    {
+                        consoleMessage =
+                            new ConsoleMessageLine(
+                                killee.Callsign, ProtocolHelpers.TeamTypeToColor(killee.Team),
+                                " was killed by ", Color.White,
+                                killer.Callsign, ProtocolHelpers.TeamTypeToColor(killer.Team));
+                    }
+
+                    Console.WriteLine(consoleMessage);
 
                     break;
 
