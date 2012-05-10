@@ -428,20 +428,35 @@ namespace AngryTanks.Client
             // construct the StaticSprites from the stream
             mapObjects = ParseMapFile(sr);
 
-            // now we can make our grid
-            mapGrid = new Grid(new Vector2(WorldSize, WorldSize), MapObjects);
+            // add the boundaries
+            AddMapBoundaries();
+
+            // now we can make our grid, make it 10% larger than actual size to get any objects near the world edge
+            mapGrid = new Grid(new Vector2(WorldSize, WorldSize) * 1.1f, MapObjects);
         }
 
-        /* parseMapFile()
-         * 
-         * Takes in a StreamReader object and returns a List of Sprites
-         * corresponding to the boxes and pyramids which have a zero Z-position
-         * found in the stream.
-         * 
-         * IF THERE IS NO WORLD DATA this function will set the world name and size to default
-         * values 'No Name' and 800.
-         * 
-         */
+        private void AddMapBoundaries()
+        {
+            List<Sprite> tiled = mapObjects["tiled"];
+
+            tiled.Add(new Box(this, boxTexture, new Vector2((-WorldSize / 2) - 5, 0), new Vector2(10, WorldSize + 20), 0));
+            tiled.Add(new Box(this, boxTexture, new Vector2(( WorldSize / 2) + 5, 0), new Vector2(10, WorldSize + 20), 0));
+            tiled.Add(new Box(this, boxTexture, new Vector2(0, (-WorldSize / 2) - 5), new Vector2(WorldSize + 20, 10), 0));
+            tiled.Add(new Box(this, boxTexture, new Vector2(0, ( WorldSize / 2) + 5), new Vector2(WorldSize + 20, 10), 0));
+        }
+
+        /// <summary>
+        /// <para>
+        ///     Takes in a StreamReader <paramref name="sr"/> and returns a Dictionary mapping
+        ///     the draw type of the world object to a List of <see cref="Sprite"/>s.
+        /// </para>
+        /// <para>
+        ///     If there is no world data, this method will set the world name and size to
+        ///     the default values of "No Name" and 800 world units, respectively.
+        /// </para>
+        /// </summary>
+        /// <param name="sr"></param>
+        /// <returns></returns>
         private Dictionary<String, List<Sprite>> ParseMapFile(StreamReader sr)
         {
             Dictionary<String, List<Sprite>> mapObjects = new Dictionary<String, List<Sprite>>();
