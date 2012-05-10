@@ -101,8 +101,16 @@ namespace AngryTanks.Client
 
         protected static Texture2D GetTexture(World world, PlayerInformation playerInfo)
         {
-            // TODO get the correct texture depending on team
-            return world.Content.Load<Texture2D>("textures/tank_rogue");
+            try
+            {
+                return world.Content.Load<Texture2D>(String.Format("textures/tank_{0}", ProtocolHelpers.TeamTypeToName(playerInfo.Team)));
+            }
+            catch (ContentLoadException e)
+            {
+                Log.Error(e.Message);
+                Log.Error(e.StackTrace);
+                return world.Content.Load<Texture2D>("textures/tank_white");
+            }
         }
 
         protected static Vector2 GetTankSize(World world, PlayerInformation playerInfo)
@@ -192,7 +200,7 @@ namespace AngryTanks.Client
             state = PlayerState.Exploding;
         }
 
-        protected virtual Byte Shoot(Byte shotSlot)
+        protected virtual void Shoot(Byte shotSlot)
         {
             // get starting position
             Single tankLength = (Single)World.VarDB["tankLength"].Value;
@@ -201,8 +209,6 @@ namespace AngryTanks.Client
 
             // create the shot
             Shots[shotSlot] = new Shot(World, this, shotSlot, initialPosition, Rotation, Velocity);
-
-            return shotSlot;
         }
 
         /// <summary>

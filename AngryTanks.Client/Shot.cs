@@ -92,7 +92,7 @@ namespace AngryTanks.Client
         private TimeSpan maxTTL;
 
         public Shot(World world, Player player, Byte slot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
-            : base(world, GetTexture(world), initialPosition, new Vector2(2, 2), rotation)
+            : base(world, GetTexture(world, player), initialPosition, new Vector2(2, 2), rotation)
         {
             Single shotSpeed = (Single)World.VarDB["shotSpeed"].Value;
 
@@ -139,10 +139,18 @@ namespace AngryTanks.Client
             return earliestSlot;
         }
 
-        protected static Texture2D GetTexture(World world)
+        protected static Texture2D GetTexture(World world, Player player)
         {
-            // TODO get the correct texture depending on team
-            return world.Content.Load<Texture2D>("textures/bz/rogue_bolt");
+            try
+            {
+                return world.Content.Load<Texture2D>(String.Format("textures/bz/{0}_bolt", ProtocolHelpers.TeamTypeToName(player.Team)));
+            }
+            catch (ContentLoadException e)
+            {
+                Log.Error(e.Message);
+                Log.Error(e.StackTrace);
+                return world.Content.Load<Texture2D>("textures/bz/rabbit_bolt");
+            }
         }
 
         public void End()
