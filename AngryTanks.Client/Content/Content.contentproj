@@ -225,6 +225,21 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="textures\bz\rabbit_bolt.png">
+      <Name>rabbit_bolt</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\bz\rabbit_laser.png">
+      <Name>rabbit_laser</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\bz\rabbit_super_bolt.png">
+      <Name>rabbit_super_bolt</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="textures\bz\red_basetop.png">
       <Name>red_basetop</Name>
       <Importer>TextureImporter</Importer>
@@ -408,20 +423,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="textures\bz\rabbit_bolt.png">
-      <Name>rabbit_bolt</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="audio\music\Intergalactic.mp3">
+      <Name>Intergalactic</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="textures\bz\rabbit_laser.png">
-      <Name>rabbit_laser</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="audio\music\Imphenzia.I.Can.See.You.[Nicky.F.Instrumental.Edit].mp3">
+      <Name>Imphenzia.I.Can.See.You.[Nicky.F.Instrumental.Edit]</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="textures\bz\rabbit_super_bolt.png">
-      <Name>rabbit_super_bolt</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="audio\music\Imphenzia.Departure.mp3">
+      <Name>Imphenzia.Departure</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
