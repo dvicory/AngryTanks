@@ -120,6 +120,8 @@ namespace AngryTanks.Client
             get { return maxTTL; }
         }
 
+        private AnimatedSprite explosion;
+
         public Shot(World world, Player player, Byte slot, bool local, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
             : base(world, GetTexture(world, player), initialPosition, new Vector2(2, 2), rotation)
         {
@@ -194,6 +196,13 @@ namespace AngryTanks.Client
             else
                 state = ShotState.Ended;
 
+            explosion = new AnimatedSprite(World,
+                                           World.Content.Load<Texture2D>("textures/bz/explode1"),
+                                           Position,
+                                           new Vector2(8, 8),
+                                           Rotation,
+                                           new Point(8, 8), new Point(64, 64), SpriteSheetDirection.RightToLeft, false);
+
             // we only broadcast the end shot if it's a local one we're keeping track of
             if (Local)
             {
@@ -218,17 +227,21 @@ namespace AngryTanks.Client
             if (State == ShotState.Starting)
                 state = ShotState.Active;
 
-            // if we're ending, move straight to ended
-            // TODO logic to handle explosions while ending
+            // if we're ending, we'll update the explosion
             if (State == ShotState.Ending)
-                state = ShotState.Ended;
+            {
+                explosion.Update(gameTime);
+
+                if (explosion.Done)
+                    state = ShotState.Ended;
+            }
 
             // can the shot explode based on time yet?
             if (InitialTime + MaxTTL <= gameTime.TotalRealTime)
             {
                 if (State == ShotState.Ended)
                     state = ShotState.None;
-                else
+                else if (State != ShotState.Ending)
                     End(true);
             }
 
@@ -272,7 +285,10 @@ namespace AngryTanks.Client
             if (State == ShotState.Ended || State == ShotState.None)
                 return;
 
-            DrawStretched(gameTime, spriteBatch);
+            if (State == ShotState.Ending)
+                explosion.Draw(gameTime, spriteBatch);
+            else
+                DrawStretched(gameTime, spriteBatch);
         }
     }
 }

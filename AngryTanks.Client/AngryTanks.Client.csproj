@@ -92,6 +92,7 @@
     <Compile Include="AudioManager.cs" />
     <Compile Include="Box.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="AnimatedSprite.cs" />
     <Compile Include="Player\PlayerManager.cs" />
     <Compile Include="Player\RemotePlayer.cs" />
     <Compile Include="Player\Player.cs" />
