@@ -15,40 +15,55 @@ namespace AngryTanks.Common
     {
         #region Properties
 
+        private Single oldRotation;
         public Single Rotation;
+
+        private Vector2 oldOrigin;
         public Vector2 Origin;
 
+        private Vector2 upperLeft;
         public Vector2 UpperLeft
         {
             get
             {
+                if (Rotation == oldRotation && Origin == oldOrigin)
+                    return this.upperLeft;
                 Vector2 upperLeft = new Vector2(Left, Top);
                 return RotatePoint(upperLeft, upperLeft + Origin, Rotation);
             }
         }
 
+        private Vector2 upperRight;
         public Vector2 UpperRight
         {
             get
             {
+                if (Rotation == oldRotation && Origin == oldOrigin)
+                    return this.upperRight;
                 Vector2 upperRight = new Vector2(Right, Top);
                 return RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
             }
         }
 
+        private Vector2 lowerLeft;
         public Vector2 LowerLeft
         {
             get
             {
+                if (Rotation == oldRotation && Origin == oldOrigin)
+                    return this.lowerLeft;
                 Vector2 lowerLeft = new Vector2(Left, Bottom);
                 return RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
             }
         }
 
+        private Vector2 lowerRight;
         public Vector2 LowerRight
         {
             get
             {
+                if (Rotation == oldRotation && Origin == oldOrigin)
+                    return this.lowerRight;
                 Vector2 lowerRight = new Vector2(Right, Bottom);
                 return RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
             }
@@ -68,21 +83,43 @@ namespace AngryTanks.Common
         public RotatedRectangle(Single x, Single y, Single width, Single height, Single rotation)
             : base(x, y, width, height)
         {
-            this.Rotation = rotation;
+            this.oldRotation = this.Rotation = rotation;
+             
 
             // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
+
+            //Cache the rotated corners
+            Vector2 upperLeft = new Vector2(Left, Top);
+            this.upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
+            Vector2 upperRight = new Vector2(Right, Top);
+            this.upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
+            Vector2 lowerLeft = new Vector2(Left, Bottom);
+            this.lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
+            Vector2 lowerRight = new Vector2(Right, Bottom);
+            this.lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
+
         }
 
         public RotatedRectangle(RectangleF rectangle, Single rotation)
             : base(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height)
         {
-            this.Rotation = rotation;
+            this.oldRotation = this.Rotation = rotation;
 
             // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
+
+            //Cache the rotated corners
+            Vector2 upperLeft = new Vector2(Left, Top);
+            this.upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
+            Vector2 upperRight = new Vector2(Right, Top);
+            this.upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
+            Vector2 lowerLeft = new Vector2(Left, Bottom);
+            this.lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
+            Vector2 lowerRight = new Vector2(Right, Bottom);
+            this.lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
         }
 
         /// <summary>
