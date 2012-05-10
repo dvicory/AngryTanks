@@ -698,11 +698,11 @@ namespace AngryTanks.Common
         /// Sent by the client to begin a shot.
         /// Sent by the server to tell other players to begin the shot.
         /// </summary>
-        public class MsgShotBeginPacket : MsgBasePacket
+        public class MsgBeginShotPacket : MsgBasePacket
         {
             public override MessageType MsgType
             {
-                get { return MessageType.MsgShotBegin; }
+                get { return MessageType.MsgBeginShot; }
             }
 
             public readonly Byte Slot;
@@ -712,16 +712,16 @@ namespace AngryTanks.Common
             public readonly Vector2 Velocity;
 
             /// <summary>
-            /// Used to construct a <see cref="MsgShotBeginPacket"/> on the client to notify about a new shot.
+            /// Used to construct a <see cref="MsgBeginShotPacket"/> on the client to notify about a new shot.
             /// </summary>
-            public MsgShotBeginPacket(Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
+            public MsgBeginShotPacket(Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
                 : this(ProtocolInformation.DummySlot, shotSlot, position, rotation, velocity)
             { }
 
             /// <summary>
             /// Used to construct a <see cref="MsgShotBegin"/> on the server to inform about a shot.
             /// </summary>
-            public MsgShotBeginPacket(Byte slot, Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
+            public MsgBeginShotPacket(Byte slot, Byte shotSlot, Vector2 position, Single rotation, Vector2 velocity)
             {
                 this.Slot     = slot;
                 this.ShotSlot = shotSlot;
@@ -730,7 +730,7 @@ namespace AngryTanks.Common
                 this.Velocity = velocity;
             }
 
-            public static MsgShotBeginPacket Read(NetIncomingMessage packet)
+            public static MsgBeginShotPacket Read(NetIncomingMessage packet)
             {
                 Byte slot = packet.ReadByte();
                 Byte shotSlot = packet.ReadByte();
@@ -738,7 +738,7 @@ namespace AngryTanks.Common
                 Single rotation = packet.ReadSingle();
                 Vector2 velocity = packet.ReadVector2();
 
-                return new MsgShotBeginPacket(slot, shotSlot, position, rotation, velocity);
+                return new MsgBeginShotPacket(slot, shotSlot, position, rotation, velocity);
             }
 
             public void Write(NetOutgoingMessage packet)
@@ -755,44 +755,48 @@ namespace AngryTanks.Common
         /// Sent by the client to end a shot.
         /// Sent by the server to tell other players to end the shot.
         /// </summary>
-        public class MsgShotEndPacket : MsgBasePacket
+        public class MsgEndShotPacket : MsgBasePacket
         {
             public override MessageType MsgType
             {
-                get { return MessageType.MsgShotEnd; }
+                get { return MessageType.MsgEndShot; }
             }
 
             public readonly Byte Slot;
             public readonly Byte ShotSlot;
+            public readonly bool Explode;
 
             /// <summary>
-            /// Used to construct a <see cref="MsgShotEndPacket"/> on the client to notify about a new shot.
+            /// Used to construct a <see cref="MsgEndShotPacket"/> on the client to notify about a new shot.
             /// </summary>
-            public MsgShotEndPacket(Byte shotSlot)
-                : this(ProtocolInformation.DummySlot, shotSlot)
+            public MsgEndShotPacket(Byte shotSlot, bool explode)
+                : this(ProtocolInformation.DummySlot, shotSlot, explode)
             { }
 
             /// <summary>
-            /// Used to construct a <see cref="MsgShotEndPacket"/> on the server to inform about a shot.
+            /// Used to construct a <see cref="MsgEndShotPacket"/> on the server to inform about a shot.
             /// </summary>
-            public MsgShotEndPacket(Byte slot, Byte shotSlot)
+            public MsgEndShotPacket(Byte slot, Byte shotSlot, bool explode)
             {
                 this.Slot = slot;
                 this.ShotSlot = shotSlot;
+                this.Explode  = explode;
             }
 
-            public static MsgShotEndPacket Read(NetIncomingMessage packet)
+            public static MsgEndShotPacket Read(NetIncomingMessage packet)
             {
                 Byte slot = packet.ReadByte();
                 Byte shotSlot = packet.ReadByte();
+                bool explode = packet.ReadBoolean();
 
-                return new MsgShotEndPacket(slot, shotSlot);
+                return new MsgEndShotPacket(slot, shotSlot, explode);
             }
 
             public void Write(NetOutgoingMessage packet)
             {
                 packet.Write(this.Slot);
                 packet.Write(this.ShotSlot);
+                packet.Write(this.Explode);
             }
         }
     }

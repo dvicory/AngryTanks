@@ -350,16 +350,16 @@ namespace AngryTanks.Client
                         break;
                     }
 
-                case MessageType.MsgShotBegin:
+                case MessageType.MsgBeginShot:
                     {
-                        MsgShotBeginPacket packet = MsgShotBeginPacket.Read(msg);
+                        MsgBeginShotPacket packet = MsgBeginShotPacket.Read(msg);
                         FireMessageEvent(gameTime, packet);
                         break;
                     }
 
-                case MessageType.MsgShotEnd:
+                case MessageType.MsgEndShot:
                     {
-                        MsgShotEndPacket packet = MsgShotEndPacket.Read(msg);
+                        MsgEndShotPacket packet = MsgEndShotPacket.Read(msg);
                         FireMessageEvent(gameTime, packet);
                         break;
                     }

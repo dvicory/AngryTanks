@@ -11,10 +11,12 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Lidgren.Network;
 using log4net;
 
 using AngryTanks.Common;
 using AngryTanks.Common.Protocol;
+using AngryTanks.Common.Messages;
 
 namespace AngryTanks.Client
 {
@@ -66,6 +68,13 @@ namespace AngryTanks.Client
             get { return slot; }
         }
 
+        private readonly bool local;
+
+        public bool Local
+        {
+            get { return local; }
+        }
+
         private Player player;
 
         /// <summary>
@@ -111,7 +120,7 @@ namespace AngryTanks.Client
             get { return maxTTL; }
         }
 
-        public Shot(World world, Player player, Byte slot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
+        public Shot(World world, Player player, Byte slot, bool local, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
             : base(world, GetTexture(world, player), initialPosition, new Vector2(2, 2), rotation)
         {
             Single shotSpeed = (Single)World.VarDB["shotSpeed"].Value;
@@ -127,9 +136,10 @@ namespace AngryTanks.Client
             //Velocity += initialVelocity;
 
             // store info...
-            this.initialPosition = initialPosition;
             this.slot = slot;
+            this.local = local;
             this.player = player;
+            this.initialPosition = initialPosition;
             this.maxShotRange = (Single)World.VarDB["shotRange"].Value;
             this.maxTTL = new TimeSpan(0, 0, 0, 0, (int)((Single)World.VarDB["reloadTime"].Value * 1000));
 
@@ -173,13 +183,29 @@ namespace AngryTanks.Client
             }
         }
 
-        public void End()
+        public void End(bool explode)
         {
             // we are no longer moving now
             Velocity = Vector2.Zero;
 
-            // and we are ending
-            state = ShotState.Ending;
+            // and we are ending, if we choose to explode, or go straight to ended
+            if (explode)
+                state = ShotState.Ending;
+            else
+                state = ShotState.Ended;
+
+            // we only broadcast the end shot if it's a local one we're keeping track of
+            if (Local)
+            {
+                NetOutgoingMessage endShotMessage = World.ServerLink.CreateMessage();
+
+                MsgEndShotPacket endShotPacket = new MsgEndShotPacket(this.Slot, explode);
+
+                endShotMessage.Write((Byte)endShotPacket.MsgType);
+                endShotPacket.Write(endShotMessage);
+
+                World.ServerLink.SendMessage(endShotMessage, NetDeliveryMethod.ReliableUnordered, 0);
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -197,29 +223,35 @@ namespace AngryTanks.Client
             if (State == ShotState.Ending)
                 state = ShotState.Ended;
 
-            // can the shot move to the none state yet?
+            // can the shot explode based on time yet?
             if (InitialTime + MaxTTL <= gameTime.TotalRealTime)
             {
-                state = ShotState.None;
-                Log.DebugFormat("putting shot {0} in state none, initial time: {1}, max ttl: {2}, total real time: {3}",
-                                Slot, InitialTime, MaxTTL, gameTime.TotalRealTime);
+                if (State == ShotState.Ended)
+                    state = ShotState.None;
+                else
+                    End(true);
             }
 
             // see if we can bail out now
-            if (State == ShotState.Ended || State == ShotState.None)
+            if (State == ShotState.Ending || State == ShotState.Ended || State == ShotState.None)
                 return;
 
-            // see if we collide with any world objects
-            Single overlap;
-            Vector2 collisionProjection;
-
-            if (FindNearestCollision(World.MapGrid.PotentialIntersects(this), out overlap, out collisionProjection))
+            // the following is expensive, so we only do it if it's a local shot
+            // we trust everyone else will end their shots for us
+            if (Local)
             {
-                // move our position back
-                Position += overlap * collisionProjection;
+                // see if we collide with any world objects
+                Single overlap;
+                Vector2 collisionProjection;
 
-                // end shot
-                End();
+                if (FindNearestCollision(World.MapGrid.PotentialIntersects(this), out overlap, out collisionProjection))
+                {
+                    // move our position back
+                    Position += overlap * collisionProjection;
+
+                    // end shot
+                    End(true);
+                }
             }
 
             Position += Velocity * (Single)gameTime.ElapsedGameTime.TotalSeconds;
@@ -228,7 +260,7 @@ namespace AngryTanks.Client
             if (Math.Abs(Vector2.Distance(initialPosition, Position)) >= maxShotRange)
             {
                 // end shot
-                End();
+                End(true);
             }
 
             base.Update(gameTime);

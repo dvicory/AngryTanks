@@ -208,7 +208,7 @@ namespace AngryTanks.Client
 
                 MsgPlayerClientUpdatePacket playerClientUpdatePacket = new MsgPlayerClientUpdatePacket(Position, Rotation);
 
-                playerClientUpdateMessage.Write((Byte)MessageType.MsgPlayerClientUpdate);
+                playerClientUpdateMessage.Write((Byte)playerClientUpdatePacket.MsgType);
                 playerClientUpdatePacket.Write(playerClientUpdateMessage);
 
                 World.ServerLink.SendMessage(playerClientUpdateMessage, NetDeliveryMethod.UnreliableSequenced, 0);
@@ -232,7 +232,7 @@ namespace AngryTanks.Client
                 Die(shot.Player);
 
                 // now end that shot
-                shot.End();
+                shot.End(false);
             }
         }
 
@@ -257,7 +257,7 @@ namespace AngryTanks.Client
 
             MsgDeathPacket deathPacket = new MsgDeathPacket(killer.Slot);
 
-            deathMessage.Write((Byte)MessageType.MsgDeath);
+            deathMessage.Write((Byte)deathPacket.MsgType);
             deathPacket.Write(deathMessage);
 
             World.ServerLink.SendMessage(deathMessage, NetDeliveryMethod.ReliableOrdered, 0);
@@ -270,12 +270,12 @@ namespace AngryTanks.Client
             // send out the shot begin packet right away
             NetOutgoingMessage shotBeginMessage = World.ServerLink.CreateMessage();
 
-            MsgShotBeginPacket shotBeginPacket = new MsgShotBeginPacket(shotSlot, initialPosition, rotation, initialVelocity);
+            MsgBeginShotPacket shotBeginPacket = new MsgBeginShotPacket(shotSlot, initialPosition, rotation, initialVelocity);
 
-            shotBeginMessage.Write((Byte)MessageType.MsgShotBegin);
+            shotBeginMessage.Write((Byte)shotBeginPacket.MsgType);
             shotBeginPacket.Write(shotBeginMessage);
 
-            World.ServerLink.SendMessage(shotBeginMessage, NetDeliveryMethod.ReliableOrdered, 0);
+            World.ServerLink.SendMessage(shotBeginMessage, NetDeliveryMethod.ReliableUnordered, 0);
 
             base.Shoot(shotSlot, initialPosition, rotation, initialVelocity, local);
         }

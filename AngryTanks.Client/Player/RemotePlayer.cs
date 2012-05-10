@@ -79,9 +79,9 @@ namespace AngryTanks.Client
                     }
 
 
-                case MessageType.MsgShotBegin:
+                case MessageType.MsgBeginShot:
                     {
-                        MsgShotBeginPacket packet = (MsgShotBeginPacket)message.MessageData;
+                        MsgBeginShotPacket packet = (MsgBeginShotPacket)message.MessageData;
 
                         // only interested if it's a shot that this player began
                         if (packet.Slot == this.Slot)

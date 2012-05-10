@@ -99,11 +99,11 @@ namespace AngryTanks.Server
                     Die(incomingMsg);
                     break;
 
-                case MessageType.MsgShotBegin:
+                case MessageType.MsgBeginShot:
                     Shoot(incomingMsg);
                     break;
 
-                case MessageType.MsgShotEnd:
+                case MessageType.MsgEndShot:
                     EndShot(incomingMsg);
                     break;
 
@@ -173,7 +173,7 @@ namespace AngryTanks.Server
 
             addPlayerPacket = new MsgAddPlayerPacket(PlayerInfo, true);
 
-            addPlayerMessage.Write((Byte)MessageType.MsgAddPlayer);
+            addPlayerMessage.Write((Byte)addPlayerPacket.MsgType);
             addPlayerPacket.Write(addPlayerMessage);
 
             SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
@@ -183,7 +183,7 @@ namespace AngryTanks.Server
 
             MsgStatePacket statePacket = new MsgStatePacket(Slot);
 
-            stateMessage.Write((Byte)MessageType.MsgState);
+            stateMessage.Write((Byte)statePacket.MsgType);
             statePacket.Write(stateMessage);
 
             SendMessage(stateMessage, NetDeliveryMethod.ReliableOrdered, 0);
@@ -206,7 +206,7 @@ namespace AngryTanks.Server
             NetOutgoingMessage serverUpdateMessage = gameKeeper.Server.CreateMessage();
             MsgPlayerServerUpdatePacket serverUpdatePacket = new MsgPlayerServerUpdatePacket(this.Slot, clientUpdatePacket);
 
-            serverUpdateMessage.Write((Byte)MessageType.MsgPlayerServerUpdate);
+            serverUpdateMessage.Write((Byte)serverUpdatePacket.MsgType);
             serverUpdatePacket.Write(serverUpdateMessage);
 
             // send to everyone but us
@@ -224,7 +224,7 @@ namespace AngryTanks.Server
             MsgSpawnPacket spawnPacket = new MsgSpawnPacket(this.Slot, Vector2.Zero, 0);
 
             // write to the message
-            spawnMessage.Write((Byte)MessageType.MsgSpawn);
+            spawnMessage.Write((Byte)spawnPacket.MsgType);
             spawnPacket.Write(spawnMessage);
 
             // send the spawn message to everyone
@@ -248,7 +248,7 @@ namespace AngryTanks.Server
             MsgDeathPacket deathPacket = new MsgDeathPacket(this.Slot, incomingDeathPacket.Killer);
 
             // write to the message
-            deathMessage.Write((Byte)MessageType.MsgDeath);
+            deathMessage.Write((Byte)deathPacket.MsgType);
             deathPacket.Write(deathMessage);
 
             // send the death message to everyone except the player who reported it
@@ -282,24 +282,24 @@ namespace AngryTanks.Server
         /// <param name="incomingMessage"></param>
         public void Shoot(NetIncomingMessage incomingMessage)
         {
-            MsgShotBeginPacket incomingShotBeginPacket = MsgShotBeginPacket.Read(incomingMessage);
+            MsgBeginShotPacket incomingBeginShotPacket = MsgBeginShotPacket.Read(incomingMessage);
 
             // create our shot begin message and packet
-            NetOutgoingMessage shotBeginMessage = gameKeeper.Server.CreateMessage();
+            NetOutgoingMessage beginShotMessage = gameKeeper.Server.CreateMessage();
 
-            MsgShotBeginPacket shotBeginPacket =
-                new MsgShotBeginPacket(this.Slot,
-                                       incomingShotBeginPacket.ShotSlot,
-                                       incomingShotBeginPacket.Position,
-                                       incomingShotBeginPacket.Rotation,
-                                       incomingShotBeginPacket.Velocity);
+            MsgBeginShotPacket beginShotPacket =
+                new MsgBeginShotPacket(this.Slot,
+                                       incomingBeginShotPacket.ShotSlot,
+                                       incomingBeginShotPacket.Position,
+                                       incomingBeginShotPacket.Rotation,
+                                       incomingBeginShotPacket.Velocity);
 
             // write to the message
-            shotBeginMessage.Write((Byte)MessageType.MsgShotBegin);
-            shotBeginPacket.Write(shotBeginMessage);
+            beginShotMessage.Write((Byte)beginShotPacket.MsgType);
+            beginShotPacket.Write(beginShotMessage);
 
             // send the shot begin message to everyone except the player who reported it
-            gameKeeper.Server.SendToAll(shotBeginMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
+            gameKeeper.Server.SendToAll(beginShotMessage, this.Connection, NetDeliveryMethod.ReliableUnordered, 0);
         }
 
         /// <summary>
@@ -308,19 +308,19 @@ namespace AngryTanks.Server
         /// <param name="incomingMessage"></param>
         public void EndShot(NetIncomingMessage incomingMessage)
         {
-            MsgShotEndPacket incomingShotEndPacket = MsgShotEndPacket.Read(incomingMessage);
+            MsgEndShotPacket incomingShotEndPacket = MsgEndShotPacket.Read(incomingMessage);
 
             // create our shot end message and packet
             NetOutgoingMessage shotEndMessage = gameKeeper.Server.CreateMessage();
 
-            MsgShotEndPacket shotEndPacket = new MsgShotEndPacket(this.Slot, incomingShotEndPacket.ShotSlot);
+            MsgEndShotPacket shotEndPacket = new MsgEndShotPacket(this.Slot, incomingShotEndPacket.ShotSlot, incomingShotEndPacket.Explode);
 
             // write to the message
-            shotEndMessage.Write((Byte)MessageType.MsgShotEnd);
+            shotEndMessage.Write((Byte)shotEndPacket.MsgType);
             shotEndPacket.Write(shotEndMessage);
 
             // send the shot end message to everyone except the player who reported it
-            gameKeeper.Server.SendToAll(shotEndMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
+            gameKeeper.Server.SendToAll(shotEndMessage, this.Connection, NetDeliveryMethod.ReliableUnordered, 0);
         }
 
         /// <summary>

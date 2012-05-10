@@ -190,16 +190,16 @@ namespace AngryTanks.Client
                         break;
                     }
 
-                case MessageType.MsgShotEnd:
+                case MessageType.MsgEndShot:
                     {
-                        MsgShotEndPacket packet = (MsgShotEndPacket)message.MessageData;
+                        MsgEndShotPacket packet = (MsgEndShotPacket)message.MessageData;
 
                         // only interested if it's a shot by this player that's ending
                         if (packet.Slot == this.Slot)
                         {
                             try
                             {
-                                Shots[packet.ShotSlot].End();
+                                Shots[packet.ShotSlot].End(packet.Explode);
                             }
                             catch (KeyNotFoundException e)
                             {
@@ -224,7 +224,7 @@ namespace AngryTanks.Client
             // this is possible if the respawn time is quicker than shots expire
             foreach (Shot shot in ActiveShots)
             {
-                shot.End();
+                shot.End(true);
             }
 
             // set position and rotation...
@@ -254,7 +254,7 @@ namespace AngryTanks.Client
         protected virtual void Shoot(Byte shotSlot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity, bool local)
         {
             // create the shot
-            Shots[shotSlot] = new Shot(World, this, shotSlot, initialPosition, Rotation, Velocity);
+            Shots[shotSlot] = new Shot(World, this, shotSlot, local, initialPosition, Rotation, Velocity);
         }
 
         /// <summary>
