@@ -142,7 +142,7 @@ namespace AngryTanks.Common
             AddVariable("shotRange",
                         "Range of shots", 350f, typeof(Single));
             AddVariable("shotSlots",
-                        "Number of shot slots", 5, typeof(UInt16));
+                        "Number of shot slots", 5, typeof(Byte));
             AddVariable("shotSpeed",
                         "Speed of shots", 50f, typeof(Single));
             AddVariable("tankAngVel",

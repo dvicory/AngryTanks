@@ -20,10 +20,32 @@ namespace AngryTanks.Client
 {
     public enum ShotState
     {
+        /// <summary>
+        /// The final state of the shot.
+        /// The shot can be removed at this state.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// The starting state of the shot.
+        /// </summary>
         Starting,
+
+        /// <summary>
+        /// The active phase of the shot.
+        /// </summary>
         Active,
-        Ending
+
+        /// <summary>
+        /// The ending phase of the shot.
+        /// </summary>
+        Ending,
+
+        /// <summary>
+        /// The ended phase of the shot.
+        /// A shot will remain in Ended until it has reloaded, where it will go to None.
+        /// </summary>
+        Ended
     }
 
     public class Shot : DynamicSprite
@@ -59,6 +81,16 @@ namespace AngryTanks.Client
         /// </summary>
         private Single maxShotRange;
 
+        /// <summary>
+        /// Time the shot was created.
+        /// </summary>
+        private TimeSpan initialTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// The maximum time to live for the shot, which is also the reload time.
+        /// </summary>
+        private TimeSpan maxTTL;
+
         public Shot(World world, Player player, Byte slot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
             : base(world, GetTexture(world), initialPosition, new Vector2(2, 2), rotation)
         {
@@ -79,6 +111,7 @@ namespace AngryTanks.Client
             this.slot = slot;
             this.player = player;
             this.maxShotRange = (Single)World.VarDB["shotRange"].Value;
+            this.maxTTL = new TimeSpan(0, 0, 0, 0, (int)((Single)World.VarDB["reloadTime"].Value * 1000));
 
             // start the shot
             state = ShotState.Starting;
@@ -123,17 +156,29 @@ namespace AngryTanks.Client
 
         public override void Update(GameTime gameTime)
         {
+            // see if we need to setup initial time
+            if (initialTime == TimeSpan.Zero)
+                initialTime = gameTime.TotalRealTime;
+
             // if we're starting, move straight to active
             if (State == ShotState.Starting)
                 state = ShotState.Active;
 
-            // if we're ending, move straight to none
+            // if we're ending, move straight to ended
             // TODO logic to handle explosions while ending
             if (State == ShotState.Ending)
-                state = ShotState.None;
+                state = ShotState.Ended;
 
-            // bail out now
-            if (State == ShotState.None)
+            // can the shot move to the none state yet?
+            if (initialTime + maxTTL <= gameTime.TotalRealTime)
+            {
+                state = ShotState.None;
+                Log.DebugFormat("putting shot {0} in state none, initial time: {1}, max ttl: {2}, total real time: {3}",
+                                Slot, initialTime, maxTTL, gameTime.TotalRealTime);
+            }
+
+            // see if we can bail out now
+            if (State == ShotState.Ended || State == ShotState.None)
                 return;
 
             // see if we collide with any world objects
@@ -164,7 +209,7 @@ namespace AngryTanks.Client
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // we have nothing to draw
-            if (State == ShotState.None)
+            if (State == ShotState.Ended || State == ShotState.None)
                 return;
 
             DrawStretched(gameTime, spriteBatch);

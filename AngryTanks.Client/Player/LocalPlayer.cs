@@ -83,8 +83,29 @@ namespace AngryTanks.Client
 
                 // shoot when you hit enter
                 case Keys.Enter:
-                    Shoot();
-                    break;
+                    {
+                        // first limit how many shots we can fire
+                        // how many active shots are there?
+                        Byte numActiveShots = (Byte)Shots.Values.Count(s => s.State != ShotState.None);
+
+                        // is there shot slots left for the player to fire?
+                        Byte maxShots = (Byte)World.VarDB["shotSlots"].Value;
+
+                        if (numActiveShots >= maxShots)
+                            return;
+
+                        // find first available shot ID
+                        Byte shotSlot = Shot.AllocateSlot(Shots);
+
+                        // no more shot slots
+                        if (shotSlot == ProtocolInformation.DummyShot)
+                            return;
+
+                        // fire away
+                        Shoot(shotSlot);
+
+                        break;
+                    }
 
                 default:
                     break;

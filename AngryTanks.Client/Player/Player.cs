@@ -192,15 +192,8 @@ namespace AngryTanks.Client
             state = PlayerState.Exploding;
         }
 
-        protected virtual Byte Shoot()
+        protected virtual Byte Shoot(Byte shotSlot)
         {
-            // find first available shot ID
-            Byte shotSlot = Shot.AllocateSlot(Shots);
-
-            // no more shot slots
-            if (shotSlot == ProtocolInformation.DummyShot)
-                return shotSlot;
-
             // get starting position
             Single tankLength = (Single)World.VarDB["tankLength"].Value;
             Vector2 initialPosition = Position + new Vector2((tankLength / 2) * (Single)Math.Cos(Rotation - Math.PI / 2),
