@@ -138,7 +138,7 @@ namespace AngryTanks.Server
             foreach (Player otherPlayer in gameKeeper.Players)
             {
                 // don't want to tell our player about himself just yet...
-                if (otherPlayer.Slot == this.Slot)
+                if (otherPlayer == this)
                     continue;
 
                 addPlayerMessage = gameKeeper.Server.CreateMessage();
@@ -153,8 +153,20 @@ namespace AngryTanks.Server
 
                 SendMessage(addPlayerMessage, NetDeliveryMethod.ReliableOrdered, 0);
             }
-            
-            // TODO send scores and such...
+
+            // send everyones' scores to him
+            NetOutgoingMessage scoreMessage;
+
+            foreach (Player otherPlayer in gameKeeper.Players)
+            {
+                // no reason to give our player his score... he has none yet
+                if (otherPlayer == this)
+                    continue;
+
+                scoreMessage = otherPlayer.GetMsgScore();
+
+                SendMessage(scoreMessage, NetDeliveryMethod.ReliableOrdered, 0);
+            }
 
             // send back one last MsgAddPlayer with their full information (which could be changed!)
             addPlayerMessage = gameKeeper.Server.CreateMessage();
@@ -242,7 +254,25 @@ namespace AngryTanks.Server
             // send the death message to everyone except the player who reported it
             gameKeeper.Server.SendToAll(deathMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
 
-            // they're now dead as far as we're concerned
+            // update our score
+            this.Score.Losses++;
+
+            // update killer's score, but only if the killer wasn't myself
+            if (this.Slot != incomingDeathPacket.Killer)
+            {
+                Player killer = gameKeeper.GetPlayerBySlot(incomingDeathPacket.Killer);
+
+                if (killer != null)
+                {
+                    killer.Score.Wins++;
+                    gameKeeper.Server.SendToAll(killer.GetMsgScore(), null, NetDeliveryMethod.ReliableOrdered, 0);
+                }
+            }
+
+            // broadcast our score
+            gameKeeper.Server.SendToAll(this.GetMsgScore(), null, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // we're now dead as far as we're concerned
             state = PlayerState.Dead;
         }
 
@@ -291,6 +321,22 @@ namespace AngryTanks.Server
 
             // send the shot end message to everyone except the player who reported it
             gameKeeper.Server.SendToAll(shotEndMessage, this.Connection, NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public NetOutgoingMessage GetMsgScore()
+        {
+            NetOutgoingMessage scoreMessage = gameKeeper.Server.CreateMessage();
+
+            MsgScorePacket scorePacket = new MsgScorePacket(this.Slot, this.Score);
+
+            scoreMessage.Write((Byte)scorePacket.MsgType);
+            scorePacket.Write(scoreMessage);
+
+            return scoreMessage;
         }
 
         #region Connection Helpers

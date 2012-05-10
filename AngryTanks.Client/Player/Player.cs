@@ -177,6 +177,18 @@ namespace AngryTanks.Client
                         break;
                     }
 
+                case MessageType.MsgScore:
+                    {
+                        MsgScorePacket packet = (MsgScorePacket)message.MessageData;
+
+                        // only interested in it if it's our new score
+                        if (packet.Slot == this.Slot)
+                        {
+                            this.Score = packet.Score;
+                        }
+
+                        break;
+                    }
 
                 case MessageType.MsgShotEnd:
                     {

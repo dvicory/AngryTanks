@@ -194,6 +194,26 @@ namespace AngryTanks.Server
         }
 
         /// <summary>
+        /// Gets the <see cref="Player"/> associated with a certain slot.
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public Player GetPlayerBySlot(Byte slot)
+        {
+            try
+            {
+                return players[slot];
+            }
+            // a player at that slot doesn't exist...
+            catch (KeyNotFoundException e)
+            {
+                Log.Error(e.Message);
+                Log.Error(e.StackTrace);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Attempts to find a slot to allocate a <see cref="Player"/>.
         /// </summary>
         /// <param name="playerAdding"><see cref="PlayerInformation"/> about the player being added.</param>

@@ -317,6 +317,14 @@ namespace AngryTanks.Client
                         break;
                     }
 
+                case MessageType.MsgScore:
+                    {
+                        Log.DebugFormat("Got MsgScore ({0} bytes)", msg.LengthBytes);
+                        MsgScorePacket packet = MsgScorePacket.Read(msg);
+                        FireMessageEvent(gameTime, packet);
+                        break;
+                    }
+
                 case MessageType.MsgWorld:
                     {
                         Log.DebugFormat("Got MsgWorld ({0} bytes)", msg.LengthBytes);

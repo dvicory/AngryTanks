@@ -648,6 +648,53 @@ namespace AngryTanks.Common
         }
 
         /// <summary>
+        /// Sent by the server to update the score.
+        /// </summary>
+        public class MsgScorePacket : MsgBasePacket
+        {
+            public override MessageType MsgType
+            {
+                get { return MessageType.MsgScore; }
+            }
+
+            public readonly Byte Slot;
+            public readonly Score Score;
+
+            /// <summary>
+            /// Used to construct a <see cref="MsgScorePacket"/>.
+            /// </summary>
+            public MsgScorePacket(Byte slot, Score score)
+            {
+                this.Slot = slot;
+                this.Score = score;
+            }
+
+            public static MsgScorePacket Read(NetIncomingMessage packet)
+            {
+                Byte slot       = packet.ReadByte();
+                Int32 wins      = packet.ReadInt32();
+                Int32 losses    = packet.ReadInt32();
+                Int32 teamkills = packet.ReadInt32();
+
+                Score score = new Score();
+
+                score.Wins      = wins;
+                score.Losses    = losses;
+                score.Teamkills = teamkills;
+
+                return new MsgScorePacket(slot, score);
+            }
+
+            public void Write(NetOutgoingMessage packet)
+            {
+                packet.Write(this.Slot);
+                packet.Write(this.Score.Wins);
+                packet.Write(this.Score.Losses);
+                packet.Write(this.Score.Teamkills);
+            }
+        }
+
+        /// <summary>
         /// Sent by the client to begin a shot.
         /// Sent by the server to tell other players to begin the shot.
         /// </summary>
