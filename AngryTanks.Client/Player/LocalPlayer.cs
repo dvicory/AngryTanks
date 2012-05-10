@@ -86,7 +86,7 @@ namespace AngryTanks.Client
                     {
                         // first limit how many shots we can fire
                         // how many active shots are there?
-                        Byte numActiveShots = (Byte)Shots.Values.Count(s => s.State != ShotState.None);
+                        Byte numActiveShots = (Byte)ActiveShots.Count;
 
                         // is there shot slots left for the player to fire?
                         Byte maxShots = (Byte)World.VarDB["shotSlots"].Value;

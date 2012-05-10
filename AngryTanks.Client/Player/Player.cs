@@ -67,9 +67,19 @@ namespace AngryTanks.Client
             set;
         }
 
-        #endregion
+        protected Dictionary<Byte, Shot> shots = new Dictionary<Byte, Shot>();
 
-        public Dictionary<Byte, Shot> Shots = new Dictionary<Byte, Shot>();
+        public Dictionary<Byte, Shot> Shots
+        {
+            get { return shots; }
+        }
+
+        public List<Shot> ActiveShots
+        {
+            get { return shots.Values.Where(s => s.State != ShotState.None).ToList();}
+        }
+
+        #endregion
 
         public Player(World world, PlayerInformation playerInfo)
             : base(world, GetTexture(world, playerInfo), Vector2.Zero, GetTankSize(world, playerInfo), 0)

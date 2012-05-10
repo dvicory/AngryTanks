@@ -71,25 +71,40 @@ namespace AngryTanks.Client
         /// </summary>
         private Player player;
 
+        private Vector2 initialPosition;
+
         /// <summary>
         /// Stores the position the shot originated from.
         /// </summary>
-        private Vector2 initialPosition;
+        public Vector2 InitialPosition
+        {
+            get { return initialPosition; }
+        }
 
         /// <summary>
         /// Maximum distance the shot will travel.
         /// </summary>
         private Single maxShotRange;
 
+        private TimeSpan initialTime = TimeSpan.Zero;
+
         /// <summary>
         /// Time the shot was created.
         /// </summary>
-        private TimeSpan initialTime = TimeSpan.Zero;
+        public TimeSpan InitialTime
+        {
+            get { return initialTime; }
+        }
+
+        private TimeSpan maxTTL;
 
         /// <summary>
         /// The maximum time to live for the shot, which is also the reload time.
         /// </summary>
-        private TimeSpan maxTTL;
+        public TimeSpan MaxTTL
+        {
+            get { return maxTTL; }
+        }
 
         public Shot(World world, Player player, Byte slot, Vector2 initialPosition, Single rotation, Vector2 initialVelocity)
             : base(world, GetTexture(world, player), initialPosition, new Vector2(2, 2), rotation)
@@ -165,7 +180,7 @@ namespace AngryTanks.Client
         public override void Update(GameTime gameTime)
         {
             // see if we need to setup initial time
-            if (initialTime == TimeSpan.Zero)
+            if (InitialTime == TimeSpan.Zero)
                 initialTime = gameTime.TotalRealTime;
 
             // if we're starting, move straight to active
@@ -178,11 +193,11 @@ namespace AngryTanks.Client
                 state = ShotState.Ended;
 
             // can the shot move to the none state yet?
-            if (initialTime + maxTTL <= gameTime.TotalRealTime)
+            if (InitialTime + MaxTTL <= gameTime.TotalRealTime)
             {
                 state = ShotState.None;
                 Log.DebugFormat("putting shot {0} in state none, initial time: {1}, max ttl: {2}, total real time: {3}",
-                                Slot, initialTime, maxTTL, gameTime.TotalRealTime);
+                                Slot, InitialTime, MaxTTL, gameTime.TotalRealTime);
             }
 
             // see if we can bail out now
