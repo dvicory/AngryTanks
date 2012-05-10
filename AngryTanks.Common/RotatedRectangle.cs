@@ -15,10 +15,61 @@ namespace AngryTanks.Common
     {
         #region Properties
 
-        private Single oldRotation;
-        public Single Rotation;
+        private Single x;
+        public override Single X
+        {
+            get { return x; }
+            set 
+            {
+                x = value;
+                ReCalcVertices();
+            }
+        }
 
-        private Vector2 oldOrigin;
+        private Single y;
+        public override Single Y
+        {
+            get { return y; }
+            set 
+            { 
+                y = value;
+                ReCalcVertices();
+            }
+        }
+
+        private Single width;
+        public override Single Width
+        {
+            get { return width; }
+            set
+            { 
+                width = value;
+                ReCalcVertices();
+            }
+        }
+
+        private Single height;
+        public override Single Height
+        {
+            get { return height; }
+            set 
+            {
+                height = value;
+                ReCalcVertices();
+            }
+        }
+
+        private Single rotation;
+        public Single Rotation
+        {
+            get{ return rotation; }
+            set
+            { 
+                rotation = value;
+                ReCalcVertices();
+            }
+        }
+        
         public Vector2 Origin;
 
         private Vector2 upperLeft;
@@ -26,10 +77,7 @@ namespace AngryTanks.Common
         {
             get
             {
-                if (Rotation == oldRotation && Origin == oldOrigin)
-                    return this.upperLeft;
-                Vector2 upperLeft = new Vector2(Left, Top);
-                return RotatePoint(upperLeft, upperLeft + Origin, Rotation);
+                return upperLeft;
             }
         }
 
@@ -38,10 +86,7 @@ namespace AngryTanks.Common
         {
             get
             {
-                if (Rotation == oldRotation && Origin == oldOrigin)
-                    return this.upperRight;
-                Vector2 upperRight = new Vector2(Right, Top);
-                return RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
+                return this.upperRight;
             }
         }
 
@@ -49,11 +94,8 @@ namespace AngryTanks.Common
         public Vector2 LowerLeft
         {
             get
-            {
-                if (Rotation == oldRotation && Origin == oldOrigin)
-                    return this.lowerLeft;
-                Vector2 lowerLeft = new Vector2(Left, Bottom);
-                return RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
+            {                
+                 return this.lowerLeft;                
             }
         }
 
@@ -61,11 +103,8 @@ namespace AngryTanks.Common
         public Vector2 LowerRight
         {
             get
-            {
-                if (Rotation == oldRotation && Origin == oldOrigin)
-                    return this.lowerRight;
-                Vector2 lowerRight = new Vector2(Right, Bottom);
-                return RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
+            {               
+                return this.lowerRight;                
             }
         }
 
@@ -83,43 +122,26 @@ namespace AngryTanks.Common
         public RotatedRectangle(Single x, Single y, Single width, Single height, Single rotation)
             : base(x, y, width, height)
         {
-            this.oldRotation = this.Rotation = rotation;
+            this.Rotation = rotation;
              
 
             // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
 
-            //Cache the rotated corners
-            Vector2 upperLeft = new Vector2(Left, Top);
-            this.upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
-            Vector2 upperRight = new Vector2(Right, Top);
-            this.upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
-            Vector2 lowerLeft = new Vector2(Left, Bottom);
-            this.lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
-            Vector2 lowerRight = new Vector2(Right, Bottom);
-            this.lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
-
+            ReCalcVertices();
         }
 
         public RotatedRectangle(RectangleF rectangle, Single rotation)
             : base(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height)
         {
-            this.oldRotation = this.Rotation = rotation;
+            this.Rotation = rotation;
 
             // Calculate the Rectangle's origin. We assume the center of the Rectangle will
             // be the point that we will be rotating around and we use that for the origin
             Origin = new Vector2(Width / 2, Height / 2);
 
-            //Cache the rotated corners
-            Vector2 upperLeft = new Vector2(Left, Top);
-            this.upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
-            Vector2 upperRight = new Vector2(Right, Top);
-            this.upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
-            Vector2 lowerLeft = new Vector2(Left, Bottom);
-            this.lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
-            Vector2 lowerRight = new Vector2(Right, Bottom);
-            this.lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
+            ReCalcVertices();
         }
 
         /// <summary>
@@ -296,6 +318,19 @@ namespace AngryTanks.Common
         public override String ToString()
         {
             return String.Format("{{X:{0} Y:{1} Width:{2} Height:{3} Rotation:{4}}}", X, Y, Width, Height, Rotation);
+        }
+
+        private void ReCalcVertices()
+        {
+            //ReCalculate the rotated corners from the update RectangleF Properties
+            Vector2 upperLeft = new Vector2(Left, Top);
+            this.upperLeft = RotatePoint(upperLeft, upperLeft + Origin, Rotation);
+            Vector2 upperRight = new Vector2(Right, Top);
+            this.upperRight = RotatePoint(upperRight, upperRight + new Vector2(-Origin.X, Origin.Y), Rotation);
+            Vector2 lowerLeft = new Vector2(Left, Bottom);
+            this.lowerLeft = RotatePoint(lowerLeft, lowerLeft + new Vector2(Origin.X, -Origin.Y), Rotation);
+            Vector2 lowerRight = new Vector2(Right, Bottom);
+            this.lowerRight = RotatePoint(lowerRight, lowerRight + new Vector2(-Origin.X, -Origin.Y), Rotation);
         }
     }
 }
