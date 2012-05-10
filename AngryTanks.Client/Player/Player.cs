@@ -220,6 +220,13 @@ namespace AngryTanks.Client
 
         public virtual void Spawn(Vector2 position, Single rotation)
         {
+            // spawning invalidates any shots that you previously had fired
+            // this is possible if the respawn time is quicker than shots expire
+            foreach (Shot shot in ActiveShots)
+            {
+                shot.End();
+            }
+
             // set position and rotation...
             Position = newPosition = oldPosition = position;
             Rotation = newRotation = oldRotation = rotation;
