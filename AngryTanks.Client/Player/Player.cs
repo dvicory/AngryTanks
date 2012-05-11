@@ -199,7 +199,7 @@ namespace AngryTanks.Client
                         {
                             try
                             {
-                                Shots[packet.ShotSlot].End(packet.Explode);
+                                Shots[packet.ShotSlot].End(packet.Explode, false);
                             }
                             catch (KeyNotFoundException e)
                             {
@@ -224,7 +224,7 @@ namespace AngryTanks.Client
             // this is possible if the respawn time is quicker than shots expire
             foreach (Shot shot in ActiveShots)
             {
-                shot.End(true);
+                shot.End(true, false);
             }
 
             // set position and rotation...

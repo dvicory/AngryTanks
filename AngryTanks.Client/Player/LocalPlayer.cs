@@ -232,7 +232,7 @@ namespace AngryTanks.Client
                 Die(shot.Player);
 
                 // now end that shot
-                shot.End(false);
+                shot.End(false, true);
             }
         }
 

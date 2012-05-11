@@ -313,7 +313,7 @@ namespace AngryTanks.Server
             // create our shot end message and packet
             NetOutgoingMessage shotEndMessage = gameKeeper.Server.CreateMessage();
 
-            MsgEndShotPacket shotEndPacket = new MsgEndShotPacket(this.Slot, incomingShotEndPacket.ShotSlot, incomingShotEndPacket.Explode);
+            MsgEndShotPacket shotEndPacket = new MsgEndShotPacket(incomingShotEndPacket.Slot, incomingShotEndPacket.ShotSlot, incomingShotEndPacket.Explode);
 
             // write to the message
             shotEndMessage.Write((Byte)shotEndPacket.MsgType);

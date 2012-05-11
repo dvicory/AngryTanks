@@ -185,7 +185,7 @@ namespace AngryTanks.Client
             }
         }
 
-        public void End(bool explode)
+        public void End(bool explode, bool sendEndShot)
         {
             // we are no longer moving now
             Velocity = Vector2.Zero;
@@ -204,11 +204,11 @@ namespace AngryTanks.Client
                                            new Point(8, 8), new Point(64, 64), SpriteSheetDirection.RightToLeft, false);
 
             // we only broadcast the end shot if it's a local one we're keeping track of
-            if (Local)
+            if (sendEndShot)
             {
                 NetOutgoingMessage endShotMessage = World.ServerLink.CreateMessage();
 
-                MsgEndShotPacket endShotPacket = new MsgEndShotPacket(this.Slot, explode);
+                MsgEndShotPacket endShotPacket = new MsgEndShotPacket(Player.Slot, this.Slot, explode);
 
                 endShotMessage.Write((Byte)endShotPacket.MsgType);
                 endShotPacket.Write(endShotMessage);
@@ -242,7 +242,7 @@ namespace AngryTanks.Client
                 if (State == ShotState.Ended)
                     state = ShotState.None;
                 else if (State != ShotState.Ending)
-                    End(true);
+                    End(true, false);
             }
 
             // see if we can bail out now
@@ -263,7 +263,7 @@ namespace AngryTanks.Client
                     Position += overlap * collisionProjection;
 
                     // end shot
-                    End(true);
+                    End(true, true);
                 }
             }
 
@@ -273,7 +273,7 @@ namespace AngryTanks.Client
             if (Math.Abs(Vector2.Distance(initialPosition, Position)) >= maxShotRange)
             {
                 // end shot
-                End(true);
+                End(true, false);
             }
 
             base.Update(gameTime);
