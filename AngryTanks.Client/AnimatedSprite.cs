@@ -36,6 +36,38 @@ namespace AngryTanks.Client
             get { return maxFrames; }
         }
 
+        /// <summary>
+        /// The first frame in the sprite sheet, depends on direction.
+        /// </summary>
+        public Point FirstFrame
+        {
+            get
+            {
+                if (Direction == SpriteSheetDirection.LeftToRight)
+                    return Point.Zero;
+                else if (Direction == SpriteSheetDirection.RightToLeft)
+                    return new Point(maxFrames.X, 0);
+                else
+                    throw new ArgumentOutOfRangeException("direction", "Only left-to-right and right-to-left are supported at this time");
+            }
+        }
+
+        /// <summary>
+        /// The last frame in the sprite sheet, depends on direction.
+        /// </summary>
+        public Point LastFrame
+        {
+            get
+            {
+                if (Direction == SpriteSheetDirection.LeftToRight)
+                    return MaxFrames;
+                else if (Direction == SpriteSheetDirection.RightToLeft)
+                    return new Point(0, MaxFrames.Y);
+                else
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private Point frameSize;
 
         /// <summary>
@@ -62,12 +94,27 @@ namespace AngryTanks.Client
             set;
         }
 
+        private bool running = true;
+
+        /// <summary>
+        /// Determines if the animation is running.
+        /// </summary>
+        public bool Running
+        {
+            get { return running; }
+            set
+            {
+                running = value;
+                currentFrame = FirstFrame;
+            }
+        }
+
         /// <summary>
         /// Determines if the animation is done or not.
         /// </summary>
         public bool Done
         {
-            get { return !Loop && (CurrentFrame == MaxFrames); }
+            get { return !Loop && (CurrentFrame == LastFrame); }
         }
 
         public AnimatedSprite(World world, Texture2D texture, Vector2 position, Vector2 size, Single rotation, Point maxFrames, Point frameSize, SpriteSheetDirection direction, bool loop)
@@ -82,23 +129,38 @@ namespace AngryTanks.Client
             this.direction = direction;
             this.Loop = loop;
 
-            if (Direction == SpriteSheetDirection.LeftToRight)
-                this.currentFrame = Point.Zero;
-            else if (Direction == SpriteSheetDirection.RightToLeft)
-                this.currentFrame = new Point(maxFrames.X, 0);
-            else
-                throw new ArgumentOutOfRangeException("direction", "Only left-to-right and right-to-left are supported at this time");
+            this.currentFrame = FirstFrame;
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            if (!Running)
+                return;
+
             if (Direction == SpriteSheetDirection.LeftToRight)
             {
-                throw new NotImplementedException();
+                if (!Loop && (CurrentFrame == LastFrame))
+                    return;
+
+                currentFrame.X++;
+
+                // went past the right edge of the sprite sheet
+                if (currentFrame.X > 0)
+                {
+                    currentFrame.X = 0;
+                    currentFrame.Y++;
+
+                    // did we go past the bottom edge?
+                    if (currentFrame.Y > maxFrames.Y)
+                    {
+                        if (Loop)
+                            currentFrame = FirstFrame;
+                    }
+                }
             }
             else if (Direction == SpriteSheetDirection.RightToLeft)
             {
-                if (!Loop && (CurrentFrame == new Point(0, MaxFrames.Y)))
+                if (!Loop && (CurrentFrame == LastFrame))
                     return;
 
                 currentFrame.X--;
@@ -113,10 +175,7 @@ namespace AngryTanks.Client
                     if (currentFrame.Y > maxFrames.Y)
                     {
                         if (Loop)
-                        {
-                            currentFrame.X = maxFrames.X;
-                            currentFrame.Y = 0;
-                        }
+                            currentFrame = FirstFrame;
                     }
                 }
             }
@@ -124,6 +183,9 @@ namespace AngryTanks.Client
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!Running)
+                return;
+
             Vector2 pixelPosition = World.WorldUnitsToPixels(Position);
             Vector2 pixelSize = World.WorldUnitsToPixels(Size);
 

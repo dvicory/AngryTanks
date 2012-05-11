@@ -78,7 +78,9 @@ namespace AngryTanks.Client
             {
                 // kill ourselves if we hit delete
                 case Keys.Delete:
-                    Die(this);
+                    if (State == PlayerState.Alive)
+                        Die(this);
+
                     break;
 
                 // shoot when you hit enter

@@ -79,6 +79,8 @@ namespace AngryTanks.Client
             get { return shots.Values.Where(s => s.State != ShotState.None).ToList();}
         }
 
+        private AnimatedSprite explosion;
+
         #endregion
 
         public Player(World world, PlayerInformation playerInfo)
@@ -86,6 +88,15 @@ namespace AngryTanks.Client
         {
             this.playerInfo = playerInfo;
             this.Score = new Score(); //Gives scoreHUD a valid reference to start with
+
+            explosion = new AnimatedSprite(World,
+                                           World.Content.Load<Texture2D>("textures/bz/explode1"),
+                                           Position,
+                                           GetTankSize(World, PlayerInfo) * 4,
+                                           Rotation,
+                                           new Point(8, 8), new Point(64, 64), SpriteSheetDirection.RightToLeft, false);
+
+            explosion.Running = false;
 
             World.ServerLink.MessageReceivedEvent += HandleReceivedMessage;
         }
@@ -131,9 +142,17 @@ namespace AngryTanks.Client
 
         public override void Update(GameTime gameTime)
         {
-            // move straight into dead state if we're exploding since we have no logic for exploding yet
+            // update logic for exploding
             if (State == PlayerState.Exploding)
-                state = PlayerState.Dead;
+            {
+                explosion.Position = Position;
+                explosion.Rotation = Rotation;
+
+                explosion.Update(gameTime);
+
+                if (explosion.Done)
+                    state = PlayerState.Dead;
+            }
 
             // update all our shots
             foreach (Shot shot in Shots.Values)
@@ -156,7 +175,7 @@ namespace AngryTanks.Client
                         MsgSpawnPacket packet = (MsgSpawnPacket)message.MessageData;
 
                         // only interested in it if it's us that is spawning
-                        if (packet.Slot == this.Slot)
+                        if (packet.Slot == this.Slot && State == PlayerState.Dead)
                         {
                             Spawn(packet.Position, packet.Rotation);
                         }
@@ -237,6 +256,9 @@ namespace AngryTanks.Client
 
         public virtual void Die(Player killer)
         {
+            // move explosion animation to running state
+            explosion.Running = true;
+
             // move into the exploding state
             state = PlayerState.Exploding;
         }
@@ -293,9 +315,13 @@ namespace AngryTanks.Client
             if (State == PlayerState.Dead)
                 return;
 
-            DrawCallsign(gameTime, spriteBatch);
-
-            DrawStretched(gameTime, spriteBatch);
+            if (State == PlayerState.Exploding)
+                explosion.Draw(gameTime, spriteBatch);
+            else
+            {
+                DrawCallsign(gameTime, spriteBatch);
+                DrawStretched(gameTime, spriteBatch);
+            }
         }
     }
 }
