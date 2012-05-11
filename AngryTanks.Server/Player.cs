@@ -48,6 +48,12 @@ namespace AngryTanks.Server
 
         private GameKeeper gameKeeper;
 
+        // when they last died so we know when to spawn him
+        private DateTime lastDiedTime = DateTime.MinValue;
+
+        // 5 second respawn
+        private TimeSpan respawnTime = new TimeSpan(0, 0, 5);
+
         public Player(GameKeeper gameKeeper, Byte slot, NetConnection connection, PlayerInformation playerInfo)
         {
             this.Slot       = slot;
@@ -70,8 +76,7 @@ namespace AngryTanks.Server
         /// <param name="lastUpdate"></param>
         public void Update(DateTime lastUpdate)
         {
-            // TODO wait to spawn until explodeTime has elapsed
-            if (State == PlayerState.Dead)
+            if ((State == PlayerState.Dead) && (lastDiedTime + respawnTime <= DateTime.Now))
                 Spawn();
 
             return;
@@ -271,6 +276,9 @@ namespace AngryTanks.Server
 
             // broadcast our score
             gameKeeper.Server.SendToAll(this.GetMsgScore(), null, NetDeliveryMethod.ReliableOrdered, 0);
+
+            // update our last died time
+            lastDiedTime = DateTime.Now;
 
             // we're now dead as far as we're concerned
             state = PlayerState.Dead;

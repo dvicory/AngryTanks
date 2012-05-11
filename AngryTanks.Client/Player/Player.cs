@@ -175,7 +175,7 @@ namespace AngryTanks.Client
                         MsgSpawnPacket packet = (MsgSpawnPacket)message.MessageData;
 
                         // only interested in it if it's us that is spawning
-                        if (packet.Slot == this.Slot && State == PlayerState.Dead)
+                        if (packet.Slot == this.Slot && State != PlayerState.Alive)
                         {
                             Spawn(packet.Position, packet.Rotation);
                         }
